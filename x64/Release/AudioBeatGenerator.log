@@ -1,7 +1,0 @@
-﻿  AudioBeatMain.cpp
-  AudioBeatGenerator.vcxproj -> D:\AudioBeatGenerator\.\AudioBeatGenerator.exe
-  Run the compile.bat file
-  'AudioBeatMain' is not recognized as an internal or external command,
-  operable program or batch file.
-F:\VS\IDE\Common7\IDE\VC\VCTargets\Microsoft.CppCommon.targets(138,5): error MSB3073: The command "compile.bat
-F:\VS\IDE\Common7\IDE\VC\VCTargets\Microsoft.CppCommon.targets(138,5): error MSB3073: :VCEnd" exited with code 1.
