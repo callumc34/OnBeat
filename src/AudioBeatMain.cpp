@@ -3,9 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
-#include "headers/AudioBeatMain.h"
+#include <AudioBeatMain.h>
 
-std::vector<std::vector<double>> AudioBeat::processFrames(const char* logFile = "./frames.log",
+std::vector<std::vector<double>> AudioBeat::processFrames(const char* logFile = "./logs/frames.log",
 	AudioFlags::Value method = AudioFlags::SPECTRAL_DIFFERENCE) {
 
 	if (audioFile.getFileFormat() == AudioFileFormat::NotLoaded) {
@@ -92,16 +92,31 @@ int AudioBeat::loadAudio(const char* file) {
 
 }
 
+int AudioBeat::initPA() {
+	//Initialise the PA module
+	PaError err = Pa_Initialize();
+	if (err != paNoError) {
+		throw std::runtime_error(Pa_GetErrorText(err));
+		return false;
+	}
+	else {
+		std::cout << "PA Initialised...\n";
+		return true;
+	}
+}
+
 AudioBeat::AudioBeat(double sampleRate, double frameSize) {
 	//initialise the gist values with new ones
  	setAudioFrameSize(frameSize);
  	setSamplingFrequency(sampleRate);
+	initPA();
 }
 
 AudioBeat::AudioBeat() {
 	//Gist initialised with default values
 	//Frame size 512
 	//Sampling rate 44100
+	initPA();
 }
 
 AudioBeat::~AudioBeat() {

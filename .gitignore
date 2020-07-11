@@ -1,7 +1,13 @@
-graphs
+.gitignore
+Graphs
 Test music
 Gist
 Objects
 plan.txt
 frames.log
 Sublime Project
+VSOutput
+.vs
+AudioBeatGenerator.vcxproj.user
+AudioBeatMain.exe
+AudioBeatMain.ilk

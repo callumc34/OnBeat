@@ -1,0 +1,11 @@
+CallbackStream.lo: ../source/portaudiocpp/CallbackStream.cxx \
+ /usr/include/stdc-predef.h ../include/portaudiocpp/CallbackStream.hxx \
+ ../../../include/portaudio.h ../include/portaudiocpp/Stream.hxx
+
+/usr/include/stdc-predef.h:
+
+../include/portaudiocpp/CallbackStream.hxx:
+
+../../../include/portaudio.h:
+
+../include/portaudiocpp/Stream.hxx:
