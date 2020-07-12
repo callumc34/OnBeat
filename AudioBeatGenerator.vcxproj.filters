@@ -42,14 +42,14 @@
     <ClCompile Include="src\include\pitch\Yin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\include\AudioBeatGen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\include\AudioBeatMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\include\AudioFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -111,6 +111,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\pitch\Yin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\AudioBeatGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

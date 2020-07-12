@@ -1,9 +1,0 @@
-CallbackInterface.lo: ../source/portaudiocpp/CallbackInterface.cxx \
- /usr/include/stdc-predef.h ../include/portaudiocpp/CallbackInterface.hxx \
- ../../../include/portaudio.h
-
-/usr/include/stdc-predef.h:
-
-../include/portaudiocpp/CallbackInterface.hxx:
-
-../../../include/portaudio.h:
