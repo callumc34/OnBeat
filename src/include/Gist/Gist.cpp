@@ -37,21 +37,6 @@ Gist<T>::Gist (int audioFrameSize, int fs, WindowType windowType_)
     setAudioFrameSize (audioFrameSize);
 }
 
-//Added default constructor
-//Sets frame size to 512
-//Sets sample rate to 44100
-template <class T>
-Gist<T>::Gist ()
- :  windowType (HanningWindow),
-    fftConfigured (false),
-    onsetDetectionFunction (512),
-    yin (44100),
-    mfcc (512, 44100)
-{
-    samplingFrequency = 44100;
-    setAudioFrameSize (512);
-}
-
 //=======================================================================
 template <class T>
 Gist<T>::~Gist()

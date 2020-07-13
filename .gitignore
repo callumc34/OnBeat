@@ -1,16 +1,13 @@
 .gitignore
+.vs/
 Graphs
-Test music
-Gist
-gainput
-enkiTS
-Objects
-plan.txt
-frames.log
+logs
 Sublime Project
-x64
+Test music
 VSOutput
-.vs
-AudioBeatGenerator.vcxproj.user
-AudioBeatMain.exe
-AudioBeatMain.ilk
+x64
+OnBeat.vcxproj.user
+OnBeat.exe
+OnBeat.ilk
+plan.txt
+*.dll

@@ -67,8 +67,7 @@ public:
      * @param fs the input audio sample rate
      * @param windowType the type of window function to use
      */
-    Gist (int audioFrameSize, int fs, WindowType windowType = HanningWindow);
-    Gist ();
+    Gist (int audioFrameSize = 512, int fs = 44100, WindowType windowType = HanningWindow);
 
     /** Destructor */
     ~Gist();
