@@ -2,8 +2,6 @@
 #include <iostream>
 #include <AudioBeatSDL/AudioBeatGame.h>
 
-const char* APPDATA = getenv("APPDATA") != NULL ? getenv("APPDATA") : "./beats/";
-
 int main(int argc, char *argv[]) {
 	if (argc == 4) {
 		double frameSize, sampleRate;

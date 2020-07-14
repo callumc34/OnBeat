@@ -10,4 +10,5 @@ OnBeat.vcxproj.user
 OnBeat.exe
 OnBeat.ilk
 plan.txt
+compile.bat
 *.dll

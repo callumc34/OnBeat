@@ -1,8 +1,9 @@
-#include <stdlib.h>
 #include <assert.h>
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <filesystem>
+#include <math.h>
 #include <AudioBeatGen/AudioBeatGen.h>
 #include <sys/stat.h>
 
@@ -11,19 +12,118 @@ bool fileExists(const char* file) {
 	return (stat(file, &buffer) == 0);
 }
 
-int AudioBeat::createBeatFile(AudioVector beats, const char* outputDir) {
-	const char* outputFile;
+const char* concatstr(const char* s1, const char* s2) {
+	return (std::string(s1) + std::string(s2)).c_str();
+}
+
+bool validateAudioVector(AudioVector av, double frameSize, double sampleRate, double length) {
+	if (round((av[0].size() / length)) != round(sampleRate / frameSize)) {
+		std::cout << "Sample count differs from sample rate and frame size\n";
+		return false;
+	}
+
+
+	if (av.size() > 1) { //Validate all channels are equal in size
+		for (int i = 1; i < av.size() - 1; i++)
+			if (av[i].size() != av[-1].size()) {
+				std::cout << "Channels differ in size\n";
+				return false;
+			}
+	}
+
+	return true;
+}
+
+AudioVector AudioBeat::parseBeatFile(const char* beatFile) {
+	std::ifstream beatStream(beatFile, std::fstream::in);
+	std::string line;
+	if (!beatStream.is_open()) {
+		std::cout << "Error opening file " << beatFile << std::endl;
+		return AudioVector{}; //Return empty audio vector
+	}
+
+	AudioVector beats;
+	std::string buffer, sr;
+	bool beginBeat = false;
+	int curChannel = 0;
+
+	int lineNum = 0;
+
+	while (std::getline(beatStream, line)) {
+		if (line.substr(0, 10) == "BEGIN BEAT") beginBeat = true; //Do not parse lines until beat is defined
+		if (line.substr(0, 8) == "END BEAT") beginBeat = false; //End parsing of beat
+		if (beginBeat) {
+			if (line.substr(0, 11) == "NEW CHANNEL") {
+				beats.push_back(std::vector<double>{});
+				curChannel += 1;
+			}
+			else {
+				std::size_t end = line.find(";");
+				if (end == std::string::npos) {
+					std::cout << "No end to line - Error parsing line " << lineNum << std::endl;
+					return AudioVector{};
+				}
+
+				beats[curChannel].push_back(strtod(line.substr(0, end).c_str(), NULL));
+			}
+		}
+		else if (line.substr(0, 6) == "DEFINE") {
+			std::size_t assignLocation = line.find("=");
+			std::size_t endLocation = line.find(";");
+			if (assignLocation == std::string::npos || endLocation == std::string::npos) {
+				std::cout << "No end to line - Error parsing line " << lineNum << std::endl;
+				return AudioVector{};
+			}
+			std::string varName = line.substr(7, assignLocation - 7);
+			std::string var = line.substr(assignLocation + 1, endLocation - assignLocation - 1);
+			if (varName == "BUFFER") {
+				buffer = var;
+			}
+			else if (varName == "SAMPLE_RATE") {
+				sr = var;
+			}
+			else {
+				std::cout << "Error parsing var in " << beatFile << ": UNKNOWN VAR " << varName << "\nErr line: " << lineNum;
+				return AudioVector{};
+			}
+		}
+		else {}
+
+		lineNum += 1;
+
+	}
+
+	
+
+	return beats;
+}
+
+int AudioBeat::createBeatFile(AudioVector beats, const char* outputDir, const char* outputName) {
+	if (!std::experimental::filesystem::create_directories(outputDir)) {
+		std::cout << "Error making dir " << outputDir << "\nDir may exist\n";
+	}
+
+	const char* outputFile = concatstr(outputDir, outputName);
+
 	std::ofstream outputStream(outputFile);
 
-	assert(outputStream.is_open());
+	if (!outputStream.is_open()) {
+		std::cout << "Error opening file " << outputFile << std::endl;
+		return 0;
+	}
+	outputStream << "DEFINE BUFFER=" << getAudioFrameSize() << ";\nDEFINE SAMPLE_RATE=" << getSamplingFrequency() << ";\n";
+	outputStream << "BEGIN BEAT;\n";
 
-	AudioVector frames = processFrames();
-
-	for (int c = 0; c < frames.size(); c++) {
-		for (int i = 0; i < frames[c].size(); i++) {
-
+	for (int c = 0; c < beats.size(); c++) {
+		outputStream << "NEW CHANNEL;\n";
+		for (int i = 0; i < beats[c].size(); i++) {
+			outputStream << beats[c][i] << ";\n";
 		}
 	}
+
+	outputStream << "END BEAT;";
+
+	std::cout << "File written to " << concatstr(outputDir, outputName) << std::endl;
 
 	return 1;
 }
@@ -51,6 +151,8 @@ AudioVector AudioBeat::cleanUpBeats(AudioVector beats, const char* logFile) {
 		}
 	}
 
+	assert(validateAudioVector(beats, getAudioFrameSize(),
+		getSamplingFrequency(), audioFile.getLengthInSeconds()));
 	return beats;
 }
 
@@ -121,14 +223,6 @@ AudioVector AudioBeat::processFrames(const char* logFile, AudioBeatFlags::Value 
 		logStream.close();
 	}
 
-	//Vectors must be of equal size for time to correspond to difference
-	assert(beats[0].size() ==
-		audioFile.samples[0].size() / getAudioFrameSize());
-
-	if (beats.size() > 1) {
-		for (int i = 1; i < beats.size() - 1; i++)
-			assert(beats[i].size() == beats[-1].size());
-	}
 
 	std::cout << "Finished processing frames\n";
 	

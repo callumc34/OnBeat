@@ -21,7 +21,6 @@ int FMOD_ERRCHECK(FMOD_RESULT r, const char * log, bool throwE) {
 	return 1;
 }
 
-
 int AudioBeatGame::initAudioBeat(double frameSize, double sampleRate, const char* file) {
 	//Process frames and setup the audiofile
 	audioBeat.setAudioFrameSize(frameSize);
@@ -31,7 +30,6 @@ int AudioBeatGame::initAudioBeat(double frameSize, double sampleRate, const char
 		<< audioBeat.getAudioFrameSize() << std::endl;
 	audioBeat.loadAudio(file);
 	audioLocation = file;
-	//audioBeat.processFrames();
 	return 1;
 }
 
@@ -73,7 +71,10 @@ int AudioBeatGame::runGame() {
 
 AudioBeatGame::AudioBeatGame(double frameSize, double sampleRate, const char * file) {
 	initAudioBeat(frameSize, sampleRate, file);
-	audioBeat.processFrames();
+	AudioVector beats = audioBeat.processFrames();
+	audioBeat.createBeatFile(
+		beats, concatstr(getenv("APPDATA") != NULL ? getenv("APPDATA") : ".", "\\OnBeat\\beats\\"), "test.beat");
+	
 }
 
 AudioBeatGame::AudioBeatGame() {
@@ -209,7 +210,7 @@ AudioPlayer::AudioPlayer(const char* audioLocation) {
 AudioPlayer::~AudioPlayer() {
 	//Stop audio processing
 	sound->release();
-	delete audioFile;
-	delete channel;
-	delete system;	
+	delete[] audioFile;
+	delete[] channel;
+	delete[] system;	
 }
