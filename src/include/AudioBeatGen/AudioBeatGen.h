@@ -1,14 +1,6 @@
-#include <stdlib.h>
-#include <string>
 #include <vector>
 #include <Gist/AudioFile.h>
 #include <Gist/Gist.h>
-#include <TaskScheduler/TaskScheduler.h>
-#include <gainput/gainput.h>
-
-#ifndef AUDIOBEAT
-#define AUDIOBEAT
-
 
 typedef std::vector<std::vector<double>> AudioVector; //Simplify 2d vector of doubles
 
@@ -48,6 +40,3 @@ private:
 	//Functions
 	//Vars
 };
-
-
-#endif

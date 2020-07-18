@@ -1,9 +1,14 @@
-#include <SDL2/sdl.h>
+#include <string>
+#include <TaskScheduler/TaskScheduler.h>
 #include <FMOD/fmod.hpp>
-#include <FMOD/fmod_common.h>
-#include <FMOD/fmod_errors.h>
-#include <FMOD/fmod_output.h>
+#include <gainput/gainput.h>
+#include <ShellFileInterface.h>
+#include <RmlUi/SDL2Integration/RenderInterfaceSDL2.h>
+#include <RmlUi/SDL2Integration/SystemInterfaceSDL2.h>
 #include <AudioBeatGen/AudioBeatGen.h>
+#include <AudioBeatSDL/RmlEventListener.hpp>
+
+const std::string APPDATA = getenv("APPDATA") != NULL ? getenv("APPDATA") : ".";
 
 int FMOD_ERRCHECK(FMOD_RESULT r, const char* log = "./logs/FMOD.log", bool throwE = false);
 
@@ -13,13 +18,64 @@ struct ParallelTaskSet : enki::ITaskSet {
 	}
 };
 
-class AudioPlayer {
+
+#pragma region Timer
+class Timer //Simple timer used to regulare frame rate
+{
+private:
+	//The clock time when the timer started
+	int startTicks;
+
+	//The ticks stored when the timer was paused
+	int pausedTicks;
+
+	//The timer status
+	bool paused;
+	bool started;
+
+public:
+	//Initializes variables
+	Timer();
+
+	//The various clock actions
+	void start();
+	void stop();
+	void pause();
+	void unpause();
+
+	//Gets the timer's time
+	int get_ticks();
+
+	//Checks the status of the timer
+	bool is_started();
+	bool is_paused();
+};
+#pragma endregion Timer
+
+#pragma region SDLScene
+class SDLScene : public SDL_Surface { //Simple scene implementation
+public:
+	//Functions
+	int renderBlit(const char* blitName, SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect); //Redefinition if BlitSurface but also appends to blits vector
+	SDLScene();
+	~SDLScene();
+	//Vars
+private:
+	//Functions
+	//Vars
+	std::unordered_map<const char*, SDL_Surface*> blits;
+};
+#pragma endregion SDLScene
+
+#pragma region AudioPlayer
+class AudioPlayer { //Plays audio using the FMOD libraries
 
 public:
 	//Functions
 	int pauseAudio(bool pause);
 	int playAudio();
 	int loadAudio(const char* audioLocation = NULL);
+	int releaseSound();
 
 	const char* getAudioFile();
 	unsigned int getCurrentPos();
@@ -43,20 +99,36 @@ private:
 	bool playing = false;
 	bool loaded = false;
 };
+#pragma endregion AudioPlayer
 
-class AudioBeatGame {
+
+#pragma region AudioBeatGame
+class AudioBeatGame { //Base class for the game
 
 public:
 	//Functions
-	int initAudioBeat(double frameSize, double sampleRate, const char * file);
+	int initSDL();
+	int initAudioBeat(double frameSize, double sampleRate);
 	int runGame();
-	AudioBeatGame(double frameSize, double sampleRate, const char* file);
-	AudioBeatGame();
+	int createNewBeatScene();
+	AudioBeatGame(double frameSize = NULL, double sampleRate = NULL, const char* file = NULL);
 	~AudioBeatGame();
+
+	//Fetch/Get functions
+	//Blit timing
+	void setBlitTiming(double timing);
+	double getBlitTiming();
+	//Blit velocity
+	void setBlitVelocity(double velocity);
+	double getBlitVelocity();
+	//Screen vals
+	SDL_DisplayMode getFullScreenDimensions();
+	void setWindowDimensions(SDL_DisplayMode screenDimensions);
+	SDL_DisplayMode getWindowDimensions();
+
 	//Vars
-	SDL_Window* window;
-	SDL_Event sdlEvent;
-	AudioBeat audioBeat;
+	Timer fps;
+	int frameRate;
 
 	//Gainput config
 	gainput::InputManager manager; //Gainput manager
@@ -74,12 +146,34 @@ public:
 private:
 	//Functions
 	int initGainput();
+	double calculateBlitVelocity();
 	//Vars
+	std::unordered_map<const char*, SDLScene> scenes;
+	double blitTiming = 2;
+	double blitVelocity;
+	double monitorHz;
 	int width;
 	int height;
 	int framesPerBuffer = 512;
 	const char* audioLocation;
+	const char* exePath;
+	bool quit = false;
+	AudioBeat audioBeat;
 
-	//FMOD init
+	//SDL Vars
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+	SDL_Event sdlEvent;
+	SDL_Surface* windowSurface;
+	SDL_GLContext glcontext;
+	RmlUiSDL2SystemInterface SystemInterface;
+	RmlUiSDL2Renderer Renderer;
+	ShellFileInterface fileInterface = ShellFileInterface(exePath);
+	Rml::Core::ElementDocument* Document;
+	Rml::Core::Context* Context;
+
+	//FMOD Vars
 	AudioPlayer audioSys;
 };
+
+#pragma endregion AudioBeatGame

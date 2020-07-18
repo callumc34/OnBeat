@@ -94,6 +94,9 @@
     <TargetName>OnBeat</TargetName>
     <PostBuildEventUseInBuild>
     </PostBuildEventUseInBuild>
+    <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <OutDir>./</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,13 +111,14 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>./VSOutput/$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>.VSOutput/$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
       <ManifestFile>./VSOutput/$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
@@ -151,6 +155,7 @@
       <CompileAsWinRT>false</CompileAsWinRT>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -159,7 +164,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>./VSOutput/$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>.VSOutput/$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
       <ManifestFile>./VSOutput/$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
@@ -187,16 +192,18 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <ProgramDataBaseFileName>./VSOutput/$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
-      <AdditionalOptions>-DUSE_KISS_FFT</AdditionalOptions>
+      <AdditionalOptions>-DUSE_KISS_FFT;</AdditionalOptions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>./src/include/shell</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>./VSOutput/$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>.VSOutput/$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
       <ManifestFile>./VSOutput/$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
@@ -224,16 +231,19 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <ProgramDataBaseFileName>./VSOutput/$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
-      <AdditionalOptions>-DUSE_KISS_FFT</AdditionalOptions>
+      <AdditionalOptions>-DUSE_KISS_FFT;</AdditionalOptions>
       <DisableSpecificWarnings>4244;</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <CompileAsWinRT>false</CompileAsWinRT>
       <PreprocessorDefinitions>
       </PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>./src/include/shell;./src/include;</AdditionalIncludeDirectories>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>./VSOutput/$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <ProfileGuidedDatabase>.VSOutput/$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
       <ManifestFile>./VSOutput/$(IntDir)$(TargetName)$(TargetExt).intermediate.manifest</ManifestFile>
@@ -269,15 +279,43 @@
     <ClCompile Include="src\include\mfcc\MFCC.cpp" />
     <ClCompile Include="src\include\onset-detection-functions\OnsetDetectionFunction.cpp" />
     <ClCompile Include="src\include\pitch\Yin.cpp" />
+    <ClCompile Include="src\include\RmlUi\SDL2Integration\RenderInterfaceSDL2.cpp" />
+    <ClCompile Include="src\include\RmlUi\SDL2Integration\SystemInterfaceSDL2.cpp" />
+    <ClCompile Include="src\include\shell\Input.cpp" />
+    <ClCompile Include="src\include\shell\Shell.cpp" />
+    <ClCompile Include="src\include\shell\ShellFileInterface.cpp" />
+    <ClCompile Include="src\include\shell\ShellRenderInterfaceOpenGL.cpp" />
+    <ClCompile Include="src\include\shell\ShellSystemInterface.cpp" />
+    <ClCompile Include="src\include\shell\win32\InputWin32.cpp" />
+    <ClCompile Include="src\include\shell\win32\ShellRenderInterfaceExtensionsOpenGL_Win32.cpp" />
+    <ClCompile Include="src\include\shell\win32\ShellWin32.cpp" />
     <ClCompile Include="src\include\TaskScheduler\TaskScheduler.cpp" />
     <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="assets\img\bgTest.psd" />
+    <None Include="assets\rml\MainMenu\core.rcss" />
+    <None Include="assets\rml\MainMenu\core.rml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="logo\Logo-Small.psd" />
+    <None Include="logo\logo.psd" />
+    <None Include="src\include\RmlUi\Core\Colour.inl" />
+    <None Include="src\include\RmlUi\Core\Element.inl" />
+    <None Include="src\include\RmlUi\Core\Lua\LuaType.inl" />
+    <None Include="src\include\RmlUi\Core\Matrix4.inl" />
+    <None Include="src\include\RmlUi\Core\TypeConverter.inl" />
+    <None Include="src\include\RmlUi\Core\Variant.inl" />
+    <None Include="src\include\RmlUi\Core\Vector2.inl" />
+    <None Include="src\include\RmlUi\Core\Vector3.inl" />
+    <None Include="src\include\RmlUi\Core\Vector4.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\include\AudioBeatGen\AudioBeatGen.h" />
     <ClInclude Include="src\include\AudioBeatSDL\AudioBeatGame.h" />
+    <ClInclude Include="src\include\AudioBeatSDL\RmlEventListener.hpp" />
     <ClInclude Include="src\include\core\CoreFrequencyDomainFeatures.h" />
     <ClInclude Include="src\include\core\CoreTimeDomainFeatures.h" />
     <ClInclude Include="src\include\fft\kissfft.hh" />
@@ -327,6 +365,10 @@
     <ClInclude Include="src\include\gainput\recorder\GainputInputRecording.h" />
     <ClInclude Include="src\include\Gist\AudioFile.h" />
     <ClInclude Include="src\include\Gist\Gist.h" />
+    <ClInclude Include="src\include\GL\eglew.h" />
+    <ClInclude Include="src\include\GL\glew.h" />
+    <ClInclude Include="src\include\GL\glxew.h" />
+    <ClInclude Include="src\include\GL\wglew.h" />
     <ClInclude Include="src\include\mfcc\MFCC.h" />
     <ClInclude Include="src\include\onset-detection-functions\OnsetDetectionFunction.h" />
     <ClInclude Include="src\include\pitch\Yin.h" />
@@ -340,6 +382,116 @@
     <ClInclude Include="src\include\portaudio\pa_win_wdmks.h" />
     <ClInclude Include="src\include\portaudio\pa_win_wmme.h" />
     <ClInclude Include="src\include\portaudio\portaudio.h" />
+    <ClInclude Include="src\include\RmlUi\Controls.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\Controls.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\DataFormatter.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\DataQuery.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\DataSource.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\DataSourceListener.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementDataGrid.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementDataGridCell.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementDataGridExpandButton.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementDataGridRow.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementForm.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementFormControl.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementFormControlDataSelect.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementFormControlInput.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementFormControlSelect.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementFormControlTextArea.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementProgressBar.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\ElementTabSet.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\Header.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\Lua\Controls.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\Lua\Header.h" />
+    <ClInclude Include="src\include\RmlUi\Controls\SelectOption.h" />
+    <ClInclude Include="src\include\RmlUi\Core.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Animation.h" />
+    <ClInclude Include="src\include\RmlUi\Core\BaseXMLParser.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Box.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Colour.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ComputedValues.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Containers\chobo\flat_map.hpp" />
+    <ClInclude Include="src\include\RmlUi\Core\Containers\chobo\flat_set.hpp" />
+    <ClInclude Include="src\include\RmlUi\Core\Containers\robin_hood.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Context.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ContextInstancer.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ConvolutionFilter.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Core.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Debug.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Decorator.h" />
+    <ClInclude Include="src\include\RmlUi\Core\DecoratorInstancer.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Dictionary.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Element.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ElementDocument.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ElementInstancer.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ElementScroll.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ElementText.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ElementUtilities.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Event.h" />
+    <ClInclude Include="src\include\RmlUi\Core\EventInstancer.h" />
+    <ClInclude Include="src\include\RmlUi\Core\EventListener.h" />
+    <ClInclude Include="src\include\RmlUi\Core\EventListenerInstancer.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Factory.h" />
+    <ClInclude Include="src\include\RmlUi\Core\FileInterface.h" />
+    <ClInclude Include="src\include\RmlUi\Core\FontEffect.h" />
+    <ClInclude Include="src\include\RmlUi\Core\FontEffectInstancer.h" />
+    <ClInclude Include="src\include\RmlUi\Core\FontEngineInterface.h" />
+    <ClInclude Include="src\include\RmlUi\Core\FontGlyph.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Geometry.h" />
+    <ClInclude Include="src\include\RmlUi\Core\GeometryUtilities.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Header.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ID.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Input.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Log.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Lua\Header.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Lua\Interpreter.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Lua\lua.hpp" />
+    <ClInclude Include="src\include\RmlUi\Core\Lua\LuaType.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Lua\Utilities.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Math.h" />
+    <ClInclude Include="src\include\RmlUi\Core\MathTypes.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Matrix4.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ObserverPtr.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Platform.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Plugin.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Profiling.h" />
+    <ClInclude Include="src\include\RmlUi\Core\PropertiesIteratorView.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Property.h" />
+    <ClInclude Include="src\include\RmlUi\Core\PropertyDefinition.h" />
+    <ClInclude Include="src\include\RmlUi\Core\PropertyDictionary.h" />
+    <ClInclude Include="src\include\RmlUi\Core\PropertyIdSet.h" />
+    <ClInclude Include="src\include\RmlUi\Core\PropertyParser.h" />
+    <ClInclude Include="src\include\RmlUi\Core\PropertySpecification.h" />
+    <ClInclude Include="src\include\RmlUi\Core\RenderInterface.h" />
+    <ClInclude Include="src\include\RmlUi\Core\ScriptInterface.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Spritesheet.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Stream.h" />
+    <ClInclude Include="src\include\RmlUi\Core\StreamMemory.h" />
+    <ClInclude Include="src\include\RmlUi\Core\StringUtilities.h" />
+    <ClInclude Include="src\include\RmlUi\Core\StyleSheet.h" />
+    <ClInclude Include="src\include\RmlUi\Core\StyleSheetSpecification.h" />
+    <ClInclude Include="src\include\RmlUi\Core\SystemInterface.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Texture.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Traits.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Transform.h" />
+    <ClInclude Include="src\include\RmlUi\Core\TransformPrimitive.h" />
+    <ClInclude Include="src\include\RmlUi\Core\TransformState.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Tween.h" />
+    <ClInclude Include="src\include\RmlUi\Core\TypeConverter.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Types.h" />
+    <ClInclude Include="src\include\RmlUi\Core\URL.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Variant.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Vector2.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Vector3.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Vector4.h" />
+    <ClInclude Include="src\include\RmlUi\Core\Vertex.h" />
+    <ClInclude Include="src\include\RmlUi\Core\XMLNodeHandler.h" />
+    <ClInclude Include="src\include\RmlUi\Core\XMLParser.h" />
+    <ClInclude Include="src\include\RmlUi\Debugger.h" />
+    <ClInclude Include="src\include\RmlUi\Debugger\Debugger.h" />
+    <ClInclude Include="src\include\RmlUi\Debugger\Header.h" />
+    <ClInclude Include="src\include\RmlUi\SDL2Integration\RenderInterfaceSDL2.h" />
+    <ClInclude Include="src\include\RmlUi\SDL2Integration\SystemInterfaceSDL2.h" />
     <ClInclude Include="src\include\SDL2\begin_code.h" />
     <ClInclude Include="src\include\SDL2\close_code.h" />
     <ClInclude Include="src\include\SDL2\SDL.h" />
@@ -370,6 +522,7 @@
     <ClInclude Include="src\include\SDL2\SDL_gesture.h" />
     <ClInclude Include="src\include\SDL2\SDL_haptic.h" />
     <ClInclude Include="src\include\SDL2\SDL_hints.h" />
+    <ClInclude Include="src\include\SDL2\SDL_image.h" />
     <ClInclude Include="src\include\SDL2\SDL_joystick.h" />
     <ClInclude Include="src\include\SDL2\SDL_keyboard.h" />
     <ClInclude Include="src\include\SDL2\SDL_keycode.h" />
@@ -420,10 +573,21 @@
     <ClInclude Include="src\include\SDL2\SDL_thread.h" />
     <ClInclude Include="src\include\SDL2\SDL_timer.h" />
     <ClInclude Include="src\include\SDL2\SDL_touch.h" />
+    <ClInclude Include="src\include\SDL2\SDL_ttf.h" />
     <ClInclude Include="src\include\SDL2\SDL_types.h" />
     <ClInclude Include="src\include\SDL2\SDL_version.h" />
     <ClInclude Include="src\include\SDL2\SDL_video.h" />
     <ClInclude Include="src\include\SDL2\SDL_vulkan.h" />
+    <ClInclude Include="src\include\shell\Input.h" />
+    <ClInclude Include="src\include\shell\precompiled.h" />
+    <ClInclude Include="src\include\shell\Shell.h" />
+    <ClInclude Include="src\include\shell\ShellFileInterface.h" />
+    <ClInclude Include="src\include\shell\ShellOpenGL.h" />
+    <ClInclude Include="src\include\shell\ShellRenderInterfaceExtensions.h" />
+    <ClInclude Include="src\include\shell\ShellRenderInterfaceOpenGL.h" />
+    <ClInclude Include="src\include\shell\ShellSystemInterface.h" />
+    <ClInclude Include="src\include\shell\win32\IncludeWindows.h" />
+    <ClInclude Include="src\include\shell\win32\InputWin32.h" />
     <ClInclude Include="src\include\TaskScheduler\LocklessMultiReadPipe.h" />
     <ClInclude Include="src\include\TaskScheduler\TaskScheduler.h" />
   </ItemGroup>
@@ -431,10 +595,32 @@
     <Library Include="lib\enkiTS.lib" />
     <Library Include="lib\fmodL_vc.lib" />
     <Library Include="lib\fmod_vc.lib" />
+    <Library Include="lib\freetype.lib" />
     <Library Include="lib\gainput-d.lib" />
+    <Library Include="lib\glew32.lib" />
+    <Library Include="lib\glew32s.lib" />
+    <Library Include="lib\RmlControls.lib" />
+    <Library Include="lib\RmlCore.lib" />
+    <Library Include="lib\RmlDebugger.lib" />
     <Library Include="lib\SDL2.lib" />
     <Library Include="lib\SDL2main.lib" />
     <Library Include="lib\SDL2test.lib" />
+    <Library Include="lib\SDL2_image.lib" />
+    <Library Include="lib\SDL2_ttf.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\img\bgTest.png" />
+    <Image Include="assets\img\menuBackground.png" />
+    <Image Include="assets\img\menuBackgroundRescaled.png" />
+    <Image Include="logo\logo.ico" />
+    <Image Include="logo\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OnBeat.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\Walkway Expand Black.ttf" />
+    <Font Include="assets\fonts\Walkway UltraExpand.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

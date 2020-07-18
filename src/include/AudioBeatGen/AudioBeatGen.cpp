@@ -1,8 +1,10 @@
-#include <assert.h>
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <filesystem>
+#include <string>
+#include <assert.h>
+#include <stdlib.h>
 #include <math.h>
 #include <AudioBeatGen/AudioBeatGen.h>
 #include <sys/stat.h>
@@ -17,8 +19,9 @@ const char* concatstr(const char* s1, const char* s2) {
 }
 
 bool validateAudioVector(AudioVector av, double frameSize, double sampleRate, double length) {
-	if (round((av[0].size() / length)) != round(sampleRate / frameSize)) {
-		std::cout << "Sample count differs from sample rate and frame size\n";
+	//Ensure that for each tame frame there is a beat value
+	if (round((av[0].size() / length)) != round(sampleRate / frameSize)) { //May need to fix not too sure on math
+		std::cerr << "Sample count differs from sample rate and frame size\n";
 		return false;
 	}
 
@@ -26,7 +29,7 @@ bool validateAudioVector(AudioVector av, double frameSize, double sampleRate, do
 	if (av.size() > 1) { //Validate all channels are equal in size
 		for (int i = 1; i < av.size() - 1; i++)
 			if (av[i].size() != av[-1].size()) {
-				std::cout << "Channels differ in size\n";
+				std::cerr << "Channels differ in size\n";
 				return false;
 			}
 	}
@@ -38,7 +41,7 @@ AudioVector AudioBeat::parseBeatFile(const char* beatFile) {
 	std::ifstream beatStream(beatFile, std::fstream::in);
 	std::string line;
 	if (!beatStream.is_open()) {
-		std::cout << "Error opening file " << beatFile << std::endl;
+		std::cerr << "Error opening file " << beatFile << std::endl;
 		return AudioVector{}; //Return empty audio vector
 	}
 
@@ -60,7 +63,7 @@ AudioVector AudioBeat::parseBeatFile(const char* beatFile) {
 			else {
 				std::size_t end = line.find(";");
 				if (end == std::string::npos) {
-					std::cout << "No end to line - Error parsing line " << lineNum << std::endl;
+					std::cerr << "No end to line - Error parsing line " << lineNum << std::endl;
 					return AudioVector{};
 				}
 
@@ -71,7 +74,7 @@ AudioVector AudioBeat::parseBeatFile(const char* beatFile) {
 			std::size_t assignLocation = line.find("=");
 			std::size_t endLocation = line.find(";");
 			if (assignLocation == std::string::npos || endLocation == std::string::npos) {
-				std::cout << "No end to line - Error parsing line " << lineNum << std::endl;
+				std::cerr << "No end to line - Error parsing line " << lineNum << std::endl;
 				return AudioVector{};
 			}
 			std::string varName = line.substr(7, assignLocation - 7);
@@ -83,7 +86,7 @@ AudioVector AudioBeat::parseBeatFile(const char* beatFile) {
 				sr = var;
 			}
 			else {
-				std::cout << "Error parsing var in " << beatFile << ": UNKNOWN VAR " << varName << "\nErr line: " << lineNum;
+				std::cerr << "Error parsing var in " << beatFile << ": UNKNOWN VAR " << varName << "\nErr line: " << lineNum;
 				return AudioVector{};
 			}
 		}
@@ -99,8 +102,8 @@ AudioVector AudioBeat::parseBeatFile(const char* beatFile) {
 }
 
 int AudioBeat::createBeatFile(AudioVector beats, const char* outputDir, const char* outputName) {
-	if (!std::experimental::filesystem::create_directories(outputDir)) {
-		std::cout << "Error making dir " << outputDir << "\nDir may exist\n";
+	if (!std::filesystem::create_directories(outputDir)) {
+		std::cerr << "Error making dir " << outputDir << "\nDir may exist\n";
 	}
 
 	const char* outputFile = concatstr(outputDir, outputName);
@@ -108,7 +111,7 @@ int AudioBeat::createBeatFile(AudioVector beats, const char* outputDir, const ch
 	std::ofstream outputStream(outputFile);
 
 	if (!outputStream.is_open()) {
-		std::cout << "Error opening file " << outputFile << std::endl;
+		std::cerr << "Error opening file " << outputFile << std::endl;
 		return 0;
 	}
 	outputStream << "DEFINE BUFFER=" << getAudioFrameSize() << ";\nDEFINE SAMPLE_RATE=" << getSamplingFrequency() << ";\n";
@@ -133,7 +136,7 @@ AudioVector AudioBeat::cleanUpBeats(AudioVector beats, const char* logFile) {
 	std::fstream logStream(logFile, std::fstream::app);
 
 	if (!logStream.is_open()) {
-		std::cout << "Could not open log file...\nContinuing without logging...\n";
+		std::cerr << "Could not open log file...\nContinuing without logging...\n";
 		log = false;
 	}
 	else {
@@ -168,7 +171,7 @@ AudioVector AudioBeat::processFrames(const char* logFile, AudioBeatFlags::Value 
 	std::ofstream logStream(logFile);
 
 	if (!logStream.is_open()) {
-		std::cout << "Could not open log file...\nContinuing without logging...\n";
+		std::cerr << "Could not open log file...\nContinuing without logging...\n";
 		log = false;
 	} else {
 		log = true;
@@ -233,7 +236,7 @@ int AudioBeat::loadAudio(const char* file) {
 	//Load audio using AudioFile.h to process the frames
 	std::cout << "Loading file: " << file << "...\n";
 	if (!audioFile.load(file)) {
-		std::cout << "File " << file << " could not be loaded...\n";
+		std::cerr << "File " << file << " could not be loaded...\n";
 		return 0;
 	}
 	else {
