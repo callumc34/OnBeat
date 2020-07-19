@@ -16,6 +16,8 @@ int main(int argc, char *argv[]) {
 		frameSize = strtod(argv[1], NULL);
 		sampleRate = strtod(argv[2], NULL);
 		AudioBeatGame game(frameSize, sampleRate, argv[3]);
+		game.initSDL();
+		game.runGame();
 	} else {
 		std::cout << 
 		"USAGE: AudioBeatMain [frame size] [sample rate] [file]\n";

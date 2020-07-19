@@ -154,14 +154,15 @@ int AudioBeatGame::initGainput() {
 }
 
 double AudioBeatGame::calculateBlitVelocity() {
-	blitVelocity = (0.66 * height) / blitTiming;
-	return blitVelocity;
+	return (0.66 * height) / blitTiming;
 }
 
 int AudioBeatGame::createNewBeatScene() {
 	audioBeat.loadAudio(audioLocation);
 	AudioVector beats = audioBeat.processFrames();
 	blitVelocity = calculateBlitVelocity();
+	//Set up enki tasks here i guess
+
 	return 1;
 }
 
@@ -196,21 +197,16 @@ SDL_DisplayMode AudioBeatGame::getFullScreenDimensions() {
 
 int AudioBeatGame::initSDL() {
 	//Initialise SDL values and create a window
-	exePath = SDL_GetBasePath();
-	if (!exePath) {
-		exePath = "./";
-	}
 
 #ifdef RMLUI_PLATFORM_WIN32
 	AllocConsole();
 #endif
 	
-
-	SDL_Init(SDL_INIT_VIDEO);
-
+	std::cout << width << height;
 	if (!width || !height) {
 		setWindowDimensions(getFullScreenDimensions());
 	}
+	std::cout << width << height;
 	//Set up SDL Window
 	window = SDL_CreateWindow(
 		"OnBeat",
@@ -384,16 +380,21 @@ int AudioBeatGame::runGame() {
 
 
 AudioBeatGame::AudioBeatGame(double frameSize, double sampleRate, const char * file) {
-	audioLocation = file;
-	if (audioLocation) {
-		audioBeat.loadAudio(audioLocation);
+
+	SDL_Init(SDL_INIT_VIDEO);
+	exePath = SDL_GetBasePath();
+	if (!exePath) {
+		exePath = "./";
 	}
 	if ((frameSize && sampleRate)) {
 		initAudioBeat(frameSize, sampleRate);
 	}
+	audioLocation = file;
+	if (audioLocation) {
+		audioBeat.loadAudio(audioLocation);
+	}
+
 	initGainput();
-	initSDL();
-	runGame();
 }
 
 AudioBeatGame::~AudioBeatGame() {

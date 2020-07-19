@@ -1,4 +1,5 @@
 #include <string>
+#include <filesystem>
 #include <TaskScheduler/TaskScheduler.h>
 #include <FMOD/fmod.hpp>
 #include <gainput/gainput.h>
@@ -156,7 +157,7 @@ private:
 	int height;
 	int framesPerBuffer = 512;
 	const char* audioLocation;
-	const char* exePath;
+	const char* exePath = std::filesystem::current_path().string().c_str();
 	bool quit = false;
 	AudioBeat audioBeat;
 
