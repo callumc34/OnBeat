@@ -206,7 +206,6 @@ int AudioBeatGame::initSDL() {
 	if (!width || !height) {
 		setWindowDimensions(getFullScreenDimensions());
 	}
-	std::cout << width << height;
 	//Set up SDL Window
 	window = SDL_CreateWindow(
 		"OnBeat",
@@ -303,6 +302,8 @@ int AudioBeatGame::runGame() {
 	std::cout << "Running OnBeat...\n";
 
 	while (!quit) {
+
+		frameRate = monitorHz;
 
 		fps.start();
 

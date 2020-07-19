@@ -116,6 +116,23 @@
     <None Include="assets\rml\MainMenu\core.rml" />
     <None Include="assets\rml\MainMenu\core.rcss" />
     <None Include="assets\img\bgTest.psd" />
+    <None Include="runtime\fmodL.dll" />
+    <None Include="runtime\fmod.dll" />
+    <None Include="runtime\gainput-d.dll" />
+    <None Include="runtime\freetype.dll" />
+    <None Include="runtime\glew32.dll" />
+    <None Include="runtime\libfreetype-6.dll" />
+    <None Include="runtime\libjpeg-9.dll" />
+    <None Include="runtime\libpng16-16.dll" />
+    <None Include="runtime\libtiff-5.dll" />
+    <None Include="runtime\libwebp-7.dll" />
+    <None Include="runtime\RmlControls.dll" />
+    <None Include="runtime\RmlCore.dll" />
+    <None Include="runtime\RmlDebugger.dll" />
+    <None Include="runtime\SDL2.dll" />
+    <None Include="runtime\SDL2_image.dll" />
+    <None Include="runtime\SDL2_ttf.dll" />
+    <None Include="runtime\zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\core\CoreFrequencyDomainFeatures.h">

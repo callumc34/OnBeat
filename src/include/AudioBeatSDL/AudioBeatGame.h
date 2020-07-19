@@ -129,7 +129,6 @@ public:
 
 	//Vars
 	Timer fps;
-	int frameRate;
 
 	//Gainput config
 	gainput::InputManager manager; //Gainput manager
@@ -153,6 +152,7 @@ private:
 	double blitTiming = 2;
 	double blitVelocity;
 	double monitorHz;
+	double frameRate;
 	int width;
 	int height;
 	int framesPerBuffer = 512;
