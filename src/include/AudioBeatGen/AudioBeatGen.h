@@ -24,7 +24,7 @@ public:
 	//Functions
 	int loadAudio(const char* file); //Use audioFile.h to load the audio file
 	AudioVector parseBeatFile(const char * beatFile); //Parses the given beat file
-	int createBeatFile(AudioVector beats, const char * outputDir, const char* outputName); //Creates a beat file from the given AudioVector
+	int createBeatFile(AudioVector beats, const char* outputName); //Creates a beat file from the given AudioVector
 	AudioVector cleanUpBeats(AudioVector beats, const char* logFile = "./logs/frames.log"); //Removes beats tto close to each other
 	//Process each frame from the audio file using Gist and return a double vector of requested method
 	AudioVector processFrames(const char* logFile = "./logs/frames.log",

@@ -202,7 +202,6 @@ int AudioBeatGame::initSDL() {
 	AllocConsole();
 #endif
 	
-	std::cout << width << height;
 	if (!width || !height) {
 		setWindowDimensions(getFullScreenDimensions());
 	}

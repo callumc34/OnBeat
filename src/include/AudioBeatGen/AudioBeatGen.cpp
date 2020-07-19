@@ -101,13 +101,12 @@ AudioVector AudioBeat::parseBeatFile(const char* beatFile) {
 	return beats;
 }
 
-int AudioBeat::createBeatFile(AudioVector beats, const char* outputDir, const char* outputName) {
-	if (!std::filesystem::create_directories(outputDir)) {
-		std::cerr << "Error making dir " << outputDir << "\nDir may exist\n";
+int AudioBeat::createBeatFile(AudioVector beats, const char* outputFile) {
+	if (!std::filesystem::create_directories(
+		std::filesystem::path(outputFile).parent_path())) {
+			std::cerr << "Error making dir " << outputFile << "\nDir may exist\n";
 	}
-
-	const char* outputFile = concatstr(outputDir, outputName);
-
+	
 	std::ofstream outputStream(outputFile);
 
 	if (!outputStream.is_open()) {
@@ -126,13 +125,17 @@ int AudioBeat::createBeatFile(AudioVector beats, const char* outputDir, const ch
 
 	outputStream << "END BEAT;";
 
-	std::cout << "File written to " << concatstr(outputDir, outputName) << std::endl;
+	std::cout << "File written to " << outputFile << std::endl;
 
 	return 1;
 }
 
 AudioVector AudioBeat::cleanUpBeats(AudioVector beats, const char* logFile) {
 	bool log;
+	if (!std::filesystem::create_directories(
+		std::filesystem::path(logFile).parent_path())) {
+		std::cerr << "Error making dir " << logFile << "\nDir may exist\n";
+	}
 	std::fstream logStream(logFile, std::fstream::app);
 
 	if (!logStream.is_open()) {
@@ -144,13 +147,17 @@ AudioVector AudioBeat::cleanUpBeats(AudioVector beats, const char* logFile) {
 	}
 	double beatSize;
 	for (int c = 0; c < beats.size(); c++) {
-		logStream << "Channel " << c + 1 << std::endl;
+		if (log) {
+			logStream << "Channel " << c + 1 << std::endl;
+		}
 		for (int i = 0; i < beats[c].size(); i++) {
 			if (beats[c][i] < beats[c][i + 1]) {
 				beats[c][i] = 0;
 			}
 
-			logStream << "SD Beat: " << beats[c][i] << std::endl;
+			if (log) {
+				logStream << "SD Beat: " << beats[c][i] << std::endl;
+			}
 		}
 	}
 
@@ -162,6 +169,11 @@ AudioVector AudioBeat::cleanUpBeats(AudioVector beats, const char* logFile) {
 AudioVector AudioBeat::processFrames(const char* logFile, AudioBeatFlags::Value method) {
 
 	const double THRESHOLD_MULTIPLIER = 1.2;
+
+	if (!std::filesystem::create_directories(
+		std::filesystem::path(logFile).parent_path())) {
+		std::cerr << "Error making dir " << logFile << "\nDir may exist\n";
+	}
 
 	if (audioFile.getFileFormat() == AudioFileFormat::NotLoaded) {
 		throw std::runtime_error("Audio file not loaded");
