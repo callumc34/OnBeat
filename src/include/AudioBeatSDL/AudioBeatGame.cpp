@@ -147,6 +147,11 @@ int AudioBeatGame::initAudioBeat(double frameSize, double sampleRate) {
 	return 1;
 }
 
+int AudioBeatGame::initEnki() {
+	enkiTS.Initialize();
+	return 1;
+}
+
 int AudioBeatGame::initGainput() {
 	//Define wanted key presses
 	std::cout << "Gainput initialised...\n";
@@ -162,6 +167,8 @@ int AudioBeatGame::createNewBeatScene() {
 	AudioVector beats = audioBeat.processFrames();
 	blitVelocity = calculateBlitVelocity();
 	//Set up enki tasks here i guess
+
+	double songLength = (beats[0].size() * audioBeat.getAudioFrameSize()) / audioBeat.getSamplingFrequency(); //Rough estimate of song length
 
 	return 1;
 }
@@ -395,6 +402,7 @@ AudioBeatGame::AudioBeatGame(double frameSize, double sampleRate, const char * f
 	}
 
 	initGainput();
+	initEnki();
 }
 
 AudioBeatGame::~AudioBeatGame() {

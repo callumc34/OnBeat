@@ -13,7 +13,7 @@ const std::string APPDATA = getenv("APPDATA") != NULL ? getenv("APPDATA") : ".";
 
 int FMOD_ERRCHECK(FMOD_RESULT r, const char* log = "./logs/FMOD.log", bool throwE = false);
 
-struct ParallelTaskSet : enki::ITaskSet {
+struct ParallelBlitCreater : enki::ITaskSet {
 	void ExecuteRange(enki::TaskSetPartition range_, uint32_t threadnum_) override {
 		// do something here, can issue tasks with g_TS
 	}
@@ -137,15 +137,12 @@ public:
 	const gainput::DeviceId padId = manager.CreateDevice<gainput::InputDevicePad>();
 	const gainput::DeviceId touchId = manager.CreateDevice<gainput::InputDeviceTouch>();
 	gainput::InputMap map{ manager };
-
-	//Enki Task Scheduler config
-	enki::TaskScheduler g_TS;
-	ParallelTaskSet task;
 	
 
 private:
 	//Functions
 	int initGainput();
+	int initEnki();
 	double calculateBlitVelocity();
 	//Vars
 	std::unordered_map<const char*, SDLScene> scenes;
@@ -155,7 +152,6 @@ private:
 	double frameRate;
 	int width;
 	int height;
-	int framesPerBuffer = 512;
 	const char* audioLocation;
 	const char* exePath = std::filesystem::current_path().string().c_str();
 	bool quit = false;
@@ -175,6 +171,10 @@ private:
 
 	//FMOD Vars
 	AudioPlayer audioSys;
+
+	//Enki Task Scheduler config
+	enki::TaskScheduler enkiTS;
+	ParallelBlitCreater blitScheduler;
 };
 
 #pragma endregion AudioBeatGame
