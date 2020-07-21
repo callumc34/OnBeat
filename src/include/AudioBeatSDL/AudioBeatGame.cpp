@@ -147,7 +147,10 @@ int AudioBeatGame::initAudioBeat(double frameSize, double sampleRate) {
 	return 1;
 }
 
-int AudioBeatGame::initEnki() {
+int AudioBeatGame::initEnki () {
+	enki::TaskSchedulerConfig config;
+	config.numExternalTaskThreads = NUMEXTERNALTHREADS;
+
 	enkiTS.Initialize();
 	return 1;
 }
@@ -166,9 +169,12 @@ int AudioBeatGame::createNewBeatScene() {
 	audioBeat.loadAudio(audioLocation);
 	AudioVector beats = audioBeat.processFrames();
 	blitVelocity = calculateBlitVelocity();
-	//Set up enki tasks here i guess
+	//Set up enki tasks here
+	//Initialise with the times and beats
+	blitScheduler = new ParallelBlitCreater(audioBeat.getAudioFrameSize() / audioBeat.getSamplingFrequency(), beats);
 
-	double songLength = (beats[0].size() * audioBeat.getAudioFrameSize()) / audioBeat.getSamplingFrequency(); //Rough estimate of song length
+	enkiTS.AddTaskSetToPipe(blitScheduler);
+	enkiTS.WaitforTask(blitScheduler);
 
 	return 1;
 }
@@ -319,6 +325,11 @@ int AudioBeatGame::runGame() {
 		Context->Render();
 		SDL_RenderPresent(renderer);
 
+		for (auto& scene : scenes) {
+			if (scene.isActive()) {
+				scene.onFrame(); //Run render of frame
+			}
+		}
 
 		while (SDL_PollEvent(&sdlEvent))
 		{
@@ -360,10 +371,16 @@ int AudioBeatGame::runGame() {
 				default:
 				{
 
-					if (sdlEvent.user.code == UserEvent::Code::LaunchGame) {
-
+					if (sdlEvent.user.code == UserEvent::Code::LAUNCH_GAME) {
+						//Begin timer i guess and do it all in here
 						Document->Hide();
-						createNewBeatScene();
+						SDL_Thread* blitMakerThread = SDL_CreateThread([this] { createNewBeatScene(); }, "BlitMakerThread", (void *)NULL);
+						if (thread == NULL) {
+							std::cerr << "SDL_CreateThread failed: " << SDL_GetError();
+						}
+					}
+					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {
+						std::cout << "Calling blit function beat values: " << sdlEvent.user.data1 << " " << sdlEvent.user.data2;
 					}
 				}
 			}
@@ -583,6 +600,14 @@ int SDLScene::renderBlit(const char* blitName, SDL_Surface * src, const SDL_Rect
 	}
 }
 
+bool SDLScene::isActive() {
+	return active;
+}
+
+bool SDLScene::setActive(bool display) {
+	active = display;
+}
+
 SDLScene::SDLScene() {
 }
 
@@ -593,4 +618,14 @@ SDLScene::~SDLScene() {
 	}
 }
 
+void RhythmScene::onFrame() {
+
+}
+
+int RhythmScene::finishedRunning() {
+	return 0;
+}
+
 #pragma endregion SDLScene
+
+

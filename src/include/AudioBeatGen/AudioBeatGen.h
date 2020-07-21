@@ -1,3 +1,6 @@
+#ifndef AUDIOBEATGEN_H
+#define AUDIOBEATGEN_H
+
 #include <vector>
 #include <Gist/AudioFile.h>
 #include <Gist/Gist.h>
@@ -40,3 +43,5 @@ private:
 	//Functions
 	//Vars
 };
+
+#endif

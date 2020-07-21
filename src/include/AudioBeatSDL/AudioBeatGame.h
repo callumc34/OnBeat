@@ -1,4 +1,8 @@
+#ifndef AUDIOBEATGAME_H
+#define AUDIOBEATGAME_H
+
 #include <string>
+#include <thread>
 #include <filesystem>
 #include <TaskScheduler/TaskScheduler.h>
 #include <FMOD/fmod.hpp>
@@ -11,28 +15,13 @@
 
 const std::string APPDATA = getenv("APPDATA") != NULL ? getenv("APPDATA") : ".";
 
+const uint32_t NUMEXTERNALTHREADS = 5;
+
 int FMOD_ERRCHECK(FMOD_RESULT r, const char* log = "./logs/FMOD.log", bool throwE = false);
-
-struct ParallelBlitCreater : enki::ITaskSet {
-	void ExecuteRange(enki::TaskSetPartition range_, uint32_t threadnum_) override {
-		// do something here, can issue tasks with g_TS
-	}
-};
-
 
 #pragma region Timer
 class Timer //Simple timer used to regulare frame rate
 {
-private:
-	//The clock time when the timer started
-	int startTicks;
-
-	//The ticks stored when the timer was paused
-	int pausedTicks;
-
-	//The timer status
-	bool paused;
-	bool started;
 
 public:
 	//Initializes variables
@@ -50,6 +39,18 @@ public:
 	//Checks the status of the timer
 	bool is_started();
 	bool is_paused();
+
+private:
+	//The clock time when the timer started
+	int startTicks;
+
+	//The ticks stored when the timer was paused
+	int pausedTicks;
+
+	//The timer status
+	bool paused;
+	bool started;
+
 };
 #pragma endregion Timer
 
@@ -57,16 +58,92 @@ public:
 class SDLScene : public SDL_Surface { //Simple scene implementation
 public:
 	//Functions
-	int renderBlit(const char* blitName, SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect); //Redefinition if BlitSurface but also appends to blits vector
+	//Redefinition if BlitSurface but also appends to blits vector
+	int renderBlit(const char* blitName, SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
+	virtual void onFrame() = 0; //Render on every frame
+	bool isActive();
+	void setActive(bool display);
 	SDLScene();
 	~SDLScene();
 	//Vars
 private:
 	//Functions
 	//Vars
+	bool active;
 	std::unordered_map<const char*, SDL_Surface*> blits;
 };
+
+class RhythmScene : SDLScene {
+public:
+	//Functions
+	void onFrame() override;
+	//Vars
+	Timer beatTimer;
+
+private:
+	//Functions
+	int finishedRunning();
+
+	//Vars
+	AudioVector beats;
+	double blitOn;
+	Uint32 eventType = SDL_RegisterEvents(1);
+};
+
+
 #pragma endregion SDLScene
+
+//Probably delete
+#pragma region ParallelBlitCreater
+struct ParallelBlitCreater : enki::ITaskSet {
+	const double blitOn;
+	const AudioVector beats;
+	Timer blitTimer;
+	bool running = false;
+	bool finished = false;
+	Uint32 eventType = SDL_RegisterEvents(1);
+
+	ParallelBlitCreater(double blitOn, AudioVector beats) : blitOn(blitOn), beats(beats) {
+
+	}
+
+	void ExecuteRange(enki::TaskSetPartition range_, uint32_t threadnum_) override {
+		SDL_Event blitEvent;
+		blitEvent.type = eventType;
+		blitEvent.user.code = NULL;
+		blitEvent.user.data1 = NULL;
+		blitEvent.user.data2 = NULL;
+		blitTimer.start();
+
+		for (int i = 0; i < beats[0].size(); i++) {
+			while (blitTimer.is_paused()) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+			}
+			blitEvent.user.code = UserEvent::Code::CREATE_BLIT;
+			blitEvent.user.data1 = malloc(sizeof beats[0][i]); 
+			if (blitEvent.user.data1)
+				*(double *)blitEvent.user.data1 = beats[0][i];
+
+			blitEvent.user.data2 = malloc(sizeof beats[1][i]); 
+			if (blitEvent.user.data2)
+				*(double *)blitEvent.user.data2 = beats[1][i];
+
+			if ((blitOn * (i + 1)) / 1000 >= blitTimer.get_ticks()) { //If beat is due
+				SDL_PushEvent(&blitEvent);
+				if (beats[0][i] > 10) {
+					std::cout << "Beat sent: " << i + 1;
+				}
+			}
+			else { //Sleep for thte remaining time
+				//std::chrono::duration<double std::chrono::milliseconds> sleepTime = (blitOn * (i + 1)) - blitTimer.get_ticks();
+				std::this_thread::sleep_for(
+					std::chrono::duration<double>((blitOn * (i + 1)) - blitTimer.get_ticks()));
+			}
+		}
+
+	}
+};
+#pragma endregion ParallelBlitCreater
 
 #pragma region AudioPlayer
 class AudioPlayer { //Plays audio using the FMOD libraries
@@ -174,7 +251,9 @@ private:
 
 	//Enki Task Scheduler config
 	enki::TaskScheduler enkiTS;
-	ParallelBlitCreater blitScheduler;
+	ParallelBlitCreater* blitScheduler;
 };
 
 #pragma endregion AudioBeatGame
+
+#endif

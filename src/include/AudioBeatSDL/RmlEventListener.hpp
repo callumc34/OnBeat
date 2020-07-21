@@ -4,10 +4,10 @@
 
 struct UserEvent {
 	enum Code {
-		LaunchGame = 0x1001,
+		LAUNCH_GAME = 0x1001,
+		CREATE_BLIT = 0x1002,
 	};
 };
-
 
 #pragma region RmlEvenListener
 //Process custom events
@@ -31,7 +31,7 @@ public:
 
 
 		else if (action == "LaunchGame") {
-			sdlEvent.user.code = UserEvent::Code::LaunchGame;
+			sdlEvent.user.code = UserEvent::Code::LAUNCH_GAME;
 			
 		}
 
