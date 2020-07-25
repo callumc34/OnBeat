@@ -60,23 +60,29 @@ public:
 	//Functions
 	//Redefinition if BlitSurface but also appends to blits vector
 	int renderBlit(const char* blitName, SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
-	virtual void onFrame() = 0; //Render on every frame
-	bool isActive();
-	void setActive(bool display);
+	void setRunning(bool run);
+	bool isRunning();
+	Uint32 getEventType();
+	virtual void onFrame() {}; //Render on every frame
+	virtual void startScene() {};
 	SDLScene();
 	~SDLScene();
 	//Vars
 private:
 	//Functions
 	//Vars
-	bool active;
+	bool running = false;
 	std::unordered_map<const char*, SDL_Surface*> blits;
+	Uint32 eventType = SDL_RegisterEvents(1);
 };
 
-class RhythmScene : SDLScene {
+class RhythmScene : public SDLScene {
 public:
 	//Functions
+	RhythmScene(double blitTiming, AudioVector newBeats);
 	void onFrame() override;
+	void startScene() override;
+	
 	//Vars
 	Timer beatTimer;
 
@@ -87,7 +93,8 @@ private:
 	//Vars
 	AudioVector beats;
 	double blitOn;
-	Uint32 eventType = SDL_RegisterEvents(1);
+	int previousTick = 0;
+	int currentBeat = 0;
 };
 
 
@@ -219,20 +226,20 @@ public:
 private:
 	//Functions
 	int initGainput();
-	int initEnki();
 	double calculateBlitVelocity();
 	//Vars
-	std::unordered_map<const char*, SDLScene> scenes;
+	std::unordered_map<const char*, SDLScene*> scenes;
 	double blitTiming = 2;
 	double blitVelocity;
 	double monitorHz;
 	double frameRate;
-	int width;
-	int height;
+	int width = NULL;
+	int height = NULL;
 	const char* audioLocation;
 	const char* exePath = std::filesystem::current_path().string().c_str();
 	bool quit = false;
 	AudioBeat audioBeat;
+	RhythmScene* rhythmSurface;
 
 	//SDL Vars
 	SDL_Window* window;
@@ -248,10 +255,6 @@ private:
 
 	//FMOD Vars
 	AudioPlayer audioSys;
-
-	//Enki Task Scheduler config
-	enki::TaskScheduler enkiTS;
-	ParallelBlitCreater* blitScheduler;
 };
 
 #pragma endregion AudioBeatGame

@@ -131,6 +131,7 @@ int AudioBeat::createBeatFile(AudioVector beats, const char* outputFile) {
 }
 
 AudioVector AudioBeat::cleanUpBeats(AudioVector beats, const char* logFile) {
+	//May need to improve this algorithm
 	bool log;
 	if (!std::filesystem::create_directories(
 		std::filesystem::path(logFile).parent_path())) {
@@ -202,14 +203,14 @@ AudioVector AudioBeat::processFrames(const char* logFile, AudioBeatFlags::Value 
 		double threshold = 0;
 
 		for (int i = getAudioFrameSize(); i < audioFile.samples[c].size(); i += getAudioFrameSize()) {
-			
+
 			for (int buf = i - getAudioFrameSize(); buf < i; buf++) {
 				frame.push_back(audioFile.samples[c][buf]);
 			}
-			
+
 			processAudioFrame(frame);
 
-			double dif = method == AudioBeatFlags::SPECTRAL_DIFFERENCE ? spectralDifference() : energyDifference();
+			double dif = (method == AudioBeatFlags::SPECTRAL_DIFFERENCE) ? spectralDifference() : energyDifference();
 
 			threshold += dif * THRESHOLD_MULTIPLIER;
 
@@ -241,7 +242,7 @@ AudioVector AudioBeat::processFrames(const char* logFile, AudioBeatFlags::Value 
 
 	std::cout << "Finished processing frames\n";
 	
-	return cleanUpBeats(beats);
+	return beats;
 }
 
 int AudioBeat::loadAudio(const char* file) {
@@ -252,7 +253,7 @@ int AudioBeat::loadAudio(const char* file) {
 		return 0;
 	}
 	else {
-		std::cout << "File " << file << " loaded...\n";
+		std::cout << "Loaded file: " << file << "...\n";
 		audioFile.printSummary();
 		return 1;
 	}

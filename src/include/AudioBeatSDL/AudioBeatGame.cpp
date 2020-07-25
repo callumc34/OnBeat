@@ -147,14 +147,6 @@ int AudioBeatGame::initAudioBeat(double frameSize, double sampleRate) {
 	return 1;
 }
 
-int AudioBeatGame::initEnki () {
-	enki::TaskSchedulerConfig config;
-	config.numExternalTaskThreads = NUMEXTERNALTHREADS;
-
-	enkiTS.Initialize();
-	return 1;
-}
-
 int AudioBeatGame::initGainput() {
 	//Define wanted key presses
 	std::cout << "Gainput initialised...\n";
@@ -167,15 +159,12 @@ double AudioBeatGame::calculateBlitVelocity() {
 
 int AudioBeatGame::createNewBeatScene() {
 	audioBeat.loadAudio(audioLocation);
-	AudioVector beats = audioBeat.processFrames();
+	AudioVector beats = audioBeat.cleanUpBeats(audioBeat.processFrames());
 	blitVelocity = calculateBlitVelocity();
-	//Set up enki tasks here
-	//Initialise with the times and beats
-	blitScheduler = new ParallelBlitCreater(audioBeat.getAudioFrameSize() / audioBeat.getSamplingFrequency(), beats);
-
-	enkiTS.AddTaskSetToPipe(blitScheduler);
-	enkiTS.WaitforTask(blitScheduler);
-
+	rhythmSurface = new RhythmScene(
+		(1.0 * audioBeat.getAudioFrameSize()) / (1.0 * audioBeat.getSamplingFrequency()), beats);
+	scenes["Rhythm Scene"] = rhythmSurface;
+	
 	return 1;
 }
 
@@ -326,8 +315,8 @@ int AudioBeatGame::runGame() {
 		SDL_RenderPresent(renderer);
 
 		for (auto& scene : scenes) {
-			if (scene.isActive()) {
-				scene.onFrame(); //Run render of frame
+			if (scene.second->isRunning()) {
+				scene.second->onFrame();
 			}
 		}
 
@@ -372,15 +361,13 @@ int AudioBeatGame::runGame() {
 				{
 
 					if (sdlEvent.user.code == UserEvent::Code::LAUNCH_GAME) {
-						//Begin timer i guess and do it all in here
 						Document->Hide();
-						SDL_Thread* blitMakerThread = SDL_CreateThread([this] { createNewBeatScene(); }, "BlitMakerThread", (void *)NULL);
-						if (thread == NULL) {
-							std::cerr << "SDL_CreateThread failed: " << SDL_GetError();
-						}
+						createNewBeatScene();
+						scenes["Rhythm Scene"]->startScene();
 					}
 					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {
-						std::cout << "Calling blit function beat values: " << sdlEvent.user.data1 << " " << sdlEvent.user.data2;
+						std::cout << "Calling blit function beat values: " << *(double *)sdlEvent.user.data1 << " " << *(double *)sdlEvent.user.data2 << std::endl;
+						//Todo render blits
 					}
 				}
 			}
@@ -419,7 +406,6 @@ AudioBeatGame::AudioBeatGame(double frameSize, double sampleRate, const char * f
 	}
 
 	initGainput();
-	initEnki();
 }
 
 AudioBeatGame::~AudioBeatGame() {
@@ -600,12 +586,16 @@ int SDLScene::renderBlit(const char* blitName, SDL_Surface * src, const SDL_Rect
 	}
 }
 
-bool SDLScene::isActive() {
-	return active;
+Uint32 SDLScene::getEventType() {
+	return eventType;
 }
 
-bool SDLScene::setActive(bool display) {
-	active = display;
+void SDLScene::setRunning(bool run) {
+	running = run;
+}
+
+bool SDLScene::isRunning() {
+	return running;
 }
 
 SDLScene::SDLScene() {
@@ -616,10 +606,45 @@ SDLScene::~SDLScene() {
 		SDL_FreeSurface(blit.second);
 		delete[] blit.second;
 	}
+	SDL_FreeSurface(this);
+}
+
+RhythmScene::RhythmScene(double blitTiming, AudioVector newBeats) {
+	blitOn = blitTiming;
+	beats = newBeats;
 }
 
 void RhythmScene::onFrame() {
+	if (beatTimer.is_paused()) {
+		return;
+	}
 
+	int timePassed = beatTimer.get_ticks();
+	if ((blitOn * 1000) <= timePassed - previousTick) {
+		SDL_Event blitEvent;
+		blitEvent.type = getEventType();
+		blitEvent.user.code = UserEvent::Code::CREATE_BLIT;
+		blitEvent.user.data1 = NULL;
+		blitEvent.user.data2 = NULL;
+		
+		blitEvent.user.data1 = malloc(sizeof beats[1][currentBeat]);
+		if (blitEvent.user.data1)
+			*(double *)blitEvent.user.data1 = beats[0][currentBeat];
+
+		blitEvent.user.data2 = malloc(sizeof beats[1][currentBeat]);
+		if (blitEvent.user.data2)
+			*(double *)blitEvent.user.data2 = beats[1][currentBeat];
+
+		SDL_PushEvent(&blitEvent);
+
+		currentBeat += 1;
+		previousTick = timePassed;
+	}
+}
+
+void RhythmScene::startScene() {
+	beatTimer.start();
+	setRunning(true);
 }
 
 int RhythmScene::finishedRunning() {
