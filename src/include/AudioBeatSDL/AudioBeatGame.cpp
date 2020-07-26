@@ -274,18 +274,9 @@ int AudioBeatGame::initSDL() {
 	Rml::Debugger::Initialise(Context);
 
 	Context->EnableMouseCursor(true);
-	Document = Context->LoadDocument(concatstr(exePath, "assets/rml/MainMenu/core.rml"));
-
-	if (Document)
-	{
-		Document->Show();
-		std::cout << "Document loaded\n";
-	}
-	else
-	{
-		std::cerr << "Could not load document\n";
-	}
-
+	LoadNewDocument(concatstr(exePath, "assets/rml/MainMenu/core.rml"));
+	Document->Show();
+	
 	int imgFlags = IMG_INIT_PNG;
 	if (!(IMG_Init(imgFlags)))
 	{
@@ -293,9 +284,24 @@ int AudioBeatGame::initSDL() {
 		return 0;
 	}
 
-	Document->AddEventListener("click", new RmlEventListener());
 
 	return 1;
+}
+
+int AudioBeatGame::LoadNewDocument(const char* documentPath) {
+	Document = Context->LoadDocument(documentPath);
+
+	if (Document)
+	{
+		Document->AddEventListener("click", new RmlEventListener());
+		std::cerr << "Document loaded\n";
+		return 1;
+	}
+	else
+	{
+		std::cerr << "Could not load document" << documentPath << std::endl;
+		return 0;
+	}
 }
 
 int AudioBeatGame::runGame() {
@@ -361,8 +367,12 @@ int AudioBeatGame::runGame() {
 				{
 
 					if (sdlEvent.user.code == UserEvent::Code::LAUNCH_GAME) {
-						Document->Hide();
+						Document->Close();
+						Context->UnloadDocument(Document);
+						Document->Show();
 						createNewBeatScene();
+						LoadNewDocument(concatstr(exePath, "assets/rml/BeatScene/core.rml"));
+						Document->Show();
 						scenes["Rhythm Scene"]->startScene();
 					}
 					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {

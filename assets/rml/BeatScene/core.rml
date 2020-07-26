@@ -1,0 +1,19 @@
+<rml>
+	<head>
+		<link rel="stylesheet" type="text/rcss" href="./BeatScene.rcss" />
+		<title>BeatScene</title>
+	</head>
+	<body>
+		<div class="beatRow">
+			<div class="beatColumn beatLeft">
+				<div id="SongInfo"></div>
+			</div>
+			<div class="beatColumn beatMiddle">
+				<h1 id="SongName">Test</h1>			
+			</div>
+			<div class="beatColumn beatRight">
+				<p id="Placeholder">placeholder</p>				
+			</div>
+		</div>
+	</body>
+</rml>

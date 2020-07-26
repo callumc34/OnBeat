@@ -1,13 +1,13 @@
 <rml>
 	<head>
-		<link rel="stylesheet" type="text/rcss" href="./core.rcss" />
+		<link rel="stylesheet" type="text/rcss" href="./MainMenu.rcss" />
 		<title>MainMenu</title>
 	</head>
 	<body>
 		<div id="MainMenu">
 			<div class="row">
 				<div class="column left">
-					<p>placeholder</p>
+					<p id="Placeholder">placeholder</p>
 				</div>
 				<div class="column right">
 					<div id="Menu"><!-- 

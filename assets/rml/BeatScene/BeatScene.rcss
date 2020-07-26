@@ -1,0 +1,75 @@
+/*
+* Default styles for all the basic elements.
+*/
+
+* {
+    font-family: "Walkway Expand Black";
+}
+
+div {
+    display: block;
+}
+
+p {
+    display: block;
+}
+
+h1 {
+    display: block;
+}
+
+em {
+    font-style: italic;
+}
+
+strong {
+    font-weight: bold;
+}
+
+datagrid {
+    display: block;
+}
+
+select, dataselect, datacombo {
+    text-align: left;
+}
+
+tabset tabs {
+    display: block;
+}
+
+* {
+  font-family: "Walkway Expand Black";
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+}
+
+div.beatRow {
+}
+
+div.beatColumn {
+  float: left;
+}
+
+div.beatLeft {
+  height: 100%;
+  width: 30%;
+}
+
+div.beatMiddle {
+  height: 100%;
+  width: 40%;
+}
+
+div.beatRight {
+  height: 100%;
+  width: 30%;
+}
+
+p#Placeholder {
+  font-size: 0px;
+}

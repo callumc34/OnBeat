@@ -15,8 +15,6 @@
 
 const std::string APPDATA = getenv("APPDATA") != NULL ? getenv("APPDATA") : ".";
 
-const uint32_t NUMEXTERNALTHREADS = 5;
-
 int FMOD_ERRCHECK(FMOD_RESULT r, const char* log = "./logs/FMOD.log", bool throwE = false);
 
 #pragma region Timer
@@ -100,58 +98,6 @@ private:
 
 #pragma endregion SDLScene
 
-//Probably delete
-#pragma region ParallelBlitCreater
-struct ParallelBlitCreater : enki::ITaskSet {
-	const double blitOn;
-	const AudioVector beats;
-	Timer blitTimer;
-	bool running = false;
-	bool finished = false;
-	Uint32 eventType = SDL_RegisterEvents(1);
-
-	ParallelBlitCreater(double blitOn, AudioVector beats) : blitOn(blitOn), beats(beats) {
-
-	}
-
-	void ExecuteRange(enki::TaskSetPartition range_, uint32_t threadnum_) override {
-		SDL_Event blitEvent;
-		blitEvent.type = eventType;
-		blitEvent.user.code = NULL;
-		blitEvent.user.data1 = NULL;
-		blitEvent.user.data2 = NULL;
-		blitTimer.start();
-
-		for (int i = 0; i < beats[0].size(); i++) {
-			while (blitTimer.is_paused()) {
-				std::this_thread::sleep_for(std::chrono::milliseconds(10));
-			}
-			blitEvent.user.code = UserEvent::Code::CREATE_BLIT;
-			blitEvent.user.data1 = malloc(sizeof beats[0][i]); 
-			if (blitEvent.user.data1)
-				*(double *)blitEvent.user.data1 = beats[0][i];
-
-			blitEvent.user.data2 = malloc(sizeof beats[1][i]); 
-			if (blitEvent.user.data2)
-				*(double *)blitEvent.user.data2 = beats[1][i];
-
-			if ((blitOn * (i + 1)) / 1000 >= blitTimer.get_ticks()) { //If beat is due
-				SDL_PushEvent(&blitEvent);
-				if (beats[0][i] > 10) {
-					std::cout << "Beat sent: " << i + 1;
-				}
-			}
-			else { //Sleep for thte remaining time
-				//std::chrono::duration<double std::chrono::milliseconds> sleepTime = (blitOn * (i + 1)) - blitTimer.get_ticks();
-				std::this_thread::sleep_for(
-					std::chrono::duration<double>((blitOn * (i + 1)) - blitTimer.get_ticks()));
-			}
-		}
-
-	}
-};
-#pragma endregion ParallelBlitCreater
-
 #pragma region AudioPlayer
 class AudioPlayer { //Plays audio using the FMOD libraries
 
@@ -193,6 +139,7 @@ class AudioBeatGame { //Base class for the game
 public:
 	//Functions
 	int initSDL();
+	int LoadNewDocument(const char * documentPath);
 	int initAudioBeat(double frameSize, double sampleRate);
 	int runGame();
 	int createNewBeatScene();

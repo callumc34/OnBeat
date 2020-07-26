@@ -1,6 +1,7 @@
 .gitignore
 .vs/
 Graphs
+psdFiles
 logs
 Sublime Project
 Test music
