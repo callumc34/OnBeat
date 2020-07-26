@@ -16,11 +16,11 @@ int main(int argc, char *argv[]) {
 		frameSize = strtod(argv[1], NULL);
 		sampleRate = strtod(argv[2], NULL);
 		AudioBeatGame game(frameSize, sampleRate, argv[3]);
-		/*SDL_DisplayMode sizeRect;
+		SDL_DisplayMode sizeRect;
 		sizeRect.w = 1024;
 		sizeRect.h = 768;
 		sizeRect.refresh_rate = 60;
-		game.setWindowDimensions(sizeRect);*/
+		game.setWindowDimensions(sizeRect);
 		game.initSDL();
 		game.runGame();
 	} else {

@@ -169,7 +169,7 @@ AudioVector AudioBeat::cleanUpBeats(AudioVector beats, const char* logFile) {
 
 AudioVector AudioBeat::processFrames(const char* logFile, AudioBeatFlags::Value method) {
 
-	const double THRESHOLD_MULTIPLIER = 1.2;
+	const double THRESHOLD_MULTIPLIER = 1.5;
 
 	if (!std::filesystem::create_directories(
 		std::filesystem::path(logFile).parent_path())) {
