@@ -376,8 +376,13 @@ int AudioBeatGame::runGame() {
 						scenes["Rhythm Scene"]->startScene();
 					}
 					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {
+						std::cout << "Time passed in song : " << sdlEvent.user.customTimeStamp << std::endl;
 						std::cout << "Calling blit function beat values: " << *(double *)sdlEvent.user.data1 << " " << *(double *)sdlEvent.user.data2 << std::endl;
+						audioSys.loadAudio(audioLocation);
 						//Todo render blits
+					}
+					else if (sdlEvent.user.code == UserEvent::Code::FINISHED_RHYTHM) {
+						delete scenes["Rhythm Scene"];
 					}
 				}
 			}
@@ -575,8 +580,8 @@ AudioPlayer::AudioPlayer(const char* audioLocation) {
 AudioPlayer::~AudioPlayer() {
 	//Stop audio processing
 	releaseSound();
-	delete[] audioFile;
-	delete[] channel;	
+	delete audioFile;
+	delete channel;	
 }
 
 #pragma endregion AudioPlayer
@@ -596,10 +601,6 @@ int SDLScene::renderBlit(const char* blitName, SDL_Surface * src, const SDL_Rect
 	}
 }
 
-Uint32 SDLScene::getEventType() {
-	return eventType;
-}
-
 void SDLScene::setRunning(bool run) {
 	running = run;
 }
@@ -614,9 +615,8 @@ SDLScene::SDLScene() {
 SDLScene::~SDLScene() {
 	for (auto& blit : blits) {
 		SDL_FreeSurface(blit.second);
-		delete[] blit.second;
+		delete blit.second;
 	}
-	SDL_FreeSurface(this);
 }
 
 RhythmScene::RhythmScene(double blitTiming, AudioVector newBeats) {
@@ -629,15 +629,24 @@ void RhythmScene::onFrame() {
 		return;
 	}
 
+	if (currentBeat > beats[0].size())
+		finishedRunning();
+
 	int timePassed = beatTimer.get_ticks();
 	if ((blitOn * 1000) <= timePassed - previousTick) {
+		if (beats[0][currentBeat] == 0 && beats[1][currentBeat] == 0) {
+			currentBeat += 1;
+			return;
+		}
+		
 		SDL_Event blitEvent;
-		blitEvent.type = getEventType();
+		blitEvent.type = eventType;
 		blitEvent.user.code = UserEvent::Code::CREATE_BLIT;
 		blitEvent.user.data1 = NULL;
 		blitEvent.user.data2 = NULL;
+		blitEvent.user.customTimeStamp = beatTimer.get_ticks();
 		
-		blitEvent.user.data1 = malloc(sizeof beats[1][currentBeat]);
+		blitEvent.user.data1 = malloc(sizeof beats[0][currentBeat]);
 		if (blitEvent.user.data1)
 			*(double *)blitEvent.user.data1 = beats[0][currentBeat];
 
@@ -646,6 +655,8 @@ void RhythmScene::onFrame() {
 			*(double *)blitEvent.user.data2 = beats[1][currentBeat];
 
 		SDL_PushEvent(&blitEvent);
+
+		std::cout << "\n\nBeat ticks : " << beatTimer.get_ticks() << "\nChannel 1 : " << beats[0][currentBeat] << "\nChannel 2 : " << beats[1][currentBeat] << std::endl;
 
 		currentBeat += 1;
 		previousTick = timePassed;
@@ -658,7 +669,11 @@ void RhythmScene::startScene() {
 }
 
 int RhythmScene::finishedRunning() {
-	return 0;
+	SDL_Event finishedEvent;
+	finishedEvent.type = eventType;
+	finishedEvent.user.code = UserEvent::Code::FINISHED_RHYTHM;
+	SDL_PushEvent(&finishedEvent);
+	return 1;
 }
 
 #pragma endregion SDLScene

@@ -60,18 +60,20 @@ public:
 	int renderBlit(const char* blitName, SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
 	void setRunning(bool run);
 	bool isRunning();
-	Uint32 getEventType();
 	virtual void onFrame() {}; //Render on every frame
 	virtual void startScene() {};
 	SDLScene();
 	~SDLScene();
 	//Vars
+
+protected:
+	Uint32 eventType = SDL_RegisterEvents(1);
+
 private:
 	//Functions
 	//Vars
 	bool running = false;
 	std::unordered_map<const char*, SDL_Surface*> blits;
-	Uint32 eventType = SDL_RegisterEvents(1);
 };
 
 class RhythmScene : public SDLScene {
@@ -80,13 +82,13 @@ public:
 	RhythmScene(double blitTiming, AudioVector newBeats);
 	void onFrame() override;
 	void startScene() override;
+	int finishedRunning();
 	
 	//Vars
 	Timer beatTimer;
 
 private:
 	//Functions
-	int finishedRunning();
 
 	//Vars
 	AudioVector beats;

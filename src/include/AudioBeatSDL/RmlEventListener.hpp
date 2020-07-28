@@ -6,6 +6,7 @@ struct UserEvent {
 	enum Code {
 		LAUNCH_GAME = 0x1001,
 		CREATE_BLIT = 0x1002,
+		FINISHED_RHYTHM = 0x1003,
 	};
 };
 

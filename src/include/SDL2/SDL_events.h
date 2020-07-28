@@ -533,6 +533,7 @@ typedef struct SDL_UserEvent
     Sint32 code;        /**< User defined event code */
     void *data1;        /**< User defined data pointer */
     void *data2;        /**< User defined data pointer */
+	int customTimeStamp;/**< Added for custom event timer */
 } SDL_UserEvent;
 
 

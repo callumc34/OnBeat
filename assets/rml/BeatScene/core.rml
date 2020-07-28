@@ -6,17 +6,25 @@
 	<body>
 		<div class="row">
 			<div class="column left">
-				<div id="SongInfo"></div>
+				<p id="Placeholder">placeholder</p>	
 			</div>
 			<div class="column middle">
 				<div class="beatRow">
 					<div id="BeatZone"></div>
-
-					<div class="beatColumn"></div>
-					<div class="beatColumn"></div>
-					<div class="beatColumn"></div>
-				</div>		
-			</div>
+					<div class="beatColumn">
+						<div class="borderBeatColumn"></div>					
+					</div>
+					<div class="beatColumn">
+						<div class="borderBeatColumn"></div>					
+					</div>
+					<div class="beatColumn">
+						<div class="borderBeatColumn"></div>					
+					</div>
+					<div class="beatColumn">
+						<div class="borderBeatColumn"></div>					
+					</div>
+				</div>
+			</div>	
 			<div class="column right">
 				<p id="Placeholder">placeholder</p>				
 			</div>
