@@ -142,6 +142,7 @@ public:
 	//Functions
 	int initSDL();
 	int LoadNewDocument(const char * documentPath);
+	int loadNewTheme(const char* themeDir);
 	int initAudioBeat(double frameSize, double sampleRate);
 	int runGame();
 	int createNewBeatScene();
@@ -175,6 +176,7 @@ public:
 private:
 	//Functions
 	int initGainput();
+	int addBeatBlit(SDLScene * scene, int channel, double beatStrength);
 	double calculateBlitVelocity();
 	//Vars
 	std::unordered_map<const char*, SDLScene*> scenes;
@@ -186,6 +188,7 @@ private:
 	int height = NULL;
 	const char* audioLocation;
 	const char* exePath = std::filesystem::current_path().string().c_str();
+	const char* themeLocation;
 	bool quit = false;
 	AudioBeat audioBeat;
 	RhythmScene* rhythmSurface;

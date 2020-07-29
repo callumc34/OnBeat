@@ -295,10 +295,13 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="assets\img\bgTest.psd" />
+    <None Include="assets\rml\BeatScene\BeatScene.rcss" />
+    <None Include="assets\rml\BeatScene\core.rml" />
     <None Include="assets\rml\MainMenu\core.rcss" />
     <None Include="assets\rml\MainMenu\core.rml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="assets\rml\MainMenu\MainMenu.rcss" />
     <None Include="logo\Logo-Small.psd" />
     <None Include="logo\logo.psd" />
     <None Include="runtime\fmod.dll" />

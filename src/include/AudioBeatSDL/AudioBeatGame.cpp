@@ -153,7 +153,60 @@ int AudioBeatGame::initGainput() {
 	return 1;
 }
 
+void AudioBeatGame::setBlitTiming(double timing) {
+	blitTiming = timing;
+}
+
+double AudioBeatGame::getBlitTiming() {
+	return blitTiming;
+}
+
+void AudioBeatGame::setBlitVelocity(double velocity) {
+	blitVelocity = velocity;
+}
+
+double AudioBeatGame::getBlitVelocity() {
+	return blitVelocity;
+}
+
+int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength) {
+	const double threshold = 1000;
+	if (channel > 1) {
+		std::cerr << "Invalid channel - Must be less than 1";
+		return 0;
+	}
+
+	const char* beatColumn;
+
+	if (channel == 0) {
+		if (beatStrength < threshold) {
+			beatColumn = "Column1";
+		} else {
+			beatColumn = "Column2";
+		}
+	}
+	else {
+		if (beatStrength < threshold) {
+			beatColumn = "Column3";
+		}
+		else {
+			beatColumn = "Column4";
+		}
+	}
+
+	Rml::Core::Element* column = Document->GetElementById("Column3");
+	std::vector<Rml::Core::Element*> beatElements;
+	Document->GetElementsByClassName(beatElements, "borderBeatColumn");
+
+	float xOffset = column->GetAbsoluteOffset().x;
+	//Finish this
+	
+	//scene->renderBlit();
+	return 1;
+}
+
 double AudioBeatGame::calculateBlitVelocity() {
+	//Fix for dynamicy
 	return (0.66 * height) / blitTiming;
 }
 
@@ -304,6 +357,12 @@ int AudioBeatGame::LoadNewDocument(const char* documentPath) {
 	}
 }
 
+int AudioBeatGame::loadNewTheme(const char * themeDir) {
+	themeLocation = themeDir;
+	
+	return 1;
+}
+
 int AudioBeatGame::runGame() {
 	int frame = 0;
 	std::cout << "Running OnBeat...\n";
@@ -373,12 +432,13 @@ int AudioBeatGame::runGame() {
 						createNewBeatScene();
 						LoadNewDocument(concatstr(exePath, "assets/rml/BeatScene/core.rml"));
 						Document->Show();
+						audioSys.loadAudio(audioLocation);
 						scenes["Rhythm Scene"]->startScene();
 					}
 					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {
 						std::cout << "Time passed in song : " << sdlEvent.user.customTimeStamp << std::endl;
 						std::cout << "Calling blit function beat values: " << *(double *)sdlEvent.user.data1 << " " << *(double *)sdlEvent.user.data2 << std::endl;
-						audioSys.loadAudio(audioLocation);
+						addBeatBlit(scenes["Rhythm Scene"], 0, *(double *)sdlEvent.user.data1);
 						//Todo render blits
 					}
 					else if (sdlEvent.user.code == UserEvent::Code::FINISHED_RHYTHM) {
@@ -394,7 +454,7 @@ int AudioBeatGame::runGame() {
 
 		frame++; //Next frame
 		
-		if ((fps.get_ticks() < 1000 / frameRate)) {
+		if ((fps.get_ticks() < 1000 / frameRate) && frameRate > 0) {
 				//Sleep the remaining frame time
 				SDL_Delay((1000 / frameRate) - fps.get_ticks());
 		}
@@ -429,22 +489,6 @@ AudioBeatGame::~AudioBeatGame() {
 	SDL_GL_DeleteContext(glcontext);
 	SDL_DestroyWindow(window);	
 	SDL_Quit();
-}
-
-void AudioBeatGame::setBlitTiming(double timing) {
-	blitTiming = timing;
-}
-
-double AudioBeatGame::getBlitTiming() {
-	return blitTiming;
-}
-
-void AudioBeatGame::setBlitVelocity(double velocity) {
-	blitVelocity = velocity;
-}
-
-double AudioBeatGame::getBlitVelocity() {
-	return blitVelocity;
 }
 #pragma endregion AudioBeatGame
 
@@ -580,7 +624,6 @@ AudioPlayer::AudioPlayer(const char* audioLocation) {
 AudioPlayer::~AudioPlayer() {
 	//Stop audio processing
 	releaseSound();
-	delete audioFile;
 	delete channel;	
 }
 

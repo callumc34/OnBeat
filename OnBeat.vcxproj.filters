@@ -133,6 +133,9 @@
     <None Include="runtime\SDL2_image.dll" />
     <None Include="runtime\SDL2_ttf.dll" />
     <None Include="runtime\zlib1.dll" />
+    <None Include="assets\rml\BeatScene\core.rml" />
+    <None Include="assets\rml\BeatScene\BeatScene.rcss" />
+    <None Include="assets\rml\MainMenu\MainMenu.rcss" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\core\CoreFrequencyDomainFeatures.h">
