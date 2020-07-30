@@ -223,10 +223,11 @@ int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength
 	beatRect.w = widthDouble + 0.5;
 	
 	//scene->renderBlit(concatstr("beat", std::to_string(blitNum).c_str()), beatImage, NULL, &beatRect);
-	SDL_BlitScaled(beatImage, NULL, scenes["Rhythm Scene"], NULL);
-	std::cout << SDL_GetError();
+	if (SDL_BlitScaled(beatImage, NULL, scenes["Rhythm Scene"], NULL) != 0) {
+		std::cout << SDL_GetError() << std::endl;
+	}
 
-
+	std::cout << std::endl;
 	int o = 1 * 2;
 	return 1;
 }
@@ -299,7 +300,7 @@ int AudioBeatGame::initSDL() {
 		height,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI
 	);
-	
+		
 	if (window == NULL) {
 		std::cerr << "Error initialising SDL Window";
 		throw std::runtime_error("Error initialising SDL Window");
@@ -397,6 +398,12 @@ int AudioBeatGame::runGame() {
 	int frame = 0;
 	std::cout << "Running OnBeat...\n";
 
+	windowSurface = SDL_GetWindowSurface(window);
+	if (windowSurface->locked) {
+		std::cout << "Unlocking window surface...\n";
+		SDL_UnlockSurface(windowSurface);
+	}
+
 	while (!quit) {
 
 		frameRate = monitorHz;
@@ -462,7 +469,12 @@ int AudioBeatGame::runGame() {
 						createNewBeatScene();
 						LoadNewDocument(concatstr(exePath, "assets/rml/BeatScene/core.rml"));
 						Document->Show();
-						SDL_BlitSurface(scenes["Rhythm Scene"], NULL, windowSurface, NULL);
+						if (scenes["Rhythm Scene"]->locked || windowSurface->locked) {
+							std::cout << "locked";
+						}
+						if (SDL_BlitSurface(scenes["Rhythm Scene"], NULL, windowSurface, NULL) != 0) {
+							std::cout << "Assigning Rhythm Scene to surface - " << SDL_GetError() << std::endl;
+						}
 						audioSys.loadAudio(audioLocation);
 						scenes["Rhythm Scene"]->startScene();
 					}
@@ -664,14 +676,12 @@ AudioPlayer::~AudioPlayer() {
 #pragma region SDLScene
 
 int SDLScene::renderBlit(const char* blitName, SDL_Surface * src, const SDL_Rect * srcrect,	SDL_Rect * dstrect) {
-	SDL_UnlockSurface(this);
 	if (SDL_BlitScaled(src, srcrect, this, dstrect) != 0) {
 		SDL_Log(SDL_GetError());
 		return 0;
 	}
 	else {
 		blits[blitName] = src;
-		SDL_LockSurface(this);
 		return 1;
 	}
 }
@@ -685,6 +695,14 @@ bool SDLScene::isRunning() {
 }
 
 SDLScene::SDLScene() {
+	if (locked) {
+		std::cout << "Unlocking surface...\n";
+		SDL_UnlockSurface(this);
+	}
+
+	h = 400;
+	w = 800;
+
 }
 
 SDLScene::~SDLScene() {
