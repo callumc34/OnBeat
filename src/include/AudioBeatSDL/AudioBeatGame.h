@@ -176,7 +176,7 @@ public:
 private:
 	//Functions
 	int initGainput();
-	int addBeatBlit(SDLScene * scene, int channel, double beatStrength);
+	int addBeatBlit(SDLScene * scene, int channel, double beatStrength, double timeOffset, int blitNum);
 	double calculateBlitVelocity();
 	//Vars
 	std::unordered_map<const char*, SDLScene*> scenes;

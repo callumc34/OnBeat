@@ -169,12 +169,21 @@ double AudioBeatGame::getBlitVelocity() {
 	return blitVelocity;
 }
 
-int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength) {
+int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength,
+	double timeOffset, int blitNum) {
 	const double threshold = 1000;
 	if (channel > 1) {
 		std::cerr << "Invalid channel - Must be less than 1";
 		return 0;
 	}
+
+	SDL_Surface* beatImage = IMG_Load(concatstr(exePath, "assets/img/beat.png"));
+	SDL_SetSurfaceBlendMode(beatImage, SDL_BLENDMODE_NONE);
+	if (!beatImage) {
+		std::cerr << "Error loading beat: " << IMG_GetError();
+		return 0;
+	}
+	SDL_Rect beatRect;
 
 	const char* beatColumn;
 
@@ -194,20 +203,41 @@ int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength
 		}
 	}
 
-	Rml::Core::Element* column = Document->GetElementById("Column3");
-	std::vector<Rml::Core::Element*> beatElements;
-	Document->GetElementsByClassName(beatElements, "borderBeatColumn");
+	Rml::Core::Element* column = Document->GetElementById(beatColumn);
 
-	float xOffset = column->GetAbsoluteOffset().x;
-	//Finish this
+	//Convert property to int
+	//Must be done as calling cast conversioon on property causes linker errors
+
+	int xPadding = std::stod(column->GetProperty("border-left-width")->ToString())
+		+ std::stod(column->GetProperty("padding-left")->ToString());
+
+	//Find x position
+	beatRect.x = column->GetAbsoluteOffset().x + xPadding + 0.5;
+	beatRect.y = (timeOffset * calculateBlitVelocity()) + 0.5;
+	if (beatRect.y > 1080) {
+		beatRect.y = 400;
+	}
+	//Get dimensions of scaled beat
+	double widthDouble = (column->GetBox().GetSize().x) * 1.0;
+	beatRect.h = ((beatImage->h * 1.0 / beatImage->w * 1.0) * widthDouble) + 0.5;
+	beatRect.w = widthDouble + 0.5;
 	
-	//scene->renderBlit();
+	//scene->renderBlit(concatstr("beat", std::to_string(blitNum).c_str()), beatImage, NULL, &beatRect);
+	SDL_BlitScaled(beatImage, NULL, scenes["Rhythm Scene"], NULL);
+	std::cout << SDL_GetError();
+
+
+	int o = 1 * 2;
 	return 1;
 }
 
 double AudioBeatGame::calculateBlitVelocity() {
 	//Fix for dynamicy
-	return (0.66 * height) / blitTiming;
+	if (Document->GetTitle() != "BeatScene")
+		return 0;
+
+
+	return Document->GetElementById("BeatZone")->GetAbsoluteOffset().y / blitTiming / 1000;
 }
 
 int AudioBeatGame::createNewBeatScene() {
@@ -330,7 +360,7 @@ int AudioBeatGame::initSDL() {
 	LoadNewDocument(concatstr(exePath, "assets/rml/MainMenu/core.rml"));
 	Document->Show();
 	
-	int imgFlags = IMG_INIT_PNG;
+	int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
 	if (!(IMG_Init(imgFlags)))
 	{
 		std::cerr << "Error initialising SDL_Image: " << IMG_GetError() << std::endl;
@@ -432,13 +462,15 @@ int AudioBeatGame::runGame() {
 						createNewBeatScene();
 						LoadNewDocument(concatstr(exePath, "assets/rml/BeatScene/core.rml"));
 						Document->Show();
+						SDL_BlitSurface(scenes["Rhythm Scene"], NULL, windowSurface, NULL);
 						audioSys.loadAudio(audioLocation);
 						scenes["Rhythm Scene"]->startScene();
 					}
 					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {
 						std::cout << "Time passed in song : " << sdlEvent.user.customTimeStamp << std::endl;
 						std::cout << "Calling blit function beat values: " << *(double *)sdlEvent.user.data1 << " " << *(double *)sdlEvent.user.data2 << std::endl;
-						addBeatBlit(scenes["Rhythm Scene"], 0, *(double *)sdlEvent.user.data1);
+						addBeatBlit(scenes["Rhythm Scene"], 0, *(double *)sdlEvent.user.data1,
+							sdlEvent.user.customTimeStamp, sdlEvent.user.blitNum);
 						//Todo render blits
 					}
 					else if (sdlEvent.user.code == UserEvent::Code::FINISHED_RHYTHM) {
@@ -631,15 +663,15 @@ AudioPlayer::~AudioPlayer() {
 
 #pragma region SDLScene
 
-int SDLScene::renderBlit(const char* blitName, SDL_Surface * src, const SDL_Rect * srcrect,
-	SDL_Rect * dstrect) {
-
-	if (SDL_BlitSurface(src, srcrect, this, dstrect) != 0) {
+int SDLScene::renderBlit(const char* blitName, SDL_Surface * src, const SDL_Rect * srcrect,	SDL_Rect * dstrect) {
+	SDL_UnlockSurface(this);
+	if (SDL_BlitScaled(src, srcrect, this, dstrect) != 0) {
 		SDL_Log(SDL_GetError());
 		return 0;
 	}
 	else {
 		blits[blitName] = src;
+		SDL_LockSurface(this);
 		return 1;
 	}
 }
@@ -687,7 +719,8 @@ void RhythmScene::onFrame() {
 		blitEvent.user.code = UserEvent::Code::CREATE_BLIT;
 		blitEvent.user.data1 = NULL;
 		blitEvent.user.data2 = NULL;
-		blitEvent.user.customTimeStamp = beatTimer.get_ticks();
+		blitEvent.user.customTimeStamp = beatTimer.get_ticks() - previousTick;
+		blitEvent.user.blitNum = currentBeat;
 		
 		blitEvent.user.data1 = malloc(sizeof beats[0][currentBeat]);
 		if (blitEvent.user.data1)

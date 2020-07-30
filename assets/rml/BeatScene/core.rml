@@ -11,17 +11,17 @@
 			<div class="column middle">
 				<div class="beatRow">
 					<div id="BeatZone"></div>
-					<div id="Column1" class="beatColumn">
-						<div class="borderBeatColumn"></div>					
+					<div class="beatColumn">
+						<div id="Column1"  class="borderBeatColumn"></div>					
 					</div>
-					<div id="Column2" class="beatColumn">
-						<div class="borderBeatColumn"></div>					
+					<div class="beatColumn">
+						<div id="Column2"  class="borderBeatColumn"></div>					
 					</div>
-					<div id="Column3" class="beatColumn">
-						<div class="borderBeatColumn"></div>					
+					<div class="beatColumn">
+						<div id="Column3" class="borderBeatColumn"></div>					
 					</div>
-					<div id="Column4" class="beatColumn">
-						<div class="borderBeatColumn"></div>					
+					<div class="beatColumn">
+						<div id="Column4" class="borderBeatColumn"></div>					
 					</div>
 				</div>
 			</div>	
