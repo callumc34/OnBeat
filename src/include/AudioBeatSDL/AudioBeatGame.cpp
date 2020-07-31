@@ -222,10 +222,10 @@ int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength
 	beatRect.h = ((beatImage->h * 1.0 / beatImage->w * 1.0) * widthDouble) + 0.5;
 	beatRect.w = widthDouble + 0.5;
 	
-	//scene->renderBlit(concatstr("beat", std::to_string(blitNum).c_str()), beatImage, NULL, &beatRect);
-	if (SDL_BlitScaled(beatImage, NULL, scenes["Rhythm Scene"], NULL) != 0) {
-		std::cout << SDL_GetError() << std::endl;
-	}
+	scene->renderBlit(concatstr("beat", std::to_string(blitNum).c_str()), beatImage, NULL, &beatRect);
+	//if (SDL_BlitScaled(beatImage, NULL, scenes["Rhythm Scene"]->getScene(), &beatRect) != 0) {
+	//	std::cout << SDL_GetError() << std::endl;
+	//}
 
 	std::cout << std::endl;
 	int o = 1 * 2;
@@ -245,7 +245,7 @@ int AudioBeatGame::createNewBeatScene() {
 	audioBeat.loadAudio(audioLocation);
 	AudioVector beats = audioBeat.cleanUpBeats(audioBeat.processFrames());
 	blitVelocity = calculateBlitVelocity();
-	rhythmSurface = new RhythmScene(
+	rhythmSurface = new RhythmScene(width, height,
 		(1.0 * audioBeat.getAudioFrameSize()) / (1.0 * audioBeat.getSamplingFrequency()), beats);
 	scenes["Rhythm Scene"] = rhythmSurface;
 	
@@ -469,10 +469,10 @@ int AudioBeatGame::runGame() {
 						createNewBeatScene();
 						LoadNewDocument(concatstr(exePath, "assets/rml/BeatScene/core.rml"));
 						Document->Show();
-						if (scenes["Rhythm Scene"]->locked || windowSurface->locked) {
+						if (scenes["Rhythm Scene"]->getScene()->locked || windowSurface->locked) {
 							std::cout << "locked";
 						}
-						if (SDL_BlitSurface(scenes["Rhythm Scene"], NULL, windowSurface, NULL) != 0) {
+						if (SDL_BlitSurface(scenes["Rhythm Scene"]->getScene(), NULL, windowSurface, NULL) != 0) {
 							std::cout << "Assigning Rhythm Scene to surface - " << SDL_GetError() << std::endl;
 						}
 						audioSys.loadAudio(audioLocation);
@@ -481,7 +481,7 @@ int AudioBeatGame::runGame() {
 					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {
 						std::cout << "Time passed in song : " << sdlEvent.user.customTimeStamp << std::endl;
 						std::cout << "Calling blit function beat values: " << *(double *)sdlEvent.user.data1 << " " << *(double *)sdlEvent.user.data2 << std::endl;
-						addBeatBlit(scenes["Rhythm Scene"], 0, *(double *)sdlEvent.user.data1,
+						addBeatBlit(scenes["Rhythm Scene"], 0, *(double*)sdlEvent.user.data1,
 							sdlEvent.user.customTimeStamp, sdlEvent.user.blitNum);
 						//Todo render blits
 					}
@@ -676,7 +676,7 @@ AudioPlayer::~AudioPlayer() {
 #pragma region SDLScene
 
 int SDLScene::renderBlit(const char* blitName, SDL_Surface * src, const SDL_Rect * srcrect,	SDL_Rect * dstrect) {
-	if (SDL_BlitScaled(src, srcrect, this, dstrect) != 0) {
+	if (SDL_BlitScaled(src, srcrect, scene, dstrect) != 0) {
 		SDL_Log(SDL_GetError());
 		return 0;
 	}
@@ -694,15 +694,33 @@ bool SDLScene::isRunning() {
 	return running;
 }
 
-SDLScene::SDLScene() {
-	if (locked) {
+SDLScene::SDLScene(int width, int height) {
+
+	scene = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+
+	if (scene->locked) {
 		std::cout << "Unlocking surface...\n";
-		SDL_UnlockSurface(this);
+		SDL_UnlockSurface(scene);
 	}
 
-	h = 400;
-	w = 800;
+	//Set up SDL Surface from template
+	//flags = templateSurface->flags;
+	//w = templateSurface->w;
+	//h = templateSurface->h;
+	//pitch = templateSurface->pitch;
+	//pixels = templateSurface->pixels;
+	//userdata = templateSurface->userdata;
+	//locked = templateSurface->locked;
+	//lock_data = templateSurface->lock_data;
+	//clip_rect = templateSurface->clip_rect;
+	//map = templateSurface->map;
+	//refcount = templateSurface->refcount;
 
+	//delete templateSurface;
+
+
+
+	//Create rgb surface from given height and width
 }
 
 SDLScene::~SDLScene() {
@@ -712,7 +730,8 @@ SDLScene::~SDLScene() {
 	}
 }
 
-RhythmScene::RhythmScene(double blitTiming, AudioVector newBeats) {
+RhythmScene::RhythmScene(int width, int height, double blitTiming, AudioVector newBeats)
+	: SDLScene(width, height) {
 	blitOn = blitTiming;
 	beats = newBeats;
 }

@@ -53,21 +53,25 @@ private:
 #pragma endregion Timer
 
 #pragma region SDLScene
-class SDLScene : public SDL_Surface { //Simple scene implementation
+class SDLScene { //Simple scene implementation
 public:
 	//Functions
 	//Redefinition if BlitSurface but also appends to blits vector
 	int renderBlit(const char* blitName, SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
+	SDL_Surface* getScene() {
+		return scene;
+	}
 	void setRunning(bool run);
 	bool isRunning();
 	virtual void onFrame() {}; //Render on every frame
 	virtual void startScene() {};
-	SDLScene();
+	SDLScene(int width, int height);
 	~SDLScene();
 	//Vars
 
 protected:
 	Uint32 eventType = SDL_RegisterEvents(1);
+	SDL_Surface* scene;
 
 private:
 	//Functions
@@ -79,7 +83,7 @@ private:
 class RhythmScene : public SDLScene {
 public:
 	//Functions
-	RhythmScene(double blitTiming, AudioVector newBeats);
+	RhythmScene(int width, int height, double blitTiming, AudioVector newBeats);
 	void onFrame() override;
 	void startScene() override;
 	int finishedRunning();
