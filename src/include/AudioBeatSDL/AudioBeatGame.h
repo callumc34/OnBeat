@@ -17,6 +17,8 @@ const std::string APPDATA = getenv("APPDATA") != NULL ? getenv("APPDATA") : ".";
 
 int FMOD_ERRCHECK(FMOD_RESULT r, const char* log = "./logs/FMOD.log", bool throwE = false);
 
+std::string calculateOffsetHeight(double velocity, double timeOffset);
+
 #pragma region Timer
 class Timer //Simple timer used to regulare frame rate
 {
@@ -57,7 +59,6 @@ class SDLScene { //Simple scene implementation
 public:
 	//Functions
 	//Redefinition if BlitSurface but also appends to blits vector
-	int renderBlit(const char* blitName, SDL_Surface* src, const SDL_Rect* srcrect, SDL_Rect* dstrect);
 	SDL_Surface* getScene() {
 		return scene;
 	}
@@ -77,7 +78,6 @@ private:
 	//Functions
 	//Vars
 	bool running = false;
-	std::unordered_map<const char*, SDL_Surface*> blits;
 };
 
 class RhythmScene : public SDLScene {
@@ -93,10 +93,11 @@ public:
 
 private:
 	//Functions
-
+	void sendBlitEvent(int timeStamp);
 	//Vars
 	AudioVector beats;
 	double blitOn;
+	int blitOnMS;
 	int previousTick = 0;
 	int currentBeat = 0;
 };
@@ -145,11 +146,14 @@ class AudioBeatGame { //Base class for the game
 public:
 	//Functions
 	int initSDL();
-	int LoadNewDocument(const char * documentPath);
+	int loadNewDocument(const char * documentPath);
 	int loadNewTheme(const char* themeDir);
 	int initAudioBeat(double frameSize, double sampleRate);
 	int runGame();
 	int createNewBeatScene();
+	double calculateBlitVelocity();
+	double imgHeight;
+	void updateBeats();
 	AudioBeatGame(double frameSize = NULL, double sampleRate = NULL, const char* file = NULL);
 	~AudioBeatGame();
 
@@ -157,9 +161,9 @@ public:
 	//Blit timing
 	void setBlitTiming(double timing);
 	double getBlitTiming();
-	//Blit velocity
-	void setBlitVelocity(double velocity);
-	double getBlitVelocity();
+	//Threshold
+	double getThreshold(int channel);
+	void setThreshold(int channel, int threshold);
 	//Screen vals
 	SDL_DisplayMode getFullScreenDimensions();
 	void setWindowDimensions(SDL_DisplayMode screenDimensions);
@@ -180,14 +184,16 @@ public:
 private:
 	//Functions
 	int initGainput();
-	int addBeatBlit(SDLScene * scene, int channel, double beatStrength, double timeOffset, int blitNum);
-	double calculateBlitVelocity();
+	int addBeatBlit(SDLScene * scene, int channel, double beatStrength, double timeOffset);
 	//Vars
 	std::unordered_map<const char*, SDLScene*> scenes;
-	double blitTiming = 2;
+	double blitTiming = 1;
 	double blitVelocity;
 	double monitorHz;
 	double frameRate;
+	double beatThreshold1 = 1000;
+	double beatThreshold2 = 1000;
+	int lastUpdate = 0;
 	int width = NULL;
 	int height = NULL;
 	const char* audioLocation;

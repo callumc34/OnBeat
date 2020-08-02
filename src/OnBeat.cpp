@@ -17,9 +17,9 @@ int main(int argc, char *argv[]) {
 		sampleRate = strtod(argv[2], NULL);
 		AudioBeatGame game(frameSize, sampleRate, argv[3]);
 		SDL_DisplayMode sizeRect;
-		sizeRect.w = 1024;
-		sizeRect.h = 768;
-		sizeRect.refresh_rate = 60;
+		sizeRect.w = 1440;
+		sizeRect.h = 900;
+		sizeRect.refresh_rate = 300;
 		game.setWindowDimensions(sizeRect);
 		game.initSDL();
 		game.runGame();

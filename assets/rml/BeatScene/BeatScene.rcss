@@ -93,6 +93,11 @@ div.borderBeatColumn {
     border-left: 4px #FAFAFA;
 }
 
+img.beat {
+    position: absolute;
+    width: 100%;
+}
+
 div#BeatZone {
     position: absolute;
     width: 100%;

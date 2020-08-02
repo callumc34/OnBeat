@@ -534,7 +534,6 @@ typedef struct SDL_UserEvent
     void *data1;        /**< User defined data pointer */
     void *data2;        /**< User defined data pointer */
 	int customTimeStamp;/**< Added for custom event timer */
-	int blitNum;		/**< Added for custom blit number */
 } SDL_UserEvent;
 
 
