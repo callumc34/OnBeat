@@ -184,7 +184,8 @@ public:
 private:
 	//Functions
 	int initGainput();
-	int addBeatBlit(SDLScene * scene, int channel, double beatStrength, double timeOffset);
+	int addBeatBlit(SDLScene * scene, int channel,
+		double beatStrength, double timeOffset, double timeStamp);
 	//Vars
 	std::unordered_map<const char*, SDLScene*> scenes;
 	double blitTiming = 1;
@@ -193,7 +194,6 @@ private:
 	double frameRate;
 	double beatThreshold1 = 1000;
 	double beatThreshold2 = 1000;
-	int lastUpdate = 0;
 	int width = NULL;
 	int height = NULL;
 	const char* audioLocation;

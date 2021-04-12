@@ -9,7 +9,6 @@
 #include <RmlUi/Core/Input.h>
 #include <Shell.h>
 #include <GL/glew.h>
-#include <GL/stb_image.h>
 #include <AudioBeatSDL/AudioBeatGame.h>
 
 #ifdef RMLUI_PLATFORM_WIN32
@@ -192,7 +191,9 @@ void AudioBeatGame::setThreshold(int channel, int threshold) {
 		std::cerr << "Invalid channel number...\n";
 }
 
-int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength, double timeOffset) {
+int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel,
+	double beatStrength, double timeOffset, double timeStamp) {
+
 	if (channel > 1) {
 		std::cerr << "Invalid channel - Must be less than 1";
 		return 0;
@@ -226,13 +227,13 @@ int AudioBeatGame::addBeatBlit(SDLScene* scene, int channel, double beatStrength
 	//Assign html values
 	beatElement->SetClass("beat", true);
 	beatElement->SetAttribute("src", "../../img/beat.png");
-	beatElement->SetProperty("top", calculateOffsetHeight(blitVelocity, timeOffset));
+	beatElement->SetProperty("top", calculateOffsetHeight(blitVelocity, (timeStamp - SDL_GetTicks()) + timeOffset));
 
 	column->AppendChild( std::move(beatElement) );
 	return 1;
 }
 
-void AudioBeatGame::updateBeats() { //Fix this i think
+void AudioBeatGame::updateBeats() { 
 	//Go through each beat column
 	//Get their current position and add the distance it should have travelled since last update
 	Rml::Core::ElementList beats;
@@ -242,9 +243,6 @@ void AudioBeatGame::updateBeats() { //Fix this i think
 		double currentPosition = std::stod(beat->GetProperty("top")->ToString());
 		beat->SetProperty("top", calculateOffsetHeight(blitVelocity, (currentPosition / blitVelocity) + fps.get_ticks()));
 	}
-	
-
-	lastUpdate = fps.get_ticks();
 }
 
 double AudioBeatGame::calculateBlitVelocity() {
@@ -272,6 +270,7 @@ int AudioBeatGame::createNewBeatScene() {
 }
 
 void AudioBeatGame::setWindowDimensions(SDL_DisplayMode screenDimensions) {
+	//Set window dimensions using SDL_DisplayMode rect
 	width = screenDimensions.w;
 	height = screenDimensions.h;
 	monitorHz = (screenDimensions.refresh_rate > 0)
@@ -279,6 +278,7 @@ void AudioBeatGame::setWindowDimensions(SDL_DisplayMode screenDimensions) {
 }
 
 SDL_DisplayMode AudioBeatGame::getWindowDimensions() {
+	//Returns current window dimensions
 	SDL_DisplayMode dm;
 	dm.w = width;
 	dm.h = height;
@@ -288,6 +288,7 @@ SDL_DisplayMode AudioBeatGame::getWindowDimensions() {
 }
 
 SDL_DisplayMode AudioBeatGame::getFullScreenDimensions() {
+	//Returns maximum resolution of display
 
 	SDL_DisplayMode dm;
 
@@ -395,6 +396,7 @@ int AudioBeatGame::initSDL() {
 }
 
 int AudioBeatGame::loadNewDocument(const char* documentPath) {
+	//Load new document into RmlUi
 	Document = Context->LoadDocument(documentPath);
 
 	if (Document)
@@ -417,6 +419,7 @@ int AudioBeatGame::loadNewTheme(const char * themeDir) {
 }
 
 int AudioBeatGame::runGame() {
+	//Main game loop
 	int frame = 0;
 	std::cout << "Running OnBeat...\n";
 
@@ -427,7 +430,7 @@ int AudioBeatGame::runGame() {
 	}
 
 	while (!quit) {
-
+		//Upddate framerate
 		frameRate = monitorHz;
 
 		fps.start();
@@ -438,6 +441,7 @@ int AudioBeatGame::runGame() {
 		Context->Render();
 		SDL_RenderPresent(renderer);
 
+		//Run scene functions
 		for (auto& scene : scenes) {
 			if (scene.second->isRunning()) {
 				scene.second->onFrame();
@@ -500,18 +504,13 @@ int AudioBeatGame::runGame() {
 					}
 
 					else if (sdlEvent.user.code == UserEvent::Code::CREATE_BLIT) {
-						std::cout << "Time offset : " << sdlEvent.user.customTimeStamp << std::endl;
-						std::cout << "Calling blit function beat values: " <<
-							*(double *)sdlEvent.user.data1 <<
-							" " << *(double *)sdlEvent.user.data2 <<
-							std::endl;
 						//Channel 1
 						addBeatBlit(scenes["Rhythm Scene"], 0, *(double*)sdlEvent.user.data1,
-							sdlEvent.user.customTimeStamp);
+							sdlEvent.user.customTimeStamp, sdlEvent.user.timestamp);
 
 						//Channel 2
 						addBeatBlit(scenes["Rhythm Scene"], 1, *(double*)sdlEvent.user.data2,
-							sdlEvent.user.customTimeStamp);
+							sdlEvent.user.customTimeStamp, sdlEvent.user.timestamp);
 					}
 
 					else if (sdlEvent.user.code == UserEvent::Code::FINISHED_RHYTHM) {
@@ -527,22 +526,20 @@ int AudioBeatGame::runGame() {
 		updateBeats();
 		Context->Update();
 
-		frame++; //Next frame
+		//frame++; //Next frame
 		
 		if ((fps.get_ticks() < 1000 / frameRate) && frameRate > 0) {
 			//Sleep the remaining frame time
-			std::cerr << "Delaying next frame: " << (1000 / frameRate) - fps.get_ticks() << std::endl;
 			SDL_Delay((1000 / frameRate) - fps.get_ticks());
 		}
 	}
-
 
 	return 0;
 }
 
 
 AudioBeatGame::AudioBeatGame(double frameSize, double sampleRate, const char * file) {
-
+	//Setup game values
 	SDL_Init(SDL_INIT_VIDEO);
 	exePath = SDL_GetBasePath();
 	if (!exePath) {
@@ -716,7 +713,7 @@ bool SDLScene::isRunning() {
 }
 
 SDLScene::SDLScene(int width, int height) {
-
+	//Create new SDL_Surface for the scene
 	scene = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 
 	if (scene->locked) {
@@ -731,12 +728,15 @@ SDLScene::~SDLScene() {
 
 RhythmScene::RhythmScene(int width, int height, double blitTiming, AudioVector newBeats)
 	: SDLScene(width, height) {
+
+	//Set up timing values
 	blitOn = blitTiming;
 	blitOnMS = (int)((blitOn * 1000) + 50);
 	beats = newBeats;
 }
 
 void RhythmScene::sendBlitEvent(int timeStamp) {
+	//Push event to SDL_Main
 	if (beats[0][currentBeat] < 1 || beats[1][currentBeat] < 1) {
 		currentBeat += 1;
 		return;
@@ -748,6 +748,7 @@ void RhythmScene::sendBlitEvent(int timeStamp) {
 	blitEvent.user.data2 = NULL;
 	blitEvent.user.customTimeStamp = timeStamp;
 
+	//Convert double to void* pointer
 	blitEvent.user.data1 = malloc(sizeof beats[0][currentBeat]);
 	if (blitEvent.user.data1)
 		*(double *)blitEvent.user.data1 = beats[0][currentBeat];
@@ -760,6 +761,7 @@ void RhythmScene::sendBlitEvent(int timeStamp) {
 }
 
 void RhythmScene::onFrame() {
+	//Runs on each frame
 	if (beatTimer.is_paused()) {
 		return;
 	}
