@@ -1,17 +1,11 @@
-.gitignore
-.vs/
-Graphs
-psdFiles
-logs
-Sublime Project
-Test music
-VSOutput
-x64
-OnBeat.vcxproj.user
-OnBeat.exe
-OnBeat.ilk
+#Planning files
 plan.txt
-compile.bat
-*.dll
-*.lastcodeanalysissucceeded
-*.aps
+
+#Images
+psdFiles
+
+#Sublime project
+Sublime Project
+
+#Test data
+testMusic
