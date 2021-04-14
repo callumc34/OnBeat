@@ -9,3 +9,18 @@ Sublime Project
 
 #Test data
 testMusic
+Hazel.log
+
+#Hazel Engine
+Hazel
+Hazelnut
+
+#Libraries
+Lib
+
+#MSVS
+.vs
+x64
+Release
+Debug
+OnBeat.vcxproj.user
