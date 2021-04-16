@@ -1,8 +1,6 @@
 #include <OnBeat/OnBeat.h>
-
-#include <Hazel/Core/EntryPoint.h>
-
 #include <OnBeat/MusicLayer/MusicLayer.h>
+#include <Hazel/Core/EntryPoint.h>
 
 OnBeat::OnBeat()
 {

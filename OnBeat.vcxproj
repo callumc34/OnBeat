@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\include\AudioPlayer\AudioPlayer.cpp" />
     <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp" />
     <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\include\AudioPlayer\AudioPlayer.h" />
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
     <ClInclude Include="src\include\OnBeat\OnBeat.h" />
   </ItemGroup>
