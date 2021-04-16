@@ -1,9 +1,9 @@
 #include <Hazel.h>
 
-class OnBeatGame : public Hazel::Layer
+class MusicLayer : public Hazel::Layer
 {
 	public:
-		OnBeatGame();
+		MusicLayer(Hazel::Application* app);
 
 		//OnEvents
 		virtual void OnAttach() override;
@@ -16,6 +16,7 @@ class OnBeatGame : public Hazel::Layer
 
 	private:
 		Hazel::OrthographicCameraController cameraController;
+		Hazel::Application* app;
 
 
 };

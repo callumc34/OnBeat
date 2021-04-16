@@ -2,11 +2,11 @@
 
 #include <Hazel/Core/EntryPoint.h>
 
-#include <OnBeat/OnBeatGame.h>
+#include <OnBeat/MusicLayer/MusicLayer.h>
 
 OnBeat::OnBeat()
 {
-	PushLayer(new OnBeatGame());
+	PushLayer(new MusicLayer(this));
 }
 
 OnBeat::~OnBeat()
