@@ -1,9 +1,11 @@
+#pragma once
 #include <Hazel.h>
+#include <OnBeat/OnBeat.h>
 
 class MusicLayer : public Hazel::Layer
 {
 	public:
-		MusicLayer(Hazel::Application* app);
+		MusicLayer(OnBeat* app);
 
 		//OnEvents
 		virtual void OnAttach() override;
@@ -16,7 +18,7 @@ class MusicLayer : public Hazel::Layer
 
 	private:
 		Hazel::OrthographicCameraController cameraController;
-		Hazel::Application* app;
+		OnBeat* MainApp;
 
 
 };

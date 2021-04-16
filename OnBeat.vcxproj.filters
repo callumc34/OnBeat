@@ -21,12 +21,18 @@
     <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\include\AudioPlayer\AudioPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\include\OnBeat\OnBeat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\AudioPlayer\AudioPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

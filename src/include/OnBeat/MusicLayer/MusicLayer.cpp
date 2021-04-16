@@ -1,10 +1,11 @@
 #include <OnBeat/MusicLayer/MusicLayer.h>
 
-MusicLayer::MusicLayer(Hazel::Application* app) 
+MusicLayer::MusicLayer(OnBeat* app) 
 	: Layer("MusicLayer"), cameraController(1280.0f / 720.0f)
 {
 	auto& window = Hazel::Application::Get().GetWindow();
-	app = app;
+	MainApp = app;
+	
 }
 
 void MusicLayer::OnAttach()
