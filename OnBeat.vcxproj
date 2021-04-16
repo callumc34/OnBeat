@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\OnBeat\OnBeat.cpp" />
-    <ClCompile Include="src\OnBeat\OnBeatGame.cpp" />
+    <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp" />
+    <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\OnBeat\OnBeat.h" />
-    <ClInclude Include="src\OnBeat\OnBeatGame.h" />
+    <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
+    <ClInclude Include="src\include\OnBeat\OnBeat.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -98,7 +98,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>src;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -106,7 +106,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>Lib/;</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>"Lib\*.lib" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"Lib\Release\*.lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -140,7 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -148,7 +148,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>Lib/;</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>"Lib\*.lib" %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>"Lib\Release\*.lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -159,7 +159,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
