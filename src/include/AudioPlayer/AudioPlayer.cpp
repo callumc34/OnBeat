@@ -3,23 +3,18 @@
 #include <FMOD/fmod_output.h>
 #include <AudioPlayer/AudioPlayer.h>
 #include <string>
-#include <assert.h>
+#include <cassert>
 
 #define AP_LOG(x) std::cout << "[Audio Player] " << x << std::endl;
 #define AP_WARN(x) std::cerr << "[Audio Player - Warning] " << x << std::endl;
 
 
-int FMOD_ERRCHECK(FMOD_RESULT r, bool throwE)
+int FMOD_ERRCHECK(FMOD_RESULT r)
 {
 	//Return/Log error of FMOD
 	if (r != FMOD_OK)
 	{
 		AP_WARN(FMOD_ErrorString(r));
-
-		if (throwE)
-		{
-			assert(r == FMOD_OK);
-		}
 
 		return 0;
 	}
@@ -80,7 +75,7 @@ int AudioPlayer::playAudio()
 int AudioPlayer::loadAudio(const char* audioLocation)
 {
 	//Loads audio into FMOD player
-	if (audioLocation == NULL && audioFile == NULL)
+	if (audioLocation == nullptr && audioFile == nullptr)
 	{
 		AP_WARN("No audio file given\n");
 		return 0;
