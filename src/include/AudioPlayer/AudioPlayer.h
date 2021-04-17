@@ -2,7 +2,7 @@
 #include <FMOD/fmod.hpp>
 #include <iostream>
 
-int FMOD_ERRCHECK(FMOD_RESULT r, bool throwE = false);
+int FMOD_ERRCHECK(FMOD_RESULT r);
 
 class AudioPlayer
 {
