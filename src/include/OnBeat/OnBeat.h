@@ -1,6 +1,7 @@
 #pragma once
 #include <Hazel.h>
 #include <AudioPlayer/AudioPlayer.h>
+#include <string>
 
 class OnBeat : public Hazel::Application
 {
@@ -10,4 +11,9 @@ class OnBeat : public Hazel::Application
 		AudioPlayer AudioPlayer;
 
 		~OnBeat();
+
+	private:
+		std::string iconPath = "logo\\logo-small.png";
+
+		void SetWindowIcon();
 };

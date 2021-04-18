@@ -24,9 +24,16 @@
     <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\include\AudioPlayer\AudioPlayer.h" />
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
     <ClInclude Include="src\include\OnBeat\OnBeat.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OnBeat.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="logo\logo.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -102,6 +109,7 @@
       </AdditionalUsingDirectories>
       <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,6 +118,12 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>"Lib\Release\*.lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <ResourceCompile>
+      <ResourceOutputFileName>Resource.rc</ResourceOutputFileName>
+    </ResourceCompile>
+    <CustomBuildStep>
+      <Command>cp $(TargetPath) ./$(TargetFileName)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -135,6 +149,12 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>"Lib\Release\*.lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <ResourceCompile>
+      <ResourceOutputFileName>Resource.rc</ResourceOutputFileName>
+    </ResourceCompile>
+    <CustomBuildStep>
+      <Command>cp $(TargetPath) ./$(TargetFileName)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -144,6 +164,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,6 +173,12 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>"Lib\Release\*.lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <ResourceCompile>
+      <ResourceOutputFileName>Resource.rc</ResourceOutputFileName>
+    </ResourceCompile>
+    <CustomBuildStep>
+      <Command>cp $(TargetPath) ./$(TargetFileName)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -177,6 +204,12 @@
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>"Lib\Release\*.lib" %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <ResourceCompile>
+      <ResourceOutputFileName>Resource.rc</ResourceOutputFileName>
+    </ResourceCompile>
+    <CustomBuildStep>
+      <Command>cp $(TargetPath) ./$(TargetFileName)</Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

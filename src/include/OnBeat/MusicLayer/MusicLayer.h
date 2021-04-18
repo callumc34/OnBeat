@@ -13,11 +13,14 @@ class MusicLayer : public Hazel::Layer
 
 		void OnEvent(Hazel::Event& e) override;
 		void OnUpdate(Hazel::Timestep ts) override;
+		bool OnWindowResize(Hazel::WindowResizeEvent& e);
 
 		virtual void OnImGuiRender() override;
 
 	private:
-		Hazel::OrthographicCameraController cameraController;
+		void CreateCamera(uint32_t width, uint32_t height);
+
+		Hazel::Scope<Hazel::OrthographicCamera> cameraController;
 		OnBeat* MainApp;
 
 
