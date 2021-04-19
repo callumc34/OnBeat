@@ -9,7 +9,7 @@ Sublime Project
 
 #Test data
 testing
-Hazel.log
+*.log
 
 #Hazel Engine
 Hazel

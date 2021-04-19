@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="src\include\AudioPlayer\AudioPlayer.cpp" />
     <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp" />
+    <ClCompile Include="src\include\OnBeat\OnSetGen\OnSetGen.cpp" />
     <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +29,7 @@
     <ClInclude Include="src\include\AudioPlayer\AudioPlayer.h" />
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
     <ClInclude Include="src\include\OnBeat\OnBeat.h" />
+    <ClInclude Include="src\include\OnBeat\OnSetGen\OnSetGen.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc" />
@@ -103,7 +105,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)USE_KISS_FFT;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalUsingDirectories>
       </AdditionalUsingDirectories>
@@ -131,7 +133,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)USE_KISS_FFT;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -160,7 +162,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -186,7 +188,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
