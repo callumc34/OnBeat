@@ -11,17 +11,45 @@ OnSetGen::OnSetGen(double thresholdC, double thresholdM, int meanW, int maximaW,
 	maximaWindow = maximaW;
 }
 
+AudioVector OnSetGen::normalise(AudioVector beats)
+{
+	AudioVector normalised;
+	normalised.resize(beats.size());
+	//Normalise each channel
+	for (int c = 0; c < beats.size(); c++)
+	{
+		double max = beats[c][0];
+		double min = beats[c][0];
+		//Pre pass to get max and min
+		for (auto& val : beats[c])
+		{
+			max = (val > max) ? val : max;
+			min = (val < min) ? val : min;
+		}
+		//New pass for normalised vector
+		normalised[c].resize(beats[c].size());
+		for (int n = 0; n < beats[c].size(); n++)
+		{
+			normalised[c][n] = (beats[c][n] - min) / (max - min);
+		}	
+		
+	}
+
+	return normalised;
+}
+
 AudioVector OnSetGen::findBeats(AudioVector beats)
 {
 	AudioVector beatPoints;
+	//Resize for channels
+	beatPoints.resize(beats.size());
 	
 	//Loop through channels
 	for (int c = 0; c < beats.size(); c++)
 	{
-		std::vector<double> beatChannel;
-		beatChannel.resize(beats[c].size());
+		//Resize for all points
+		beatPoints[c].resize(beats[c].size());
 		//Calculate threshold and find peaks for each channel
-		double threshold = 0;
 		for (int n = 0; n < beats[c].size(); n++)
 		{
 			//Calculate mean
@@ -29,14 +57,13 @@ AudioVector OnSetGen::findBeats(AudioVector beats)
 			for (int m = n - meanWindow; m <= n + meanWindow; m++)
 			{
 
-				sum += (m > 0) ? beats[c][m] : beats[c][0];
+				sum += (m > 0 && m < beats[c].size()) ? beats[c][m] : beats[c][0];
 				
 			}
 
-			double mean = sum / meanWindow;
-
+			double mean = sum / ((2 * meanWindow) + 1);
 			//Check point is above mean
-			if (beats[c][n] > mean)
+			if (beats[c][n] > thresholdConstant + (thresholdMultiple * mean))
 			{
 				bool isLocalMaxima = true;
 				//Check point is local maxima
@@ -51,16 +78,14 @@ AudioVector OnSetGen::findBeats(AudioVector beats)
 				}
 				if (isLocalMaxima)
 				{
-					beatChannel[n] = 1;
+					beatPoints[c][n] = 1;
 				}
 			}
 			else
 			{
-				beatChannel[n] = 0;
+				beatPoints[c][n] = 0;
 			}
 		}
-
-		beatPoints.push_back(beatChannel);
 
 	}
 
@@ -102,13 +127,13 @@ int OnSetGen::createBeatFile(AudioVector beats, const char* outputFile)
 
 AudioVector OnSetGen::processFile(const char* file)
 {
-	AudioVector sdValues;
+	AudioVector values;
 	if (file == nullptr)
 	{
 		if (audioFile.getFileFormat() == AudioFileFormat::NotLoaded)
 		{
 			//Error;
-			return sdValues;
+			return values;
 		}
 	}
 	else
@@ -122,7 +147,7 @@ AudioVector OnSetGen::processFile(const char* file)
 	for (int c = 0; c < audioFile.samples.size(); c++)
 	{
 		std::vector<double> channel;
-		sdValues.push_back(channel);
+		values.push_back(channel);
 
 		//Loop through each frame
 		for (int i = getAudioFrameSize(); i < audioFile.samples[c].size(); i += getAudioFrameSize())
@@ -134,7 +159,7 @@ AudioVector OnSetGen::processFile(const char* file)
 
 			processAudioFrame(frame);
 
-			sdValues[c].push_back(spectralDifference());
+			values[c].push_back(spectralDifference());
 			frame.clear();
 		}
 
@@ -142,7 +167,7 @@ AudioVector OnSetGen::processFile(const char* file)
 	}
 
 	//All frames processed in both channels
-	return sdValues;
+	return OnSetGen::normalise(values);
 
 }
 
@@ -160,3 +185,5 @@ OnSetGen::~OnSetGen()
 {
 
 }
+
+
