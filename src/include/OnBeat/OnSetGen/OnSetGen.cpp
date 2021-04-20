@@ -1,9 +1,70 @@
 #include <OnBeat/OnSetGen/OnSetGen.h>
 #include <filesystem>
 
-OnSetGen::OnSetGen(double frameSize, double sampleRate)
+OnSetGen::OnSetGen(double thresholdC, double thresholdM, int meanW, int maximaW,
+	double frameSize, double sampleRate)
 	: Gist<double>(frameSize, sampleRate)
 {
+	thresholdConstant = thresholdC;
+	thresholdMultiple = thresholdM;
+	meanWindow = meanW;
+	maximaWindow = maximaW;
+}
+
+AudioVector OnSetGen::findBeats(AudioVector beats)
+{
+	AudioVector beatPoints;
+	
+	//Loop through channels
+	for (int c = 0; c < beats.size(); c++)
+	{
+		std::vector<double> beatChannel;
+		beatChannel.resize(beats[c].size());
+		//Calculate threshold and find peaks for each channel
+		double threshold = 0;
+		for (int n = 0; n < beats[c].size(); n++)
+		{
+			//Calculate mean
+			double sum = 0;
+			for (int m = n - meanWindow; m <= n + meanWindow; m++)
+			{
+
+				sum += (m > 0) ? beats[c][m] : beats[c][0];
+				
+			}
+
+			double mean = sum / meanWindow;
+
+			//Check point is above mean
+			if (beats[c][n] > mean)
+			{
+				bool isLocalMaxima = true;
+				//Check point is local maxima
+				for (int m = n - maximaWindow; m <= n + maximaWindow; m++)
+				{
+
+					if (beats[c][n] < beats[c][m])
+					{
+						isLocalMaxima = false;
+						break;
+					}
+				}
+				if (isLocalMaxima)
+				{
+					beatChannel[n] = 1;
+				}
+			}
+			else
+			{
+				beatChannel[n] = 0;
+			}
+		}
+
+		beatPoints.push_back(beatChannel);
+
+	}
+
+	return beatPoints;
 }
 
 int OnSetGen::loadAudioFile(const char* file)
@@ -20,7 +81,6 @@ int OnSetGen::createBeatFile(AudioVector beats, const char* outputFile)
 
 	if (!outputStream.is_open())
 	{
-		std::cerr << "Error opening file " << outputFile << std::endl;
 		return 0;
 	}
 	outputStream << "DEFINE BUFFER=" << getAudioFrameSize() << ";\nDEFINE SAMPLE_RATE=" << getSamplingFrequency() << ";\n";
@@ -36,8 +96,6 @@ int OnSetGen::createBeatFile(AudioVector beats, const char* outputFile)
 	}
 
 	outputStream << "END BEAT;";
-
-	std::cout << "File written to " << outputFile << std::endl;
 
 	return 1;
 }
@@ -86,6 +144,16 @@ AudioVector OnSetGen::processFile(const char* file)
 	//All frames processed in both channels
 	return sdValues;
 
+}
+
+int OnSetGen::setThresholdValues(double thresholdC, double thresholdM, int meanW, int maximaW)
+{
+	thresholdConstant = (thresholdC == NULL) ? thresholdConstant : thresholdC;
+	thresholdMultiple = (thresholdM == NULL) ? thresholdMultiple : thresholdM;
+	meanWindow = (meanW == NULL) ? meanWindow : meanW;
+	maximaW = (maximaW == NULL) ? maximaWindow : maximaW;
+
+	return 1;
 }
 
 OnSetGen::~OnSetGen()
