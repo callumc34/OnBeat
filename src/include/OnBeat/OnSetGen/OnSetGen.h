@@ -12,6 +12,8 @@ class OnSetGen : public Gist<double>
 			double frameSize = 512, double sampleRate = 44100);
 		~OnSetGen();
 
+		static AudioVector normalise(AudioVector beats);
+
 
 		//Peak detection algorithm
 		AudioVector findBeats(AudioVector beats);
@@ -36,6 +38,7 @@ class OnSetGen : public Gist<double>
 
 	private:
 		//Threshold values
+		//Recommended 0 1 8 3
 		double thresholdConstant;
 		double thresholdMultiple;
 		int meanWindow;
