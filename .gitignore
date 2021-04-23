@@ -25,5 +25,7 @@ Release
 Debug
 OnBeat.vcxproj.user
 *.aps
+
 #Runtime
 *.dll
+*.exe
