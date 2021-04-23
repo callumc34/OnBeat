@@ -181,6 +181,12 @@
     <CustomBuildStep>
       <Command>cp $(TargetPath) ./$(TargetFileName)</Command>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>cp $(TargetPath) $(SolutionDir)$(TargetFileName)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy exe to directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -212,6 +218,12 @@
     <CustomBuildStep>
       <Command>cp $(TargetPath) ./$(TargetFileName)</Command>
     </CustomBuildStep>
+    <PostBuildEvent>
+      <Command>cp $(TargetPath) $(SolutionDir)$(TargetFileName)</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>Copy exe to directory</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
