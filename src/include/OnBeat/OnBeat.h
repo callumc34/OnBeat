@@ -13,7 +13,7 @@ class OnBeat : public Hazel::Application
 		~OnBeat();
 
 	private:
-		std::string iconPath = "logo\\logo-small.png";
+		std::string iconPath = "logo\\logo-64.png";
 
 		void SetWindowIcon();
 };
