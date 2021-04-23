@@ -5,8 +5,6 @@
 #include <GLFW/glfw3.h>
 #include <stb_image/stb_image.h>
 
-#include <OnBeat/OnSetGen/OnSetGen.h>
-
 OnBeat::OnBeat()
 {
 	SetWindowIcon();
@@ -21,7 +19,7 @@ void OnBeat::SetWindowIcon()
 	std::string path = iconPath;
 
 	int width, height, channels;
-	stbi_set_flip_vertically_on_load(1);
+	//stbi_set_flip_vertically_on_load(1);
 	stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 4);
 	HZ_ASSERT(channels == 4, "Icon must be RGBA!");
 
