@@ -38,6 +38,11 @@ AudioVector OnSetGen::normalise(AudioVector beats)
 	return normalised;
 }
 
+AudioVector OnSetGen::validateAudioVector(AudioVector beats)
+{
+	return beats;
+}
+
 AudioVector OnSetGen::findBeats(AudioVector beats)
 {
 	AudioVector beatPoints;

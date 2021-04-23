@@ -7,13 +7,25 @@
 
 OnBeat::OnBeat()
 {
+	//Temp test music
+	OnSetGen gen(0, 1, 3, 8);
+	auto all = gen.processFile("testing/testMusic/test.wav");
+
 	SetWindowIcon();
-	PushLayer(new MusicLayer(this));
+	PushLayer(new MusicLayer(this, gen.findBeats(all),
+		95.0f, 44100, 512));
+}
+
+float OnBeat::pxToGlF(float px)
+{
+	auto& window = Hazel::Application::Get().GetWindow();
+	float aspectRatio = (float)window.GetWidth() / (float)window.GetHeight();
+	return px * aspectRatio / 200;
 }
 
 void OnBeat::SetWindowIcon()
 {
-	auto& window = Hazel::Application::GetWindow();
+	auto& window = Hazel::Application::Get().GetWindow();
 	GLFWwindow* nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 
 	std::string path = iconPath;
