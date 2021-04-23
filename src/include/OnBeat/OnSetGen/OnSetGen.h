@@ -13,6 +13,7 @@ class OnSetGen : public Gist<double>
 		~OnSetGen();
 
 		static AudioVector normalise(AudioVector beats);
+		static AudioVector validateAudioVector(AudioVector beats);
 
 
 		//Peak detection algorithm

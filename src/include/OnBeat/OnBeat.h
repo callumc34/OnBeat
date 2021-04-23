@@ -8,6 +8,8 @@ class OnBeat : public Hazel::Application
 	public:
 		OnBeat();
 
+		static float pxToGlF(float px);
+
 		AudioPlayer AudioPlayer;
 
 		~OnBeat();
