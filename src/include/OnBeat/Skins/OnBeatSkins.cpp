@@ -34,11 +34,13 @@ MusicSkin::MusicSkin()
 
 }
 
-MusicSkin::MusicSkin(Quad Column1, Quad Column2, Quad Column3, Quad Column4, Quad Column5, Quad Beat, Quad BeatArea)
+MusicSkin::MusicSkin(Quad Column1, Quad Column2, Quad Column3, Quad Column4, Quad Column5,
+	Quad Beat, Quad BeatArea, Quad BeatZone)
 {
 	this->Columns = std::vector<Quad>{ Column1, Column2, Column3, Column4, Column5 };
 	this->Beat = Beat;
 	this->BeatArea = BeatArea;
+	this->BeatZone = BeatZone;
 }
 
 MusicSkin::MusicSkin(std::vector<Quad> Columns, Quad Beat, Quad BeatArea)
