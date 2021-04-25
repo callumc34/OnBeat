@@ -38,10 +38,12 @@ namespace Skin
 			Quad Column4,
 			Quad Column5,
 			Quad Beat,
-			Quad BeatArea);
+			Quad BeatArea,
+			Quad BeatZone);
 		MusicSkin(std::vector<Quad>Columns, Quad Beat, Quad BeatArea);
 		std::vector<Quad> Columns;
 		Quad Beat;
 		Quad BeatArea;
+		Quad BeatZone;
 	};
 }
