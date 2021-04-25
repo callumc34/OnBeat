@@ -43,6 +43,33 @@ AudioVector OnSetGen::validateAudioVector(AudioVector beats)
 	return beats;
 }
 
+int OnSetGen::createBeatFile(AudioVector beats, const char* outputFile, int frameSize, double sampleRate)
+{
+	//Todo check for directories and make if needed
+
+	std::ofstream outputStream(outputFile);
+
+	if (!outputStream.is_open())
+	{
+		return 0;
+	}
+	outputStream << "DEFINE BUFFER=" << frameSize << ";\nDEFINE SAMPLE_RATE=" << sampleRate << ";\n";
+	outputStream << "BEGIN BEAT;\n";
+
+	for (int c = 0; c < beats.size(); c++)
+	{
+		outputStream << "NEW CHANNEL;\n";
+		for (int i = 0; i < beats[c].size(); i++)
+		{
+			outputStream << beats[c][i] << ";\n";
+		}
+	}
+
+	outputStream << "END BEAT;";
+
+	return 1;
+}
+
 AudioVector OnSetGen::findBeats(AudioVector beats)
 {
 	AudioVector beatPoints;
@@ -100,33 +127,6 @@ AudioVector OnSetGen::findBeats(AudioVector beats)
 int OnSetGen::loadAudioFile(const char* file)
 {
 	audioFile.load(file);
-	return 1;
-}
-
-int OnSetGen::createBeatFile(AudioVector beats, const char* outputFile)
-{
-	//Todo check for directories and make if needed
-
-	std::ofstream outputStream(outputFile);
-
-	if (!outputStream.is_open())
-	{
-		return 0;
-	}
-	outputStream << "DEFINE BUFFER=" << getAudioFrameSize() << ";\nDEFINE SAMPLE_RATE=" << getSamplingFrequency() << ";\n";
-	outputStream << "BEGIN BEAT;\n";
-
-	for (int c = 0; c < beats.size(); c++)
-	{
-		outputStream << "NEW CHANNEL;\n";
-		for (int i = 0; i < beats[c].size(); i++)
-		{
-			outputStream << beats[c][i] << ";\n";
-		}
-	}
-
-	outputStream << "END BEAT;";
-
 	return 1;
 }
 

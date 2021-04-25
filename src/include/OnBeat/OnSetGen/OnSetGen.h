@@ -14,6 +14,7 @@ class OnSetGen : public Gist<double>
 
 		static AudioVector normalise(AudioVector beats);
 		static AudioVector validateAudioVector(AudioVector beats);
+		static int createBeatFile(AudioVector beats, const char* outputFile, int frameSize = 512, double sampleRate = 44100);
 
 
 		//Peak detection algorithm
@@ -22,7 +23,6 @@ class OnSetGen : public Gist<double>
 		int loadAudioFile(const char* file);
 
 		//Gist onset detection of a .wav file using spectralDifference
-		int createBeatFile(AudioVector beats, const char* outputFile);
 
 		AudioVector processFile(const char* file = nullptr);
 
