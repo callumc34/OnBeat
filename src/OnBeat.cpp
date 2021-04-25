@@ -8,19 +8,19 @@
 OnBeat::OnBeat()
 {
 	//Temp test music
-	OnSetGen gen(0, 1, 3, 8);
+	OnSetGen gen(0, 1, 8, 5);
 	auto all = gen.processFile("testing/testMusic/test.wav");
+	auto beats = gen.findBeats(all);
+	gen.createBeatFile(beats, "testing/graphing/testBeats.log");
 
 	SetWindowIcon();
-	PushLayer(new MusicLayer(this, gen.findBeats(all),
-		95.0f, 44100, 512));
+	PushLayer(new MusicLayer(this, beats,
+		900.0f, 44100, 512));
 }
 
 float OnBeat::pxToGlF(float px)
 {
-	auto& window = Hazel::Application::Get().GetWindow();
-	float aspectRatio = (float)window.GetWidth() / (float)window.GetHeight();
-	return px * aspectRatio / 200;
+	return px / 100;
 }
 
 void OnBeat::SetWindowIcon()

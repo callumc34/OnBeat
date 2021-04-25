@@ -22,6 +22,7 @@
     <ClCompile Include="src\include\AudioPlayer\AudioPlayer.cpp" />
     <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp" />
     <ClCompile Include="src\include\OnBeat\OnSetGen\OnSetGen.cpp" />
+    <ClCompile Include="src\include\OnBeat\Skins\OnBeatSkins.cpp" />
     <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +31,7 @@
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
     <ClInclude Include="src\include\OnBeat\OnBeat.h" />
     <ClInclude Include="src\include\OnBeat\OnSetGen\OnSetGen.h" />
+    <ClInclude Include="src\include\OnBeat\Skins\OnBeatSkins.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc" />

@@ -1,4 +1,5 @@
 #include <OnBeat/MusicLayer/MusicLayer.h>
+#include <GLFW/glfw3.h>
 
 MusicLayer::MusicLayer(OnBeat* app, AudioVector beats,
 	float cameraVelocity, double sampleRate, int sampleSize)
@@ -10,73 +11,112 @@ MusicLayer::MusicLayer(OnBeat* app, AudioVector beats,
 	this->beats = OnSetGen::validateAudioVector(beats);
 	//cameraVelocity in px/sec (900px/sec)
 	this->cameraVelocity = cameraVelocity;
+	this->cameraVelocityRatio = OnBeat::pxToGlF(cameraVelocity);
 	//cameraVelocity in ratio px/sec (56.25px/sec)
-	cameraVelocityRatio = OnBeat::pxToGlF(cameraVelocity);
 	this->sampleRate = sampleRate;
 	this->sampleSize = sampleSize;
 
 
 	HZ_ASSERT(this->beats.size() != 0, "Invalid beats vector.");
 
-
 	//Set up camera
 	CreateCamera(window.GetWidth(), window.GetHeight());
 
 	//Initialise shaders
-	textureShader = shaderLibrary.Load("assets/shaders/Texture.glsl");
-	flatColorShader = shaderLibrary.Load("assets/shaders/FlatColor.glsl");
-
 	beatTexture = Hazel::Texture2D::Create("assets/textures/beat.png");
+
+	//Generic Default skin - Todo move this into a json and create parser
+	Skin::Quad column(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	column.scaleX = 0.1f;
+
+	auto column1 = column;
+	column1.x = -5.0f;
+	column1.scaleX = 0.1f;
+	auto column2 = column;
+	column2.x = -2.5f;
+	column2.scaleX = 0.1f;
+	auto column3 = column;
+	column3.x = 0.0f;
+	column3.scaleX = 0.1f;
+	auto column4 = column;
+	column4.x = 2.5f;
+	column4.scaleX = 0.1f;
+	auto column5 = column;
+	column5.x = 5.0f;
+	column5.scaleX = 0.1f;
+
+	currentSkin = Skin::MusicSkin(column1, column2, column3, column4, column5,
+		Skin::Quad(beatTexture), Skin::Quad(glm::vec4( 0.75f, 0.3f, 0.3f, 1.0f ), 0.0f, 0.0f, 10.0f));
 
 	FindBeatHeights();
 }
 
 void MusicLayer::CreateBeatArea()
 {
-	//Length = camera velocity * max time 
-	//Todo render based on current camera position so it always renders the background
-	//Todo turn all those 8s into window.width / 200
-	float length = OnBeat::pxToGlF(cameraVelocity * ((sampleSize / sampleRate) * beats[0].size())) + 8.0f;
+	//Needs to be cleaned up
+	auto& window = app->GetWindow();
+
+	float length = window.GetHeight() / 100;
 
 	float yOffset = cameraController.get()->GetPosition().y;
+	float columnOffset;
 	//Lines
-	Hazel::Renderer2D::DrawQuad({ -5.0f, (length / 2) - 8.0f }, { 0.1f, length }, { 1.0f, 1.0f, 1.0f, 1.0f });
-	Hazel::Renderer2D::DrawQuad({ -2.5f, (length / 2) - 8.0f }, { 0.1f, length }, { 1.0f, 1.0f, 1.0f, 1.0f });
-	Hazel::Renderer2D::DrawQuad({ 0.0f, (length / 2) - 8.0f }, { 0.1f, length }, { 1.0f, 1.0f, 1.0f, 1.0f });
-	Hazel::Renderer2D::DrawQuad({ 2.5f, (length / 2) - 8.0f }, { 0.1f, length }, { 1.0f, 1.0f, 1.0f, 1.0f });
-	Hazel::Renderer2D::DrawQuad({ 5.0f, (length / 2) - 8.0f }, { 0.1f, length }, { 1.0f, 1.0f, 1.0f, 1.0f });
+	for (auto& column : currentSkin.Columns)
+	{
+		try
+		{
+			glm::vec4 pval = std::get<glm::vec4>(column.Colour);
+			Hazel::Renderer2D::DrawQuad({ column.x, yOffset, -0.1f }, { column.scaleX, length }, pval);
+		}
+		catch (std::bad_variant_access const& ex)
+		{
+			Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(column.Colour);
+			Hazel::Renderer2D::DrawQuad({ column.x, yOffset, -0.1f }, { column.scaleX, length }, pval);
+		}
+	}
+
 	//Beat Background
-	Hazel::Renderer2D::DrawQuad({ 0.0f, yOffset }, { 10.0f, OnBeat::pxToGlF(1600.0f) }, { 0.75f, 0.3f, 0.3f, 1.0f });
+	try
+	{
+		glm::vec4 pval = std::get<glm::vec4>(currentSkin.BeatArea.Colour);
+		Hazel::Renderer2D::DrawQuad({ currentSkin.BeatArea.x, yOffset, -0.15f }, { currentSkin.BeatArea.scaleX, length }, pval);
+	}
+	catch (std::bad_variant_access const& ex)
+	{
+		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(currentSkin.BeatArea.Colour);
+		Hazel::Renderer2D::DrawQuad({ currentSkin.BeatArea.x, yOffset, -0.15f }, { currentSkin.BeatArea.scaleX, length }, pval);
+	}
 }
 
 void MusicLayer::CreateBeats()
 {
-	//Get heights of blits
-	for (const auto& [key, vector] : blitHeights)
+	//Iterate through timing vector and create any within two windows up one window down
+	for (const auto& [key, vector] : beatHeights)
 	{
+		float zIndex = 0.01f;
+		int index = 0;
 		for (auto& value : vector)
 		{
-			glm::vec2 position;
-			if (key == 1)
+			if (value > cameraController.get()->GetPosition().y + OnBeat::pxToGlF(beatTexture.get()->GetHeight()) + 2*OnBeat::pxToGlF(app->GetWindow().GetHeight()))
 			{
-				position = { COLUMN_1_X, value };
+				break;
 			}
-			else if (key == 2)
+			else if (value < cameraController.get()->GetPosition().y - OnBeat::pxToGlF(app->GetWindow().GetHeight()))
 			{
-				position = { COLUMN_2_X, value };
-			}
-			else if (key == 3)
-			{
-				position = { COLUMN_3_X, value };
-			}
-			else
-			{
-				position = { COLUMN_4_X, value };
+				continue;
 			}
 
-			Hazel::Renderer2D::DrawQuad(position,
-				{ OnBeat::pxToGlF(beatTexture.get()->GetWidth()), OnBeat::pxToGlF(beatTexture.get()->GetHeight()) }, beatTexture);
+			Skin::Quad column = currentSkin.Columns[key - 1];
 
+			float scale = std::abs(column.x - currentSkin.Columns[key].x) / OnBeat::pxToGlF(beatTexture.get()->GetWidth());
+
+			glm::vec2 size(OnBeat::pxToGlF(scale * beatTexture.get()->GetWidth()),
+				OnBeat::pxToGlF(scale * beatTexture.get()->GetHeight()));
+
+			glm::vec3 position(column.x + size[0]/2, value + size[1]/2 - OnBeat::pxToGlF(app->GetWindow().GetHeight()/2), zIndex);
+
+			Hazel::Renderer2D::DrawQuad(position, size, beatTexture);
+			zIndex += 0.001f;
 		}
 		
 	}
@@ -84,17 +124,17 @@ void MusicLayer::CreateBeats()
 
 void MusicLayer::FindBeatHeights()
 {
-	//Blit y = Camera velocity * time of blit * 1/2(Blit height)
+	//Blit y = Camera velocity * time of blit
 	//Possible adjustment needed to represent middle of sample size however sample size so small likely unneccessary
 	double threshold = 0.5;
-	double time = sampleSize / sampleRate;
+	double time = (sampleSize) / sampleRate;
 	for (int c = 0; c < beats.size(); c++)
 	{
 		int opt1, opt2;
 		if (c == 0)
 		{
-				opt1 = 1;
-				opt2 = 2;
+			opt1 = 1;
+			opt2 = 2;
 		}
 		else
 		{
@@ -104,7 +144,11 @@ void MusicLayer::FindBeatHeights()
 
 		for (int n = 0; n < beats[c].size(); n++)
 		{
-			blitHeights[(beats[c][n] > threshold) ? opt1 : opt2].push_back(100 * cameraVelocity * time + 0.5f);
+			if (beats[c][n] == 0)
+			{
+				continue;
+			}
+			beatHeights[(beats[c][n] > threshold) ? opt1 : opt2].push_back(cameraVelocityRatio * time * (n+1));
 		}
 	}
 
@@ -126,20 +170,19 @@ void MusicLayer::OnUpdate(Hazel::Timestep ts)
 	// 
 	// 
 	//Clear scene
-	Hazel::RenderCommand::SetClearColor({ 0.08f, 0.08f, 0.08f, 1 });
-	Hazel::RenderCommand::Clear();
+	Hazel::Renderer2D::ResetStats();
+	{
+		Hazel::RenderCommand::SetClearColor({ 0.08f, 0.08f, 0.08f, 1.0f });
+		Hazel::RenderCommand::Clear();
+	}
 
 	//Rendering scope
 	{
-		//Default is 56.25x56.25 at 1600x900
 		Hazel::Renderer2D::BeginScene(*cameraController);
-		CreateBeats();
 		CreateBeatArea();
+		CreateBeats();
 		Hazel::Renderer2D::EndScene();
-	}
-	//1.0f moves camera 1600( i think ) or 900 pixels in x or y direction respectively
-	//0.01f is equal 9/16 for both ways
-	 
+	}	 
 	
 	//Todo regulate framerate
 	glm::vec3 cameraPos = cameraController.get()->GetPosition();
@@ -167,7 +210,7 @@ void MusicLayer::CreateCamera(uint32_t width, uint32_t height)
 {
 	float aspectRatio = (float)width / (float)height;
 
-	float camHeight = height / 200;
+	float camHeight = (float)height / 200;
 	float bottom = -camHeight;
 	float top = camHeight;
 	float left = bottom * aspectRatio;

@@ -3,15 +3,12 @@
 
 #include <OnBeat/OnBeat.h>
 #include <OnBeat/OnSetGen/OnSetGen.h>
+#include <OnBeat/Skins/OnBeatSkins.h>
 
 class MusicLayer : public Hazel::Layer
 {
 	public:
 		//These need to all be variables from a style file when implemented
-		const float COLUMN_1_X = -5.0f + 0.1f;
-		const float COLUMN_2_X = -2.5f + 0.1f;
-		const float COLUMN_3_X = 0.0f + 0.1f;
-		const float COLUMN_4_X = -2.5f + 0.1f;
 
 		MusicLayer(OnBeat* app, AudioVector beats,
 			float cameraVelocity, double sampleRate, int sampleSize);
@@ -30,6 +27,7 @@ class MusicLayer : public Hazel::Layer
 		void CreateCamera(uint32_t width, uint32_t height);
 
 		Hazel::Scope<Hazel::OrthographicCamera> cameraController;
+
 		OnBeat* app;
 
 		//Textures & Shading
@@ -37,7 +35,9 @@ class MusicLayer : public Hazel::Layer
 		void FindBeatHeights();
 		void CreateBeats();
 
-		std::unordered_map<int, std::vector<float>> blitHeights;
+		Skin::MusicSkin currentSkin;
+
+		std::unordered_map<int, std::vector<float>> beatHeights;
 
 		Hazel::Ref<Hazel::Texture2D> beatTexture;
 		Hazel::Ref<Hazel::Shader> flatColorShader;
