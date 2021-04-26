@@ -207,7 +207,8 @@ namespace Config
 		Settings(const char* path);
 
 		int DisplayWidth, DisplayHeight;
-		bool Fullscreen;
+		//null is false
+		int Fullscreen;
 		double FpsCap;
 
 		std::unordered_map<std::string, Hazel::KeyCode> Input;
