@@ -34,7 +34,7 @@ void MusicLayer::CreateBeatArea()
 	//Needs to be cleaned up
 	auto& window = app->GetWindow();
 
-	float length = window.GetHeight() / 100;
+	float length = window.GetHeight() / 100.0f;
 
 	float yOffset = cameraController.get()->GetPosition().y;
 	float columnOffset;
@@ -207,12 +207,12 @@ void MusicLayer::OnUpdate(Hazel::Timestep ts)
 
 void MusicLayer::OnEvent(Hazel::Event& e)
 {
-
+	Hazel::EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(MusicLayer::OnWindowResize));
 }
 
 void MusicLayer::OnImGuiRender()
 {
-
 }
 
 bool MusicLayer::OnWindowResize(Hazel::WindowResizeEvent& e)

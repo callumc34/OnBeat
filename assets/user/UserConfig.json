@@ -1,6 +1,6 @@
 {
     "Display" : [1600, 900],
-    "Fullscreen" : null,
+    "Fullscreen" : 0,
     "Input" : {
         "Column1" : "Z",
         "Column2" : "X",

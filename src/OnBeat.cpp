@@ -14,9 +14,11 @@ OnBeat::OnBeat()
 	cwd = std::filesystem::current_path().string();
 	Settings = Config::Settings((cwd + "/assets/user/UserConfig.json").c_str());
 
-	if (Settings.Fullscreen)
+	int fs = Settings.Fullscreen - 1;
+
+	if (fs > 0)
 	{
-		SetFullScreen(Settings.Fullscreen - 1);
+		SetFullScreen(fs);
 	}
 	else
 	{
