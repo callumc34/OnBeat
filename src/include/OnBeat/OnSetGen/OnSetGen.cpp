@@ -101,7 +101,7 @@ AudioVector OnSetGen::findBeats(AudioVector beats)
 				//Check point is local maxima
 				for (int m = n - maximaWindow; m <= n + maximaWindow; m++)
 				{
-
+					m = (m < 0) ? 0 : m;
 					if (beats[c][n] < beats[c][m])
 					{
 						isLocalMaxima = false;

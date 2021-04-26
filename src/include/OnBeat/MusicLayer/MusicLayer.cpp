@@ -6,13 +6,15 @@ MusicLayer::MusicLayer(OnBeat* app, AudioVector beats,
 	: Layer("MusicLayer")
 {
 	auto& window = app->GetWindow();
+
 	//Class properties
 	this->app = app;
 	this->beats = OnSetGen::validateAudioVector(beats);
+
 	//cameraVelocity in px/sec (900px/sec)
 	this->cameraVelocity = cameraVelocity;
 	this->cameraVelocityRatio = OnBeat::pxToGlF(cameraVelocity);
-	//cameraVelocity in ratio px/sec (56.25px/sec)
+
 	this->sampleRate = sampleRate;
 	this->sampleSize = sampleSize;
 
@@ -22,32 +24,7 @@ MusicLayer::MusicLayer(OnBeat* app, AudioVector beats,
 	//Set up camera
 	CreateCamera(window.GetWidth(), window.GetHeight());
 
-	//Initialise shaders
-	beatTexture = Hazel::Texture2D::Create("assets/textures/beat.png");
-
-	//Generic Default skin - Todo move this into a json and create parser
-	Skin::Quad column(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	column.scaleX = 0.1f;
-
-	auto column1 = column;
-	column1.x = -5.0f;
-	column1.scaleX = 0.1f;
-	auto column2 = column;
-	column2.x = -2.5f;
-	column2.scaleX = 0.1f;
-	auto column3 = column;
-	column3.x = 0.0f;
-	column3.scaleX = 0.1f;
-	auto column4 = column;
-	column4.x = 2.5f;
-	column4.scaleX = 0.1f;
-	auto column5 = column;
-	column5.x = 5.0f;
-	column5.scaleX = 0.1f;
-
-	currentSkin = Skin::MusicSkin(column1, column2, column3, column4, column5,
-		Skin::Quad(beatTexture), Skin::Quad(glm::vec4(0.75f, 0.3f, 0.3f, 1.0f), 0.0f, 0.0f, 10.0f),
-		Skin::Quad(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f), 0.0f, 1.25f, 10.0f, 0.1f));
+	skin = app->Settings.CurrentSkin.MusicSkin;
 
 	FindBeatHeights();
 }
@@ -62,8 +39,8 @@ void MusicLayer::CreateBeatArea()
 	float yOffset = cameraController.get()->GetPosition().y;
 	float columnOffset;
 
-	//Lines
-	for (auto& column : currentSkin.Columns)
+	//Beat Columns
+	for (auto& column : skin.Columns)
 	{
 		try
 		{
@@ -80,42 +57,55 @@ void MusicLayer::CreateBeatArea()
 	//Beat Background
 	try
 	{
-		glm::vec4 pval = std::get<glm::vec4>(currentSkin.BeatArea.Colour);
-		Hazel::Renderer2D::DrawQuad({ currentSkin.BeatArea.x, yOffset, -0.15f }, { currentSkin.BeatArea.scaleX, length }, pval);
+		glm::vec4 pval = std::get<glm::vec4>(skin.BeatArea.Colour);
+		Hazel::Renderer2D::DrawQuad({ skin.BeatArea.x, yOffset, -0.15f }, { skin.BeatArea.scaleX, length }, pval);
 	}
 	catch (std::bad_variant_access const& ex)
 	{
-		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(currentSkin.BeatArea.Colour);
-		Hazel::Renderer2D::DrawQuad({ currentSkin.BeatArea.x, yOffset, -0.15f }, { currentSkin.BeatArea.scaleX, length }, pval);
+		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(skin.BeatArea.Colour);
+		Hazel::Renderer2D::DrawQuad({ skin.BeatArea.x, yOffset, -0.15f }, { skin.BeatArea.scaleX, length }, pval);
 	}
 
 	//Beat Zone
 	try
 	{
-		glm::vec4 pval = std::get<glm::vec4>(currentSkin.BeatZone.Colour);
+		glm::vec4 pval = std::get<glm::vec4>(skin.BeatZone.Colour);
 		Hazel::Renderer2D::DrawQuad(
-			{ currentSkin.BeatZone.x, yOffset - OnBeat::pxToGlF(app->GetWindow().GetHeight())/2 + currentSkin.BeatZone.y, 0.2f },
-			{ currentSkin.BeatZone.scaleX, currentSkin.BeatZone.scaleY }, pval);
+			{ skin.BeatZone.x, yOffset - OnBeat::pxToGlF(app->GetWindow().GetHeight())/2 + skin.BeatZone.y, 0.2f },
+			{ skin.BeatZone.scaleX, skin.BeatZone.scaleY }, pval);
 	}
 	catch (std::bad_variant_access const& ex)
 	{
-		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(currentSkin.BeatZone.Colour);
+		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(skin.BeatZone.Colour);
 		Hazel::Renderer2D::DrawQuad(
-			{ currentSkin.BeatZone.x, yOffset - OnBeat::pxToGlF(app->GetWindow().GetHeight()) / 2 + currentSkin.BeatZone.y, 0.2f },
-			{ currentSkin.BeatZone.scaleX, currentSkin.BeatZone.scaleY }, pval);
+			{ skin.BeatZone.x, yOffset - OnBeat::pxToGlF(app->GetWindow().GetHeight())/2 + skin.BeatZone.y, 0.2f },
+			{ skin.BeatZone.scaleX, skin.BeatZone.scaleY }, pval);
 	}
 }
 
 void MusicLayer::CreateBeats()
 {
 	//Iterate through timing vector and create any within two windows up one window down
+	float beatTextureHeight, beatTextureWidth;
+	try
+	{
+		Hazel::Ref<Hazel::Texture2D> beatTexture = std::get<Hazel::Ref<Hazel::Texture2D>>(skin.Beat.Colour);
+		beatTextureHeight = OnBeat::pxToGlF(beatTexture.get()->GetHeight());
+		beatTextureWidth = OnBeat::pxToGlF(beatTexture.get()->GetWidth());
+
+	}
+	catch (std::bad_variant_access const& ex)
+	{
+		beatTextureHeight = skin.Beat.scaleY;
+		beatTextureWidth = skin.Beat.scaleX;
+	}
 	for (const auto& [key, vector] : beatHeights)
 	{
 		float zIndex = 0.01f;
 		int index = 0;
 		for (auto& value : vector)
 		{
-			if (value > cameraController.get()->GetPosition().y + OnBeat::pxToGlF(beatTexture.get()->GetHeight()) + 2*OnBeat::pxToGlF(app->GetWindow().GetHeight()))
+			if (value > cameraController.get()->GetPosition().y + beatTextureHeight + 2*OnBeat::pxToGlF(app->GetWindow().GetHeight()))
 			{
 				break;
 			}
@@ -124,16 +114,23 @@ void MusicLayer::CreateBeats()
 				continue;
 			}
 
-			Skin::Quad column = currentSkin.Columns[key - 1];
+			Config::Skin::Quad column = skin.Columns[key - 1];
 
-			float scale = std::abs(column.x - currentSkin.Columns[key].x) / OnBeat::pxToGlF(beatTexture.get()->GetWidth());
+			float scale = std::abs(column.x - skin.Columns[key].x) / beatTextureWidth;
 
-			glm::vec2 size(OnBeat::pxToGlF(scale * beatTexture.get()->GetWidth()),
-				OnBeat::pxToGlF(scale * beatTexture.get()->GetHeight()));
+			glm::vec2 size(scale * beatTextureWidth,
+				scale * beatTextureHeight);
 
 			glm::vec3 position(column.x + size[0]/2, value + size[1]/2 - OnBeat::pxToGlF(app->GetWindow().GetHeight()/2), zIndex);
 
-			Hazel::Renderer2D::DrawQuad(position, size, beatTexture);
+			try
+			{
+				Hazel::Renderer2D::DrawQuad(position, size, std::get<Hazel::Ref<Hazel::Texture2D>>(skin.Beat.Colour));
+			}
+			catch (std::bad_variant_access const& ex)
+			{
+				Hazel::Renderer2D::DrawQuad(position, size, std::get<glm::vec4>(skin.Beat.Colour));
+			}
 			zIndex += 0.001f;
 		}
 		

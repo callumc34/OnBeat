@@ -3,7 +3,7 @@
 
 #include <OnBeat/OnBeat.h>
 #include <OnBeat/OnSetGen/OnSetGen.h>
-#include <OnBeat/Skins/OnBeatSkins.h>
+#include <OnBeat/Config/OnBeatConfig.h>
 
 class MusicLayer : public Hazel::Layer
 {
@@ -35,7 +35,7 @@ class MusicLayer : public Hazel::Layer
 		void FindBeatHeights();
 		void CreateBeats();
 
-		Skin::MusicSkin currentSkin;
+		Config::Skin::MusicSkin skin;
 
 		std::unordered_map<int, std::vector<float>> beatHeights;
 

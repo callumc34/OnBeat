@@ -27,7 +27,7 @@
     <ClCompile Include="src\include\OnBeat\OnSetGen\OnSetGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\include\OnBeat\Skins\OnBeatSkins.cpp">
+    <ClCompile Include="src\include\OnBeat\Config\OnBeatConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClInclude Include="src\include\OnBeat\OnSetGen\OnSetGen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\OnBeat\Skins\OnBeatSkins.h">
+    <ClInclude Include="src\include\OnBeat\Config\OnBeatConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
