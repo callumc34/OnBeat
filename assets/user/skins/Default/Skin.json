@@ -1,0 +1,65 @@
+{
+    "Name" : "Default",
+    "TextureDir" : "textures/",
+    "RmlDir" : "rml/",
+    "MusicSkin" : {
+        "Columns": [
+            {
+                "x" : -5.0,
+                "y" : 0.0,
+                "scaleX" : 0.1,
+                "scaleY" : 0.0,
+                "colour" : [1.0, 1.0, 1.0, 1.0]
+            },
+            {
+                "x" : -2.5,
+                "y" : 0.0,
+                "scaleX" : 0.1,
+                "scaleY" : 0.0,
+                "colour" : [1.0, 1.0, 1.0, 1.0]
+            },
+            {
+                "x" : 0.0,
+                "y" : 0.0,
+                "scaleX" : 0.1,
+                "scaleY" : 0.0,
+                "colour" : [1.0, 1.0, 1.0, 1.0]
+            },
+            {
+                "x" : 2.5,
+                "y" : 0.0,
+                "scaleX" : 0.1,
+                "scaleY" : 0.0,
+                "colour" : [1.0, 1.0, 1.0, 1.0]
+            },
+            {
+                "x" : 5.0,
+                "y" : 0.0,
+                "scaleX" : 0.1,
+                "scaleY" : 0.0,
+                "colour" : [1.0, 1.0, 1.0, 1.0]
+            }
+        ],
+        "Beat" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "scaleX" : 0.0,
+            "scaleY" : 0.0,
+            "colour" : "beat.png"
+        },
+        "BeatArea" : {
+            "x" : 0.0,
+            "y" : 0.0,
+            "scaleX" : 10.0,
+            "scaleY" : 0.0,
+            "colour" : [0.75, 0.3, 0.3, 1.0]
+        },
+        "BeatZone" : {
+            "x" : 0.0,
+            "y" : 1.25,
+            "scaleX" : 10.0,
+            "scaleY" : 0.1,
+            "colour" : [1.0, 1.0, 1.0, 1.0]
+        }
+    }
+}

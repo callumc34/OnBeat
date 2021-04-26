@@ -1,0 +1,14 @@
+{
+    "Display" : [1600, 900],
+    "Fullscreen" : false,
+    "Input" : {
+        "Column1" : "Z",
+        "Column2" : "X",
+        "Column3" : "Comma",
+        "Column4" : "Period",
+        "Pause" : "Escape"
+    },
+    "CurrentSkin" : "Default",
+    "FpsCap": "0"
+
+}

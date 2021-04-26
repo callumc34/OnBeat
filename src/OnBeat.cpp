@@ -13,6 +13,9 @@ OnBeat::OnBeat()
 	auto beats = gen.findBeats(all);
 	gen.createBeatFile(beats, "testing/graphing/testBeats.log");
 
+	cwd = std::filesystem::current_path().string();
+	Settings = Config::Settings((cwd + "/assets/user/UserConfig.json").c_str());
+
 	SetWindowIcon();
 	PushLayer(new MusicLayer(this, beats,
 		900.0f, 44100, 512));
