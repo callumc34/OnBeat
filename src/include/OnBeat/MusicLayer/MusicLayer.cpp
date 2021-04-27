@@ -38,6 +38,19 @@ void MusicLayer::CreateBeatArea()
 
 	float yOffset = cameraController.get()->GetPosition().y;
 	float columnOffset;
+	//Background
+	try
+	{
+		glm::vec4 pval = std::get<glm::vec4>(skin.BackgroundTexture.Colour);
+		Hazel::Renderer2D::DrawQuad(
+			{ skin.BackgroundTexture.x, skin.BackgroundTexture.y + yOffset, -0.5f }, { skin.BackgroundTexture.scaleX, skin.BackgroundTexture.scaleY }, pval);
+	}
+	catch (std::bad_variant_access const& ex)
+	{
+		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(skin.BackgroundTexture.Colour);
+		Hazel::Renderer2D::DrawQuad(
+			{ skin.BackgroundTexture.x, skin.BackgroundTexture.y + yOffset , -0.5f }, { skin.BackgroundTexture.scaleX, skin.BackgroundTexture.scaleY }, pval);
+	}
 
 	//Beat Columns
 	for (auto& column : skin.Columns)
@@ -121,7 +134,7 @@ void MusicLayer::CreateBeats()
 			glm::vec2 size(scale * beatTextureWidth,
 				scale * beatTextureHeight);
 
-			glm::vec3 position(column.x + size[0]/2, value + size[1]/2 - OnBeat::pxToGlF(app->GetWindow().GetHeight()/2), zIndex);
+			glm::vec3 position(column.x + size[0]/2, value - OnBeat::pxToGlF(app->GetWindow().GetHeight()/2), zIndex);
 
 			try
 			{
@@ -187,13 +200,14 @@ void MusicLayer::OnUpdate(Hazel::Timestep ts)
 	//Clear scene
 	Hazel::Renderer2D::ResetStats();
 	{
-		Hazel::RenderCommand::SetClearColor({ 0.08f, 0.08f, 0.08f, 1.0f });
+		Hazel::RenderCommand::SetClearColor(skin.ClearColour);
 		Hazel::RenderCommand::Clear();
 	}
 
 	//Rendering scope
 	{
 		Hazel::Renderer2D::BeginScene(*cameraController);
+		//Draw background
 		CreateBeatArea();
 		CreateBeats();
 		Hazel::Renderer2D::EndScene();

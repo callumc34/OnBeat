@@ -149,6 +149,7 @@ namespace Config
 	namespace Skin
 	{
 		typedef std::variant<glm::vec4, Hazel::Ref<Hazel::Texture2D>> ColourTexture;
+		typedef std::variant<float, std::string> RectValue;
 
 		struct Quad
 		{
@@ -163,15 +164,15 @@ namespace Config
 			glm::vec2 toPositionVec();
 		};
 
-		struct DefaultSkin
+		struct LayerSkin
 		{
-			DefaultSkin(Hazel::Ref<Hazel::Texture2D> BackgroundTexture = nullptr, glm::vec4 ClearColour = { 0.08f, 0.08f, 0.08f, 1 });
+			LayerSkin(Quad BackgroundTexture = Quad(), glm::vec4 ClearColour = { 0.08f, 0.08f, 0.08f, 1 });
 
 			glm::vec4 ClearColour;
-			Hazel::Ref<Hazel::Texture2D> BackgroundTexture;
+			Quad BackgroundTexture;
 		};
 
-		struct MusicSkin : DefaultSkin
+		struct MusicSkin : LayerSkin
 		{
 			MusicSkin();
 			MusicSkin(
@@ -203,8 +204,7 @@ namespace Config
 
 	struct Settings
 	{
-		Settings();
-		Settings(const char* path);
+		Settings(const char* path = "assets/user/DefaultConfig.json");
 
 		int DisplayWidth, DisplayHeight;
 		//null is false
@@ -216,4 +216,7 @@ namespace Config
 		Skin::OnBeatSkin CurrentSkin;
 		std::string CurrentSkinPath;
 	};
+
+	glm::vec4 arrayToVec4(json object);
+	float percentageToFloat(std::string percentage, float val);
 }
