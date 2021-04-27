@@ -61,12 +61,12 @@ void MusicLayer::CreateBeatArea()
 		try
 		{
 			glm::vec4 pval = std::get<glm::vec4>(column.Colour);
-			Hazel::Renderer2D::DrawQuad({ column.toPositionVec()[0], yOffset, -0.1f }, { column.toScaleVec()[0], length }, pval);
+			Hazel::Renderer2D::DrawQuad({ column.getX(), yOffset, -0.1f }, { column.getScaleX(), length }, pval);
 		}
 		catch (std::bad_variant_access const& ex)
 		{
 			Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(column.Colour);
-			Hazel::Renderer2D::DrawQuad({ column.toPositionVec()[0], yOffset, -0.1f }, { column.toScaleVec()[0], length }, pval);
+			Hazel::Renderer2D::DrawQuad({ column.getX(), yOffset, -0.1f }, { column.getScaleX(), length }, pval);
 		}
 	}
 
@@ -74,17 +74,16 @@ void MusicLayer::CreateBeatArea()
 	try
 	{
 		glm::vec4 pval = std::get<glm::vec4>(skin.BeatArea.Colour);
-		Hazel::Renderer2D::DrawQuad({ skin.BeatArea.toPositionVec()[0], yOffset, -0.15f }, { skin.BeatArea.toScaleVec()[0], length }, pval);
+		Hazel::Renderer2D::DrawQuad({ skin.BeatArea.getX(), yOffset, -0.15f }, { skin.BeatArea.getScaleX(), length }, pval);
 	}
 	catch (std::bad_variant_access const& ex)
 	{
 		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(skin.BeatArea.Colour);
-		Hazel::Renderer2D::DrawQuad({ skin.BeatArea.toPositionVec()[0], yOffset, -0.15f }, { skin.BeatArea.toScaleVec()[0], length }, pval);
+		Hazel::Renderer2D::DrawQuad({ skin.BeatArea.getX(), yOffset, -0.15f }, { skin.BeatArea.getScaleX(), length }, pval);
 	}
 
 	//Beat Zone
 	position = skin.BeatZone.toPositionVec();
-	auto test = skin.BeatZone.toScaleVec();
 	try
 	{
 		glm::vec4 pval = std::get<glm::vec4>(skin.BeatZone.Colour);
@@ -135,23 +134,22 @@ void MusicLayer::CreateBeats()
 
 			Config::Skin::Quad column = skin.Columns[key - 1];
 
-			float columnX = column.toPositionVec()[0];
-
-			float scale = std::abs(columnX - skin.Columns[key].toPositionVec()[0]) / beatTextureWidth;
+			float scale = std::abs(column.getX() - skin.Columns[key].getX()) / beatTextureWidth;
 
 			glm::vec2 size(scale * beatTextureWidth,
 				scale * beatTextureHeight);
 
-			glm::vec3 position(
-				columnX + size[0]/2, value - OnBeat::pxToGlF(app->GetWindow().GetHeight()/2) + skin.BeatZone.toPositionVec()[1], zIndex);
-
 			try
 			{
-				Hazel::Renderer2D::DrawQuad(position, size, std::get<Hazel::Ref<Hazel::Texture2D>>(skin.Beat.Colour));
+				Hazel::Renderer2D::DrawQuad(
+					{ column.getX() + size[0] / 2, value - OnBeat::pxToGlF(app->GetWindow().GetHeight() / 2) + skin.BeatZone.getY(), zIndex },
+					size, std::get<Hazel::Ref<Hazel::Texture2D>>(skin.Beat.Colour));
 			}
 			catch (std::bad_variant_access const& ex)
 			{
-				Hazel::Renderer2D::DrawQuad(position, size, std::get<glm::vec4>(skin.Beat.Colour));
+				Hazel::Renderer2D::DrawQuad(
+					{ column.getX() + size[0] / 2, value - OnBeat::pxToGlF(app->GetWindow().GetHeight() / 2) + skin.BeatZone.getY(), zIndex },
+					size, std::get<glm::vec4>(skin.Beat.Colour));
 			}
 			zIndex += 0.001f;
 		}
