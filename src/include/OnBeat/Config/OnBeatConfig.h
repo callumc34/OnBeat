@@ -146,6 +146,12 @@ namespace Config
 		Menu = 348
 	};
 
+	enum : int
+	{
+		WIDTH = 1,
+		HEIGHT = 2,
+	};
+
 	namespace Skin
 	{
 		typedef std::variant<glm::vec4, Hazel::Ref<Hazel::Texture2D>> ColourTexture;
@@ -159,6 +165,11 @@ namespace Config
 
 			std::string x, y, scaleX, scaleY;
 			ColourTexture Colour;
+
+			float getX();
+			float getY();
+			float getScaleX();
+			float getScaleY();
 	
 			glm::vec2 toScaleVec();
 			glm::vec2 toPositionVec();
@@ -219,5 +230,5 @@ namespace Config
 	};
 
 	glm::vec4 arrayToVec4(json object);
-	float stringToFloat(std::string val, float scale);
+	float stringToFloat(std::string val, int flag);
 }

@@ -8,16 +8,34 @@ glm::vec4 Config::arrayToVec4(json object)
 	return glm::vec4(object[0], object[1], object[2], object[3]);
 }
 
-float Config::stringToFloat(std::string val, float scale)
+float Config::stringToFloat(std::string val, int flag)
 {
 	std::string type = val.substr(val.size() - 1, val.size());
 	float n = std::atof(val.c_str());
 	if (type == "%")
 	{
+		float scale;
+		if (flag == HEIGHT)
+		{
+			scale = Hazel::Application::Get().GetWindow().GetHeight();
+		}
+		if (flag == WIDTH)
+		{
+			scale = Hazel::Application::Get().GetWindow().GetWidth();
+		}
 		return n * scale / 10000;
 	}
 	else if (type == "px")
 	{
+		float scale;
+		if (flag == HEIGHT)
+		{
+			scale = Hazel::Application::Get().GetWindow().GetHeight();
+		}
+		if (flag == WIDTH)
+		{
+			scale = Hazel::Application::Get().GetWindow().GetWidth();
+		}
 		return n / 100;
 	}
 	else
@@ -100,19 +118,37 @@ Skin::Quad::Quad(ColourTexture Colour, std::string x, std::string y, std::string
 	this->Colour = Colour;
 }
 
+float Config::Skin::Quad::getX()
+{
+	return stringToFloat(x, WIDTH);
+}
+
+float Config::Skin::Quad::getY()
+{
+	return stringToFloat(y, HEIGHT);
+}
+float Config::Skin::Quad::getScaleX()
+{
+	return stringToFloat(scaleX, WIDTH);
+}
+float Config::Skin::Quad::getScaleY()
+{
+	return stringToFloat(scaleY, HEIGHT);
+}
+
 glm::vec2 Skin::Quad::toScaleVec()
 {
 	return glm::vec2(
-		stringToFloat(scaleX, Hazel::Application::Get().GetWindow().GetWidth()),
-		stringToFloat(scaleY, Hazel::Application::Get().GetWindow().GetHeight())
+		stringToFloat(scaleX, WIDTH),
+		stringToFloat(scaleY, HEIGHT)
 	);
 }
 
 glm::vec2 Skin::Quad::toPositionVec()
 {
 	return glm::vec2(
-		stringToFloat(x, Hazel::Application::Get().GetWindow().GetWidth()),
-		stringToFloat(y, Hazel::Application::Get().GetWindow().GetHeight())
+		stringToFloat(x, WIDTH),
+		stringToFloat(y, HEIGHT)
 	);
 }
 
