@@ -149,18 +149,18 @@ namespace Config
 	namespace Skin
 	{
 		typedef std::variant<glm::vec4, Hazel::Ref<Hazel::Texture2D>> ColourTexture;
-		typedef std::variant<float, std::string> RectValue;
 
 		struct Quad
 		{
 			Quad();
 			Quad(json object, std::string texturePath);
 			Quad(ColourTexture Colour,
-				float x = 0.0f, float y = 0.0f, float scaleX = 1.0f, float scaleY = 1.0f);
+				std::string x = "0.0f", std::string y = "0.0f", std::string scaleX = "1.0f", std::string scaleY = "1.0f");
 
-			float x, y, scaleX, scaleY;
+			std::string x, y, scaleX, scaleY;
 			ColourTexture Colour;
-
+	
+			glm::vec2 toScaleVec();
 			glm::vec2 toPositionVec();
 		};
 
@@ -185,6 +185,7 @@ namespace Config
 				Quad BeatArea,
 				Quad BeatZone);
 			MusicSkin(std::vector<Quad>Columns, Quad Beat, Quad BeatArea, Quad BeatZone);
+			MusicSkin(json object, const char* path);
 
 			std::vector<Quad> Columns;
 			Quad Beat;
@@ -218,5 +219,5 @@ namespace Config
 	};
 
 	glm::vec4 arrayToVec4(json object);
-	float percentageToFloat(std::string percentage, float val);
+	float stringToFloat(std::string val, float scale);
 }
