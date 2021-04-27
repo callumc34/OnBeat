@@ -8,10 +8,22 @@ glm::vec4 Config::arrayToVec4(json object)
 	return glm::vec4(object[0], object[1], object[2], object[3]);
 }
 
-float Config::percentageToFloat(std::string percentage, float val)
+float Config::stringToFloat(std::string val, float scale)
 {
-	float perc = std::atof(percentage.substr(0, percentage.size() - 1).c_str());
-	return perc / 10000 * val;
+	std::string type = val.substr(val.size() - 1, val.size());
+	float n = std::atof(val.c_str());
+	if (type == "%")
+	{
+		return n * scale / 10000;
+	}
+	else if (type == "px")
+	{
+		return n / 100;
+	}
+	else
+	{
+		return n;
+	}
 }
 
 //Setup OnBeat settings from a config.json
@@ -72,21 +84,14 @@ Skin::Quad::Quad(json object, std::string texturePath)
 	}
 
 	//Bit of a mess may need cleaning up
-	x = (object["x"].is_string()) ?
-		percentageToFloat(object["x"], Hazel::Application::Get().GetWindow().GetWidth()) : (float)object["x"];
-
-	y = (object["y"].is_string()) ?
-		percentageToFloat(object["y"], Hazel::Application::Get().GetWindow().GetHeight()) : (float)object["y"];
-
-	scaleX = (object["scaleX"].is_string()) ?
-		percentageToFloat(object["scaleX"], Hazel::Application::Get().GetWindow().GetWidth()) : (float)object["scaleX"];
-
-	scaleY = (object["scaleY"].is_string()) ?
-		percentageToFloat(object["scaleY"], Hazel::Application::Get().GetWindow().GetHeight()) : (float)object["scaleY"];
+	x = object["x"];
+	y = object["y"];
+	scaleX = object["scaleX"];
+	scaleY = object["scaleY"];
 
 }
 
-Skin::Quad::Quad(ColourTexture Colour, float x, float y, float scaleX, float scaleY)
+Skin::Quad::Quad(ColourTexture Colour, std::string x, std::string y, std::string scaleX, std::string scaleY)
 {
 	this->x = x;
 	this->y = y;
@@ -95,9 +100,20 @@ Skin::Quad::Quad(ColourTexture Colour, float x, float y, float scaleX, float sca
 	this->Colour = Colour;
 }
 
+glm::vec2 Skin::Quad::toScaleVec()
+{
+	return glm::vec2(
+		stringToFloat(scaleX, Hazel::Application::Get().GetWindow().GetWidth()),
+		stringToFloat(scaleY, Hazel::Application::Get().GetWindow().GetHeight())
+	);
+}
+
 glm::vec2 Skin::Quad::toPositionVec()
 {
-	return glm::vec2(x, y);
+	return glm::vec2(
+		stringToFloat(x, Hazel::Application::Get().GetWindow().GetWidth()),
+		stringToFloat(y, Hazel::Application::Get().GetWindow().GetHeight())
+	);
 }
 
 Skin::LayerSkin::LayerSkin(Quad BackgroundTexture, glm::vec4 ClearColour)
@@ -128,6 +144,21 @@ Skin::MusicSkin::MusicSkin(std::vector<Quad> Columns, Quad Beat, Quad BeatArea, 
 	this->BeatZone = BeatZone;
 }
 
+Skin::MusicSkin::MusicSkin(json object, const char* path)
+{
+	//Setup MusicSkin
+	for (auto& column : object["Columns"])
+	{
+		Columns.push_back(Quad(column, path));
+	}
+
+	Beat = Quad(object["Beat"], path);
+	BeatArea = Quad(object["BeatArea"], path);
+	BeatZone = Quad(object["BeatZone"], path);
+	BackgroundTexture = Quad(object["Background"], path);
+	ClearColour = arrayToVec4(object["ClearColour"]);
+}
+
 Skin::OnBeatSkin::OnBeatSkin()
 {
 
@@ -142,16 +173,6 @@ Skin::OnBeatSkin::OnBeatSkin(const char* path)
 
 	SkinPath = path;
 
-	//Setup MusicSkin
-	std::vector<Skin::Quad> Columns;
-	for (auto& column : config["MusicSkin"]["Columns"])
-	{
-		Columns.push_back(Skin::Quad(column, path));
-	}
-
-	MusicSkin = Skin::MusicSkin(Columns, Skin::Quad(config["MusicSkin"]["Beat"], path),
-		Skin::Quad(config["MusicSkin"]["BeatArea"], path), Skin::Quad(config["MusicSkin"]["BeatZone"], path));
-	MusicSkin.BackgroundTexture = Quad(config["MusicSkin"]["Background"], path);
-	MusicSkin.ClearColour = arrayToVec4(config["MusicSkin"]["ClearColour"]);
+	MusicSkin = Skin::MusicSkin(config["MusicSkin"], path);
 
 }
