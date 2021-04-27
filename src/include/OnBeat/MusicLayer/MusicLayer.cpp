@@ -154,10 +154,10 @@ void MusicLayer::FindBeatHeights()
 {
 	//Blit y = Camera velocity * time of blit
 	//Possible adjustment needed to represent middle of sample size however sample size so small likely unneccessary
-	double threshold = 0.5;
 	double time = (sampleSize) / sampleRate;
 	for (int c = 0; c < beats.size(); c++)
 	{
+		double threshold = OnSetGen::findPeakThreshold(beats[c]);
 		int opt1, opt2;
 		if (c == 0)
 		{

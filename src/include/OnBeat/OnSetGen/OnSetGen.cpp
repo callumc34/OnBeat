@@ -70,6 +70,26 @@ int OnSetGen::createBeatFile(AudioVector beats, const char* outputFile, int fram
 	return 1;
 }
 
+double OnSetGen::findPeakThreshold(std::vector<double> beats)
+{
+
+	double sum = 0;
+	int size = beats.size();
+	for (auto& beat : beats)
+	{
+		if (beat == 0)
+		{
+			size -= 1;
+		}
+		else
+		{
+			sum += beat;
+		}
+	}
+
+	return sum / size;
+}
+
 AudioVector OnSetGen::findBeats(AudioVector beats)
 {
 	AudioVector beatPoints;
@@ -110,7 +130,7 @@ AudioVector OnSetGen::findBeats(AudioVector beats)
 				}
 				if (isLocalMaxima)
 				{
-					beatPoints[c][n] = 1;
+					beatPoints[c][n] = beats[c][n];
 				}
 			}
 			else

@@ -15,6 +15,7 @@ class OnSetGen : public Gist<double>
 		static AudioVector normalise(AudioVector beats);
 		static AudioVector validateAudioVector(AudioVector beats);
 		static int createBeatFile(AudioVector beats, const char* outputFile, int frameSize = 512, double sampleRate = 44100);
+		static double findPeakThreshold(std::vector<double> beats);
 
 
 		//Peak detection algorithm
