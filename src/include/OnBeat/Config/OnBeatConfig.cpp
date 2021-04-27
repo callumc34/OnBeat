@@ -3,9 +3,15 @@
 
 using namespace Config;
 
-Settings::Settings() 
+glm::vec4 Config::arrayToVec4(json object)
 {
+	return glm::vec4(object[0], object[1], object[2], object[3]);
+}
 
+float Config::percentageToFloat(std::string percentage, float val)
+{
+	float perc = std::atof(percentage.substr(0, percentage.size() - 1).c_str());
+	return perc / 10000 * val;
 }
 
 //Setup OnBeat settings from a config.json
@@ -57,13 +63,26 @@ Skin::Quad::Quad(json object, std::string texturePath)
 	}
 	else
 	{
-		Colour = glm::vec4(object["colour"][0], object["colour"][1], object["colour"][2], object["colour"][3]);
+		Colour = arrayToVec4(object["colour"]);
 	}
 
-	x = object["x"];
-	y = object["y"];
-	scaleX = object["scaleX"];
-	scaleY = object["scaleY"];
+	for (auto& value : object["dimensions"])
+	{
+
+	}
+
+	//Bit of a mess may need cleaning up
+	x = (object["x"].is_string()) ?
+		percentageToFloat(object["x"], Hazel::Application::Get().GetWindow().GetWidth()) : (float)object["x"];
+
+	y = (object["y"].is_string()) ?
+		percentageToFloat(object["y"], Hazel::Application::Get().GetWindow().GetHeight()) : (float)object["y"];
+
+	scaleX = (object["scaleX"].is_string()) ?
+		percentageToFloat(object["scaleX"], Hazel::Application::Get().GetWindow().GetWidth()) : (float)object["scaleX"];
+
+	scaleY = (object["scaleY"].is_string()) ?
+		percentageToFloat(object["scaleY"], Hazel::Application::Get().GetWindow().GetHeight()) : (float)object["scaleY"];
 
 }
 
@@ -81,7 +100,7 @@ glm::vec2 Skin::Quad::toPositionVec()
 	return glm::vec2(x, y);
 }
 
-Skin::DefaultSkin::DefaultSkin(Hazel::Ref<Hazel::Texture2D> BackgroundTexture, glm::vec4 ClearColour)
+Skin::LayerSkin::LayerSkin(Quad BackgroundTexture, glm::vec4 ClearColour)
 {
 	this->ClearColour = ClearColour;
 	this->BackgroundTexture = BackgroundTexture;
@@ -132,5 +151,7 @@ Skin::OnBeatSkin::OnBeatSkin(const char* path)
 
 	MusicSkin = Skin::MusicSkin(Columns, Skin::Quad(config["MusicSkin"]["Beat"], path),
 		Skin::Quad(config["MusicSkin"]["BeatArea"], path), Skin::Quad(config["MusicSkin"]["BeatZone"], path));
+	MusicSkin.BackgroundTexture = Quad(config["MusicSkin"]["Background"], path);
+	MusicSkin.ClearColour = arrayToVec4(config["MusicSkin"]["ClearColour"]);
 
 }
