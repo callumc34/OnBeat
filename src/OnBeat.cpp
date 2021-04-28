@@ -26,10 +26,9 @@ OnBeat::OnBeat()
 	}
 
 	//Temp test music
-	OnSetGen gen(0, 1, 8, 8);
-	auto all = gen.processFile("testing/testMusic/test.wav");
-	auto beats = gen.findBeats(all);
-	gen.createBeatFile(beats, "testing/graphing/testBeats.log");
+	OnSetGen gen(0, 1, 8, 8, "testing/testMusic/test.wav");
+	auto beats = gen.findBeats(gen.processFile());
+
 	PushLayer(new MusicLayer(this, beats,
 		900.0f, 44100, 512));
 }
