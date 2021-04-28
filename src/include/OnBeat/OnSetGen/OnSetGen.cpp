@@ -1,14 +1,115 @@
+#define MINIMP3_IMPLEMENTATION
+
 #include <OnBeat/OnSetGen/OnSetGen.h>
 #include <filesystem>
 
+OnSetFile::OnSetFile()
+{
+	reset();
+}
+
+OnSetFile::OnSetFile(const char* file)
+{
+	path = file;
+	std::string format = path.substr(path.size() - 3, path.size());
+	fileFormat = OnSetFormat::NotLoaded;
+	if (format == "mp3")
+	{
+		loadMp3(file);
+	}
+	else if (format == "wav")
+	{
+		loadWav(file);
+	}
+	else
+	{
+		fileFormat = OnSetFormat::Unsupported;
+	}
+}
+
+void OnSetFile::reset()
+{
+	fileFormat = OnSetFormat::NotLoaded;
+	samples = AudioVector{};
+	path = "";
+
+	sampleRate = 0;
+	lengthSeconds = 0;
+	channels = 0;
+
+	wavFile = AudioFile<double>();
+	mp3Decoder = {};
+	fileInfo = {};
+}
+
+int OnSetFile::loadMp3(const char* file)
+{
+	if (fileFormat != OnSetFormat::NotLoaded)
+	{
+		return 0;
+	}
+
+	path = file;
+
+	if (mp3dec_load(&mp3Decoder, path.c_str(), &fileInfo, NULL, NULL))
+	{
+		fileFormat = OnSetFormat::Error;
+		return 0;
+	}
+
+	fileFormat = OnSetFormat::MP3;
+	sampleRate = fileInfo.hz;
+	lengthSeconds = (fileInfo.samples / fileInfo.channels) / fileInfo.hz;
+	channels = fileInfo.channels;
+
+	//Add samples to AudioVector
+	for (int c = 0; c < fileInfo.channels; c++)
+	{
+		samples.push_back(std::vector<double>());
+		for (int n = 0; n < fileInfo.samples / channels; n++)
+		{
+			samples[c].push_back(fileInfo.buffer[(c  * fileInfo.channels) + n]);
+		}
+	}
+
+	free(fileInfo.buffer);
+
+	return 1;
+}
+
+int OnSetFile::loadWav(const char* file)
+{
+	if (fileFormat != OnSetFormat::NotLoaded)
+	{
+		return 0;
+	}
+
+	if (!wavFile.load(file))
+	{
+		fileFormat = OnSetFormat::Error;
+		return 0;
+	}
+
+	fileFormat = OnSetFormat::Wave;
+	sampleRate = wavFile.getSampleRate();
+	lengthSeconds = wavFile.getLengthInSeconds();
+	channels = wavFile.getNumChannels();
+	samples = wavFile.samples;
+	return 1;
+}
+
 OnSetGen::OnSetGen(double thresholdC, double thresholdM, int meanW, int maximaW,
-	double frameSize, double sampleRate)
+	const char* file, double frameSize, double sampleRate)
 	: Gist<double>(frameSize, sampleRate)
 {
 	thresholdConstant = thresholdC;
 	thresholdMultiple = thresholdM;
 	meanWindow = meanW;
 	maximaWindow = maximaW;
+	if (file != nullptr)
+	{
+		audioFile = OnSetFile(file);
+	}
 }
 
 AudioVector OnSetGen::normalise(AudioVector beats)
@@ -144,42 +245,22 @@ AudioVector OnSetGen::findBeats(AudioVector beats)
 	return beatPoints;
 }
 
-int OnSetGen::loadAudioFile(const char* file)
-{
-	audioFile.load(file);
-	return 1;
-}
-
-AudioVector OnSetGen::processFile(const char* file)
+AudioVector OnSetGen::processAudioVector(AudioVector data)
 {
 	AudioVector values;
-	if (file == nullptr)
-	{
-		if (audioFile.getFileFormat() == AudioFileFormat::NotLoaded)
-		{
-			//Error;
-			return values;
-		}
-	}
-	else
-	{
-		audioFile.load(file);
-	}
-
-	std::vector<double> frame;
 
 	//Processing channels
-	for (int c = 0; c < audioFile.samples.size(); c++)
+	for (int c = 0; c < data.size(); c++)
 	{
-		std::vector<double> channel;
-		values.push_back(channel);
+		values.push_back(std::vector<double>());
+		std::vector<double> frame;
 
 		//Loop through each frame
-		for (int i = getAudioFrameSize(); i < audioFile.samples[c].size(); i += getAudioFrameSize())
+		for (int i = getAudioFrameSize(); i < data[c].size(); i += getAudioFrameSize())
 		{
 			for (int buf = i - getAudioFrameSize(); buf < i; buf++)
 			{
-				frame.push_back(audioFile.samples[c][buf]);
+				frame.push_back(data[c][buf]);
 			}
 
 			processAudioFrame(frame);
@@ -187,8 +268,6 @@ AudioVector OnSetGen::processFile(const char* file)
 			values[c].push_back(spectralDifference());
 			frame.clear();
 		}
-
-		channel.clear();
 	}
 
 	//All frames processed in both channels
@@ -196,14 +275,33 @@ AudioVector OnSetGen::processFile(const char* file)
 
 }
 
-int OnSetGen::setThresholdValues(double thresholdC, double thresholdM, int meanW, int maximaW)
+AudioVector OnSetGen::processFile(const char* file)
+{
+	if (file)
+	{
+		OnSetFile audioFile(file);
+	}
+
+	if (audioFile.getFormat() == OnSetFormat::Error ||
+		audioFile.getFormat() == OnSetFormat::NotLoaded ||
+		audioFile.getFormat() == OnSetFormat::Unsupported)
+	{
+		return {};
+	}
+
+	AudioVector fileSamples = audioFile.getSamples();
+
+	//All frames processed in both channels
+	return OnSetGen::normalise(processAudioVector(fileSamples));
+
+}
+
+void OnSetGen::setThresholdValues(double thresholdC, double thresholdM, int meanW, int maximaW)
 {
 	thresholdConstant = (thresholdC == NULL) ? thresholdConstant : thresholdC;
 	thresholdMultiple = (thresholdM == NULL) ? thresholdMultiple : thresholdM;
 	meanWindow = (meanW == NULL) ? meanWindow : meanW;
 	maximaW = (maximaW == NULL) ? maximaWindow : maximaW;
-
-	return 1;
 }
 
 OnSetGen::~OnSetGen()
