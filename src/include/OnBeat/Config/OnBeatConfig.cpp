@@ -44,36 +44,6 @@ float Config::stringToFloat(std::string val, int flag)
 	}
 }
 
-//Setup OnBeat settings from a config.json
-Settings::Settings(const char* path) 
-{
-	std::ifstream input(path);
-	json config;
-	input >> config;
-	input.close();
-
-	DisplayWidth = config["Display"][0];
-	DisplayHeight = config["Display"][1];
-
-	for (auto& [key, value] : config["Input"].items())
-	{
-		auto inputKey = magic_enum::enum_cast<Keys>(std::string(value));
-		if (inputKey.has_value())
-		{
-			Input[key] = inputKey.value();
-		}
-		else
-		{
-			//Todo error checking and defaulting
-		}
-	}
-
-	CurrentSkinPath = std::filesystem::current_path().string()
-		+ "/assets/user/skins/" + std::string(config["CurrentSkin"]);
-	CurrentSkin = Skin::OnBeatSkin(CurrentSkinPath.c_str());
-
-}
-
 Skin::Quad::Quad()
 {
 	this->x = 0.0f;
@@ -212,3 +182,35 @@ Skin::OnBeatSkin::OnBeatSkin(const char* path)
 	MusicSkin = Skin::MusicSkin(config["MusicSkin"], path);
 
 }
+
+//Setup OnBeat settings from a config.json
+Settings::Settings(const char* path)
+{
+	std::ifstream input(path);
+	json config;
+	input >> config;
+	input.close();
+
+	DisplayWidth = config["Display"][0];
+	DisplayHeight = config["Display"][1];
+
+	for (auto& [key, value] : config["Input"].items())
+	{
+		auto inputKey = magic_enum::enum_cast<Keys>(std::string(value));
+		if (inputKey.has_value())
+		{
+			Input[key] = inputKey.value();
+		}
+		else
+		{
+			//Todo error checking and defaulting
+		}
+	}
+
+	CurrentSkinPath = std::filesystem::current_path().string()
+		+ "/assets/user/skins/" + std::string(config["CurrentSkin"]);
+	CurrentSkin = Skin::OnBeatSkin(CurrentSkinPath.c_str());
+
+	Volume = config["Volume"];
+}
+

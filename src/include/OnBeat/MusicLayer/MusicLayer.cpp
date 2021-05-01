@@ -1,15 +1,14 @@
 #include <OnBeat/MusicLayer/MusicLayer.h>
 #include <GLFW/glfw3.h>
 
-MusicLayer::MusicLayer(OnBeat* app, AudioVector beats,
+MusicLayer::MusicLayer(OnBeat* app, const char* file,
 	float cameraVelocity, double sampleRate, int sampleSize)
-	: Layer("MusicLayer")
+	: Layer("MusicLayer"), beatGen(0, 1, 8, 8, file)
 {
 	auto& window = app->GetWindow();
 
 	//Class properties
 	this->app = app;
-	this->beats = OnSetGen::validateAudioVector(beats);
 
 	//cameraVelocity in px/sec (900px/sec)
 	this->cameraVelocity = cameraVelocity;
@@ -18,13 +17,17 @@ MusicLayer::MusicLayer(OnBeat* app, AudioVector beats,
 	this->sampleRate = sampleRate;
 	this->sampleSize = sampleSize;
 
+	skin = app->Settings.CurrentSkin.MusicSkin;
 
-	HZ_ASSERT(this->beats.size() != 0, "Invalid beats vector.");
+	musicFile = file;
+	app->AudioPlayer.loadAudio(file);
+
+	beats = beatGen.findBeats(beatGen.processFile());
+
+	HZ_ASSERT(beats.size() != 0, "Invalid beats vector.");
 
 	//Set up camera
 	CreateCamera(window.GetWidth(), window.GetHeight());
-
-	skin = app->Settings.CurrentSkin.MusicSkin;
 
 	FindBeatHeights();
 }
@@ -191,7 +194,7 @@ void MusicLayer::FindBeatHeights()
 
 void MusicLayer::OnAttach()
 {
-
+	app->AudioPlayer.playAudio();
 }
 
 void MusicLayer::OnDetach()

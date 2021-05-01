@@ -10,7 +10,7 @@ class MusicLayer : public Hazel::Layer
 	public:
 		//These need to all be variables from a style file when implemented
 
-		MusicLayer(OnBeat* app, AudioVector beats,
+		MusicLayer(OnBeat* app, const char* file,
 			float cameraVelocity, double sampleRate, int sampleSize);
 
 		//OnEvents
@@ -29,6 +29,7 @@ class MusicLayer : public Hazel::Layer
 		Hazel::Scope<Hazel::OrthographicCamera> cameraController;
 
 		OnBeat* app;
+		OnSetGen beatGen;
 
 		//Textures & Shading
 		void CreateBeatArea();
@@ -48,7 +49,9 @@ class MusicLayer : public Hazel::Layer
 		AudioVector beats;
 		float cameraVelocity;
 		float cameraVelocityRatio;
-		//Blit timing = sampleSize / sampleRate (512/44100)
+
 		int sampleSize;
 		double sampleRate;
+
+		std::string musicFile;
 };

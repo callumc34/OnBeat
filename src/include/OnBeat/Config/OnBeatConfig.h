@@ -219,7 +219,6 @@ namespace Config
 		Settings(const char* path = "assets/user/DefaultConfig.json");
 
 		int DisplayWidth, DisplayHeight;
-		//null is false
 		int Fullscreen;
 		double FpsCap;
 
@@ -227,6 +226,8 @@ namespace Config
 
 		Skin::OnBeatSkin CurrentSkin;
 		std::string CurrentSkinPath;
+
+		float Volume;
 	};
 
 	glm::vec4 arrayToVec4(json object);

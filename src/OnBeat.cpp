@@ -5,14 +5,15 @@
 #include <stb_image/stb_image.h>
 
 OnBeat::OnBeat()
-	: Application("OnBeat")
+	: Application("OnBeat"), Settings("assets/user/UserConfig.json")
 {
 	auto& window = Hazel::Application::Get().GetWindow();
 	nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 	SetWindowIcon();
 
 	cwd = std::filesystem::current_path().string();
-	Settings = Config::Settings((cwd + "/assets/user/UserConfig.json").c_str());
+
+	AudioPlayer.setVolume(Settings.Volume);
 
 	int fs = Settings.Fullscreen - 1;
 
@@ -26,10 +27,8 @@ OnBeat::OnBeat()
 	}
 
 	//Temp test music
-	OnSetGen gen(0, 1, 8, 8, "testing/testMusic/test.wav");
-	auto beats = gen.findBeats(gen.processFile());
 
-	PushLayer(new MusicLayer(this, beats,
+	PushLayer(new MusicLayer(this, "testing/testMusic/test.wav",
 		900.0f, 44100, 512));
 }
 

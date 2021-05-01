@@ -28,6 +28,7 @@ class OnSetFile
 		int loadMp3(const char* file);
 		int loadWav(const char* file);
 
+		std::string getPath() { return path; }
 		OnSetFormat getFormat() { return fileFormat; }
 		AudioVector getSamples() { return samples; }
 		double getSamplingFrequency() { return sampleRate; }

@@ -66,6 +66,7 @@ int AudioPlayer::playAudio()
 		return 0;
 	}
 
+	channel->setChannelGroup(channelGroup);
 	system->update();
 	return 1;
 
@@ -102,6 +103,24 @@ int AudioPlayer::releaseSound()
 {
 	sound->release();
 	return 1;
+}
+
+bool AudioPlayer::setVolume(float volume)
+{
+	if (!FMOD_ERRCHECK(channelGroup->setVolume(volume)))
+	{
+		return false;
+	}
+	else
+	{
+		this->volume = volume;
+		return true;
+	}
+}
+
+float AudioPlayer::getVolume()
+{
+	return volume;
 }
 
 const char* AudioPlayer::getAudioFile()
@@ -162,10 +181,16 @@ AudioPlayer::AudioPlayer(const char* audioLocation)
 {
 	//Initialises the FMOD system
 	audioFile = audioLocation;
+
+	sound = nullptr;
+
 	result = FMOD::System_Create(&system);
 	if (!FMOD_ERRCHECK(result)) return;
 
 	result = system->init(32, FMOD_INIT_NORMAL, 0);
+	if (!FMOD_ERRCHECK(result)) return;
+
+	result = system->createChannelGroup("AudioPlayer", &channelGroup);
 	if (!FMOD_ERRCHECK(result)) return;
 
 	if (audioLocation)
@@ -180,5 +205,7 @@ AudioPlayer::~AudioPlayer()
 {
 	//Stop audio processing
 	releaseSound();
+	delete channel;
+	delete sound;
 	delete channel;
 }
