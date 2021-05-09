@@ -1,5 +1,5 @@
+#include <OnBeat/Ui/OnBeatMenu.h>
 #include <OnBeat/OnBeat.h>
-#include <OnBeat/MusicLayer/MusicLayer.h>
 #include <Hazel/Core/EntryPoint.h>
 
 #include <stb_image/stb_image.h>
@@ -9,7 +9,7 @@ OnBeat::OnBeat()
 {
 	auto& window = Hazel::Application::Get().GetWindow();
 	nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
-	SetWindowIcon();
+	SetWindowIcon(iconPath);
 
 	cwd = std::filesystem::current_path().string();
 
@@ -26,10 +26,7 @@ OnBeat::OnBeat()
 		glfwSetWindowSize(nativeWindow, Settings.DisplayWidth, Settings.DisplayHeight);
 	}
 
-	//Temp test music
-
-	PushLayer(new MusicLayer(this, "testing/testMusic/test.wav",
-		900.0f, 44100, 512));
+	PushLayer(new OnBeatMenu(Settings.CurrentSkinPath + "/menu/MainMenu/main.html"));
 }
 
 float OnBeat::pxToGlF(float px)
@@ -69,10 +66,8 @@ void OnBeat::SetFullScreen(int monitor)
     
 }
 
-void OnBeat::SetWindowIcon()
+void OnBeat::SetWindowIcon(std::string path)
 {
-	
-	std::string path = iconPath;
 
 	int width, height, channels;
 	stbi_set_flip_vertically_on_load(1);

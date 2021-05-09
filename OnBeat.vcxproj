@@ -23,6 +23,7 @@
     <ClCompile Include="src\include\OnBeat\Config\OnBeatConfig.cpp" />
     <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp" />
     <ClCompile Include="src\include\OnBeat\OnSetGen\OnSetGen.cpp" />
+    <ClCompile Include="src\include\OnBeat\Ui\OnBeatMenu.cpp" />
     <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -32,6 +33,8 @@
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
     <ClInclude Include="src\include\OnBeat\OnBeat.h" />
     <ClInclude Include="src\include\OnBeat\OnSetGen\OnSetGen.h" />
+    <ClInclude Include="src\include\OnBeat\Ui\OnBeatMenu.h" />
+    <ClInclude Include="src\include\OnBeat\Ui\OpenGLSurface.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc" />
@@ -166,7 +169,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;Hazel/Vendor/Glad/include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -198,7 +201,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;Hazel/Vendor/Glad/include;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>

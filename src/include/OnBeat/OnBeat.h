@@ -2,9 +2,9 @@
 #include <Hazel.h>
 #include <AudioPlayer/AudioPlayer.h>
 #include <OnBeat/Config/OnBeatConfig.h>
+#include <GLFW/glfw3.h>
 #include <string>
 #include <filesystem>
-#include <GLFW/glfw3.h>
 
 class OnBeat : public Hazel::Application
 {
@@ -30,5 +30,5 @@ class OnBeat : public Hazel::Application
 
 		GLFWwindow* nativeWindow;
 
-		void SetWindowIcon();
+		void SetWindowIcon(std::string path);
 };
