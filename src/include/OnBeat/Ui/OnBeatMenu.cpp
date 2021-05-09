@@ -3,8 +3,7 @@
 
 namespace ul = ultralight;
 
-OnBeatMenu::OnBeatMenu(const std::string& document) : Layer("OnBeatMenu"),
-	renderer(ul::Renderer::Create()), documentPath(document)
+OnBeatMenu::OnBeatMenu(const std::string& document) : Layer("OnBeatMenu"), documentPath(document)
 {
 	//ul config setup
 	config.resource_path = "assets/resources/";
@@ -19,6 +18,8 @@ OnBeatMenu::OnBeatMenu(const std::string& document) : Layer("OnBeatMenu"),
 
 	factory.reset(new GLTextureSurfaceFactory());
 	ul::Platform::instance().set_surface_factory(factory.get());
+
+	renderer = ul::Renderer::Create();
 
 	auto& window = Hazel::Application::Get().GetWindow();
 	view = renderer->CreateView(window.GetWidth(), window.GetHeight(), false, nullptr);
@@ -44,11 +45,10 @@ void OnBeatMenu::OnUpdate(Hazel::Timestep ms)
 		renderer->Update();
 		renderer->Render();
 
-		ul::Surface* surface = view->surface();
+		GLTextureSurface* textureSurface = static_cast<GLTextureSurface*>(view->surface());
 
-		if (surface)
+		if (textureSurface)
 		{
-			GLPBOTextureSurface* textureSurface = static_cast<GLPBOTextureSurface*>(surface);
 			
 			uint32_t width = textureSurface->width();
 			uint32_t height = textureSurface->height();
@@ -84,11 +84,23 @@ void OnBeatMenu::OnEvent(Hazel::Event& e)
 {
 	Hazel::EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(OnBeatMenu::OnWindowResize));
+	dispatcher.Dispatch<Hazel::MouseMovedEvent>(HZ_BIND_EVENT_FN(OnBeatMenu::OnMouseMove));
 }
 
 bool OnBeatMenu::OnWindowResize(Hazel::WindowResizeEvent& e)
 {
 	CreateCamera(e.GetWidth(), e.GetHeight());
+	return true;
+}
+
+bool OnBeatMenu::OnMouseMove(Hazel::MouseMovedEvent& e)
+{
+	ul::MouseEvent evt;
+	evt.type = ul::MouseEvent::kType_MouseMoved;
+	evt.x = e.GetX();
+	evt.y = e.GetY();
+
+	view->FireMouseEvent(evt);
 	return true;
 }
 

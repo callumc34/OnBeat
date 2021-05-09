@@ -23,6 +23,7 @@
     <ClCompile Include="src\include\OnBeat\Config\OnBeatConfig.cpp" />
     <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp" />
     <ClCompile Include="src\include\OnBeat\OnSetGen\OnSetGen.cpp" />
+    <ClCompile Include="src\include\OnBeat\Ui\GLTextureSurface.cpp" />
     <ClCompile Include="src\include\OnBeat\Ui\OnBeatMenu.cpp" />
     <ClCompile Include="src\OnBeat.cpp" />
   </ItemGroup>
@@ -33,8 +34,8 @@
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
     <ClInclude Include="src\include\OnBeat\OnBeat.h" />
     <ClInclude Include="src\include\OnBeat\OnSetGen\OnSetGen.h" />
+    <ClInclude Include="src\include\OnBeat\Ui\GLTextureSurface.h" />
     <ClInclude Include="src\include\OnBeat\Ui\OnBeatMenu.h" />
-    <ClInclude Include="src\include\OnBeat\Ui\OpenGLSurface.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc" />

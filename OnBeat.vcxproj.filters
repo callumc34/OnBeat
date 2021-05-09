@@ -33,6 +33,9 @@
     <ClCompile Include="src\include\OnBeat\Ui\OnBeatMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\include\OnBeat\Ui\GLTextureSurface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h">
@@ -56,7 +59,7 @@
     <ClInclude Include="src\include\OnBeat\Ui\OnBeatMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\include\OnBeat\Ui\OpenGLSurface.h">
+    <ClInclude Include="src\include\OnBeat\Ui\GLTextureSurface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

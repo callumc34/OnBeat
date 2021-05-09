@@ -1,6 +1,6 @@
 #pragma once
 #include <Ultralight/Ultralight.h>
-#include <OnBeat/Ui/OpenGLSurface.h>
+#include <OnBeat/Ui/GLTextureSurface.h>
 #include <Hazel.h>
 
 class OnBeatMenu : public Hazel::Layer
@@ -12,7 +12,8 @@ class OnBeatMenu : public Hazel::Layer
 
 		void OnEvent(Hazel::Event& e) override;
 		void OnUpdate(Hazel::Timestep ms) override;
-		bool OnWindowResize(Hazel::WindowResizeEvent& ms);
+		bool OnWindowResize(Hazel::WindowResizeEvent& e);
+		bool OnMouseMove(Hazel::MouseMovedEvent& e);
 
 	private:
 		void CreateCamera(uint32_t width, uint32_t height);
