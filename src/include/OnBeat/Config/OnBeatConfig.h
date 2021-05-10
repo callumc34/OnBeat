@@ -173,6 +173,8 @@ namespace Config
 	
 			glm::vec2 toScaleVec();
 			glm::vec2 toPositionVec();
+
+			void draw(float z = 0.0f, float xOffset = 0.0f, float yOffset = 0.0f);
 		};
 
 		struct LayerSkin

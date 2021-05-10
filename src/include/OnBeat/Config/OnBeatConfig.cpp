@@ -122,6 +122,24 @@ glm::vec2 Skin::Quad::toPositionVec()
 	);
 }
 
+void Skin::Quad::draw(float z, float xOffset, float yOffset)
+{
+	try
+	{
+		glm::vec4 pval = std::get<glm::vec4>(Colour);
+		Hazel::Renderer2D::DrawQuad(
+			{ getX() + xOffset, getY() + yOffset, z},
+			toScaleVec(), pval);
+	}
+	catch (std::bad_variant_access const& ex)
+	{
+		Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(Colour);
+		Hazel::Renderer2D::DrawQuad(
+			{ getX() + xOffset, getY() + yOffset, z },
+			toScaleVec(), pval);
+	}
+}
+
 Skin::LayerSkin::LayerSkin(Quad BackgroundTexture, glm::vec4 ClearColour)
 {
 	this->ClearColour = ClearColour;
