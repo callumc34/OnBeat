@@ -1,5 +1,5 @@
 #include <OnBeat/Config/OnBeatConfig.h>
-#include <magic_enum/magic_enum.hpp>
+#include <magic_enum.hpp>
 
 using namespace Config;
 

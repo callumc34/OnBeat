@@ -19,3 +19,6 @@
 [submodule "vendor/AudioFile"]
 	path = vendor/AudioFile
 	url = https://github.com/adamstark/AudioFile
+[submodule "vendor/fftw"]
+	path = vendor/fftw
+	url = https://github.com/FFTW/fftw3

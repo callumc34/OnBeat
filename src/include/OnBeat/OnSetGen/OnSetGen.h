@@ -1,6 +1,6 @@
 #pragma once
-#include <gist/Gist.h>
-#include <gist/AudioFile.h>
+#include <Gist.h>
+#include <AudioFile/AudioFile.h>
 
 #include <minimp3/minimp3_ex.h>
 
