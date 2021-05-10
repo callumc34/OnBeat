@@ -11,10 +11,6 @@ Sublime Project
 testing
 *.log
 
-#Hazel Engine
-Hazel
-Hazelnut
-
 #Libraries
 Lib
 

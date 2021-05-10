@@ -1,0 +1,21 @@
+[submodule "vendor/Hazel"]
+	path = vendor/Hazel
+	url = https://github.com/thecherno/hazel
+[submodule "vendor/ultralight"]
+	path = vendor/ultralight
+	url = https://github.com/ultralight-ux/Ultralight-API
+[submodule "vendor/nlohmann"]
+	path = vendor/nlohmann
+	url = https://github.com/nlohmann/json
+[submodule "vendor/minimp3"]
+	path = vendor/minimp3
+	url = https://github.com/lieff/minimp3
+[submodule "vendor/magic_enum"]
+	path = vendor/magic_enum
+	url = https://github.com/Neargye/magic_enum
+[submodule "vendor/gist"]
+	path = vendor/gist
+	url = https://github.com/adamstark/gist
+[submodule "vendor/AudioFile"]
+	path = vendor/AudioFile
+	url = https://github.com/adamstark/AudioFile
