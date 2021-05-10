@@ -9,6 +9,7 @@ OnBeatMenu::OnBeatMenu(const std::string& document) : Layer("OnBeatMenu"), docum
 	config.resource_path = "assets/resources/";
 	config.use_gpu_renderer = false;
 	config.device_scale = 1.0;
+	
 
 	//ul platform setup
 	ul::Platform::instance().set_config(config);

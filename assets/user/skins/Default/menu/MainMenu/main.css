@@ -12,6 +12,10 @@
   font-family: "Walkway Expand Black";
 }
 
+body {
+    overflow: hidden;
+}
+
 body, html {
   width: 100%;
   height: 100%;
@@ -25,7 +29,7 @@ body, html {
   background-color: #FDFDFD;
   margin-left: auto;
   margin-right: 0px;
-  box-shadow: inset -4px 4px 8px 2px rgba(0,0,0,0.6);
+  box-shadow: -4px 4px 8px 2px rgba(0,0,0,0.9);
 }
 
 .title {
@@ -35,7 +39,7 @@ body, html {
 .subOption {
   width: 80%;
   background-color: #D64649;
-  box-shadow: inset -4px 4px 8px 2px rgba(0,0,0,0.6);
+  box-shadow: -4px 4px 8px 2px rgba(0,0,0,0.9);
 }
 
 .subOption:hover {
