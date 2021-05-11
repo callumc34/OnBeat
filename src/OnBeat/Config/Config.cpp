@@ -19,6 +19,7 @@ namespace OnBeat
 
 			DisplayWidth = config["Display"][0];
 			DisplayHeight = config["Display"][1];
+			Fullscreen = config["Fullscreen"];
 
 			for (auto& [key, value] : config["Input"].items())
 			{

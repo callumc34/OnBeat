@@ -47,13 +47,6 @@ namespace OnBeat
 
 	void App::SetFullScreen(int monitor)
 	{
-		int _wndPos[2];
-		int _wndSize[2];
-		// backup window position and window size
-		glfwGetWindowPos(nativeWindow, &_wndPos[0], &_wndPos[1]);
-		glfwGetWindowSize(nativeWindow, &_wndSize[0], &_wndSize[1]);
-
-		// get resolution of monitor
 		int count;
 		GLFWmonitor** monitors = glfwGetMonitors(&count);
 
