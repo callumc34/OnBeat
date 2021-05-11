@@ -78,7 +78,7 @@ namespace OnBeat
 	{
 		Hazel::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Hazel::MouseMovedEvent>(HZ_BIND_EVENT_FN(Menu::OnMouseMove));
-		dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(Menu::OnWindowResize));
+		dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(Menu::ResizeView));
 		Layer::OnEvent(e);
 	}
 
