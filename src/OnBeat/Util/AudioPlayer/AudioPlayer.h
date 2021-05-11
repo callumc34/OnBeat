@@ -2,11 +2,14 @@
 #include <FMOD/fmod.hpp>
 #include <iostream>
 
-int FMOD_ERRCHECK(FMOD_RESULT r);
-
-class AudioPlayer
+namespace OnBeat
 {
-	public:
+
+	int FMOD_ERRCHECK(FMOD_RESULT r);
+
+	class AudioPlayer
+	{
+		public:
 		AudioPlayer(const char* audioFile = nullptr);
 
 		int pauseAudio(bool pause);
@@ -26,7 +29,7 @@ class AudioPlayer
 		~AudioPlayer();
 
 		FMOD_RESULT result;
-	private:
+		private:
 		FMOD::System* system = nullptr;
 		FMOD::Sound* sound = nullptr;
 		FMOD::ChannelGroup* channelGroup = nullptr;
@@ -40,4 +43,5 @@ class AudioPlayer
 
 		bool playing = false;
 		bool loaded = false;
-};
+	};
+}

@@ -2,11 +2,11 @@
     "Display" : [1600, 900],
     "Fullscreen" : 0,
     "Input" : {
-        "Column1" : "Z",
-        "Column2" : "X",
-        "Column3" : "Comma",
-        "Column4" : "Period",
-        "Pause" : "Escape"
+        "Column1" : 90,
+        "Column2" : 88,
+        "Column3" : 44,
+        "Column4" : 46,
+        "Pause" : 256
     },
     "CurrentSkin" : "Default",
     "FpsCap": 0,

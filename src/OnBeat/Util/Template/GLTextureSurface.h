@@ -1,7 +1,6 @@
 #pragma once
 #include <Ultralight/platform/Surface.h>
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 class GLTextureSurface : public ultralight::Surface {
 public:

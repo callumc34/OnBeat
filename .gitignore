@@ -14,6 +14,9 @@ testing
 #Libraries
 Lib
 
+#FMOD Headers
+FMOD
+
 #MSVS
 .vs
 x64
