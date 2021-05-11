@@ -19,25 +19,41 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\include\AudioPlayer\AudioPlayer.cpp" />
-    <ClCompile Include="src\include\OnBeat\Config\OnBeatConfig.cpp" />
-    <ClCompile Include="src\include\OnBeat\MusicLayer\MusicLayer.cpp" />
-    <ClCompile Include="src\include\OnBeat\OnSetGen\OnSetGen.cpp" />
-    <ClCompile Include="src\OnBeat.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="src\include\AudioPlayer\AudioPlayer.h" />
-    <ClInclude Include="src\include\OnBeat\Config\OnBeatConfig.h" />
-    <ClInclude Include="src\include\OnBeat\MusicLayer\MusicLayer.h" />
-    <ClInclude Include="src\include\OnBeat\OnBeat.h" />
-    <ClInclude Include="src\include\OnBeat\OnSetGen\OnSetGen.h" />
+    <ClInclude Include="src\OnBeat.h" />
+    <ClInclude Include="src\OnBeat\App\App.h" />
+    <ClInclude Include="src\OnBeat\App\Layer\MusicLayer.h" />
+    <ClInclude Include="src\OnBeat\Config\Config.h" />
+    <ClInclude Include="src\OnBeat\Config\Skin.h" />
+    <ClInclude Include="src\OnBeat\Ui\MainMenu\MainMenu.h" />
+    <ClInclude Include="src\OnBeat\Ui\PauseMenu\PauseMenu.h" />
+    <ClInclude Include="src\OnBeat\Util\AppUtil\AppUtil.h" />
+    <ClInclude Include="src\OnBeat\Util\AudioPlayer\AudioPlayer.h" />
+    <ClInclude Include="src\OnBeat\Util\OnSetDetection\OnSetDetection.h" />
+    <ClInclude Include="src\OnBeat\Util\Template\GLTextureSurface.h" />
+    <ClInclude Include="src\OnBeat\Util\Template\Layer.h" />
+    <ClInclude Include="src\OnBeat\Util\Template\Menu.h" />
+    <ClInclude Include="src\OnBeat\Util\Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="logo\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\OnBeat\App\App.cpp" />
+    <ClCompile Include="src\OnBeat\App\Layer\MusicLayer.cpp" />
+    <ClCompile Include="src\OnBeat\Config\Config.cpp" />
+    <ClCompile Include="src\OnBeat\Config\Skin.cpp" />
+    <ClCompile Include="src\OnBeat\Ui\MainMenu\MainMenu.cpp" />
+    <ClCompile Include="src\OnBeat\Ui\PauseMenu\PauseMenu.cpp" />
+    <ClCompile Include="src\OnBeat\Util\AppUtil\AppUtil.cpp" />
+    <ClCompile Include="src\OnBeat\Util\AudioPlayer\AudioPlayer.cpp" />
+    <ClCompile Include="src\OnBeat\Util\OnSetDetection\OnSetDetection.cpp" />
+    <ClCompile Include="src\OnBeat\Util\Template\GLTextureSurface.cpp" />
+    <ClCompile Include="src\OnBeat\Util\Template\Layer.cpp" />
+    <ClCompile Include="src\OnBeat\Util\Template\Menu.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -166,7 +182,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -198,7 +214,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;src/include/;Hazel/;Hazelnut/;Hazel/vendor;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>

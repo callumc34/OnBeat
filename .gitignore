@@ -11,12 +11,11 @@ Sublime Project
 testing
 *.log
 
-#Hazel Engine
-Hazel
-Hazelnut
-
 #Libraries
 Lib
+
+#FMOD Headers
+FMOD
 
 #MSVS
 .vs
