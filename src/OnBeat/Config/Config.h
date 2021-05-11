@@ -1,5 +1,9 @@
 #pragma once
 #include <OnBeat/Config/Skin.h>
+#include <Hazel/Core/KeyCodes.h>
+
+//magic_enum throws error if this is not defined
+int main(int argc, char** argv);
 
 namespace OnBeat
 {
@@ -149,7 +153,7 @@ namespace OnBeat
 			int Fullscreen;
 			double FpsCap;
 
-			std::unordered_map<std::string, uint16_t> Input;
+			std::unordered_map < std::string, Hazel::KeyCode> Input;
 
 			Skin::AppSkin CurrentSkin;
 			std::string CurrentSkinPath;

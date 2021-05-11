@@ -1,5 +1,5 @@
 #include <OnBeat/Config/Config.h>
-//#include <magic_enum.hpp>
+#include <magic_enum.hpp>
 #include <filesystem>
 #include <fstream>
 
@@ -22,16 +22,15 @@ namespace OnBeat
 
 			for (auto& [key, value] : config["Input"].items())
 			{
-				//auto inputKey = magic_enum::enum_cast<Keys>(std::string(value));
-				//if (inputKey.has_value())
-				//{
-				//	Input[key] = inputKey.value();
-				//}
-				//else
-				//{
-				//	//Todo error checking and defaulting
-				//}
-				uint16_t keyCode = (uint16_t)value;
+				auto inputKey = magic_enum::enum_cast<Keys>(std::string(value));
+				if (inputKey.has_value())
+				{
+					Input[key] = inputKey.value();
+				}
+				else
+				{
+					//Todo error checking and defaulting
+				}
 			}
 
 			CurrentSkinPath = std::filesystem::current_path().string()
