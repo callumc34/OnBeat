@@ -66,13 +66,12 @@ namespace OnBeat
 		channels = fileInfo.channels;
 
 		//Add samples to AudioVector
+		samples.resize(fileInfo.channels);
 		for (int c = 0; c < fileInfo.channels; c++)
 		{
-			samples.push_back(std::vector<double>());
-			for (int n = 0; n < fileInfo.samples / channels; n++)
-			{
-				samples[c].push_back(fileInfo.buffer[(c * fileInfo.channels) + n]);
-			}
+			//Copy buffer data from channel index to next channel
+			samples[c] = std::vector<double>(fileInfo.buffer + ((c * fileInfo.samples) / fileInfo.channels),
+				fileInfo.buffer + (((c + 1) * fileInfo.samples) / fileInfo.channels));
 		}
 
 		free(fileInfo.buffer);
@@ -223,9 +222,10 @@ namespace OnBeat
 				{
 					bool isLocalMaxima = true;
 					//Check point is local maxima
-					for (int m = n - maximaWindow; m <= n + maximaWindow; m++)
+					for (int m = n - maximaWindow; m < n + maximaWindow; m++)
 					{
-						m = (m < 0) ? 0 : m;
+						//Ensure m is a valid index
+						m = (m < 0) ? 0 : (m >= beats[c].size()) ? 0 : m;
 						if (beats[c][n] < beats[c][m])
 						{
 							isLocalMaxima = false;
