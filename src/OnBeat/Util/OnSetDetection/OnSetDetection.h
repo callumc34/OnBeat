@@ -8,6 +8,14 @@ namespace OnBeat {
 	//Define AudioVector as a 2d vector of doubles
 	typedef std::vector<std::vector<double>> AudioVector;
 
+	struct OnSetOptions
+	{
+		double thresholdConstant;
+		double thresholdMultiple;
+		int meanWindow;
+		int maximaWindow;
+	};
+
 	enum class OnSetFormat
 	{
 		Error,
@@ -22,16 +30,16 @@ namespace OnBeat {
 	{
 		public:
 			OnSetFile();
-			OnSetFile(const char* file);
+			OnSetFile(std::string file);
 
 			void reset();
 
-			int loadMp3(const char* file);
-			int loadWav(const char* file);
+			int loadMp3(std::string file);
+			int loadWav(std::string file);
 
+			AudioVector getSamples() { return samples; }
 			std::string getPath() { return path; }
 			OnSetFormat getFormat() { return fileFormat; }
-			AudioVector getSamples() { return samples; }
 			double getSamplingFrequency() { return sampleRate; }
 			double getLengthInSeconds() { return lengthSeconds; }
 			int getChannels() { return channels; }
@@ -57,46 +65,41 @@ namespace OnBeat {
 	class OnSetDetection : public Gist<double>
 	{
 		public:
-			OnSetDetection(double thresholdC, double thresholdM, int meanW, int maximaW,
-				const char* file = nullptr,	double frameSize = 512, double sampleRate = 44100);
+			OnSetDetection(OnSetOptions options,
+				std::string file = "",	double frameSize = 512, double sampleRate = 44100);
 			~OnSetDetection();
 
-			static AudioVector normalise(AudioVector beats);
-			static AudioVector validateAudioVector(AudioVector beats);
-			static int createBeatFile(AudioVector beats, const char* outputFile, int frameSize = 512, double sampleRate = 44100);
-			static double findPeakThreshold(std::vector<double> beats);
+			static AudioVector normalise(const AudioVector& beats);
+			static AudioVector validateAudioVector(const AudioVector& beats);
+			static int createBeatFile(const AudioVector& beats, std::string outputFile, int frameSize = 512, double sampleRate = 44100);
+			static double findPeakThreshold(const std::vector<double>& beats);
 
 
 			//Peak detection algorithm
-			AudioVector findBeats(AudioVector beats);
+			AudioVector findBeats(const AudioVector& beats);
 
 			//Gist onset detection of a .wav file using spectralDifference
-			AudioVector processFile(const char* file = nullptr);
-			AudioVector processAudioVector(AudioVector data);
+			AudioVector processFile(std::string file = nullptr);
+			AudioVector processAudioVector(const AudioVector& data);
 
 			//Get private values
-			double getThresholdConstant() { return thresholdConstant; }
-			double getThresholdMultiple() { return thresholdMultiple; }
-			int getMeanWindow() { return meanWindow; }
-			int getMaximaWindow() { return maximaWindow; }
+			OnSetOptions getOptions() { return options; }
 			OnSetFile getAudioFile() { return audioFile; }
 
-
-			//Set private values
-			void setThresholdValues(double thresholdConstant = NULL, double thresholdMultiple = NULL,
-				int meanW = NULL, int maximaW = NULL);
-			void setAudioFile(OnSetFile af)
+			void setOptions(OnSetOptions options)
 			{
-				audioFile = af;
+				this->options = options;
+			}
+
+			void setAudioFile(OnSetFile audioFile)
+			{
+				this->audioFile = audioFile;
 			}
 
 		private:
 		//Threshold values
-		//Recommended 0 1 8 3
-		double thresholdConstant;
-		double thresholdMultiple;
-		int meanWindow;
-		int maximaWindow;
+		//Recommended 0 1 8 8
+		OnSetOptions options;
 
 		//AudioFile currently wav only
 		OnSetFile audioFile;

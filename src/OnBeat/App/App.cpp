@@ -3,6 +3,8 @@
 #include <Hazel/Core/EntryPoint.h>
 #include <stb_image/stb_image.h>
 
+#include <OnBeat/Util/OnSetDetection/OnSetDetection.h>
+
 namespace OnBeat
 {
 	App::App()

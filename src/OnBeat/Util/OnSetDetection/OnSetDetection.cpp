@@ -1,6 +1,7 @@
 #define MINIMP3_IMPLEMENTATION
 
 #include <OnBeat/Util/OnSetDetection/OnSetDetection.h>
+#include <OnBeat/Util/AppUtil/AppUtil.h>
 #include <filesystem>
 
 namespace OnBeat
@@ -11,7 +12,7 @@ namespace OnBeat
 		reset();
 	}
 
-	OnSetFile::OnSetFile(const char* file)
+	OnSetFile::OnSetFile(std::string file)
 	{
 		path = file;
 		std::string format = path.substr(path.size() - 3, path.size());
@@ -45,7 +46,7 @@ namespace OnBeat
 		fileInfo = {};
 	}
 
-	int OnSetFile::loadMp3(const char* file)
+	int OnSetFile::loadMp3(std::string file)
 	{
 		if (fileFormat != OnSetFormat::NotLoaded)
 		{
@@ -53,6 +54,11 @@ namespace OnBeat
 		}
 
 		path = file;
+
+		if (!std::filesystem::exists(file))
+		{
+			return 0;
+		}
 
 		if (mp3dec_load(&mp3Decoder, path.c_str(), &fileInfo, NULL, NULL))
 		{
@@ -79,7 +85,7 @@ namespace OnBeat
 		return 1;
 	}
 
-	int OnSetFile::loadWav(const char* file)
+	int OnSetFile::loadWav(std::string file)
 	{
 		if (fileFormat != OnSetFormat::NotLoaded)
 		{
@@ -100,21 +106,17 @@ namespace OnBeat
 		return 1;
 	}
 
-	OnSetDetection::OnSetDetection(double thresholdC, double thresholdM, int meanW, int maximaW,
-		const char* file, double frameSize, double sampleRate)
-		: Gist<double>(frameSize, sampleRate)
+	OnSetDetection::OnSetDetection(OnSetOptions options,
+		std::string file, double frameSize, double sampleRate)
+		: Gist<double>(frameSize, sampleRate), options(options)
 	{
-		thresholdConstant = thresholdC;
-		thresholdMultiple = thresholdM;
-		meanWindow = meanW;
-		maximaWindow = maximaW;
-		if (file != nullptr)
+		if (std::filesystem::exists(file))
 		{
 			audioFile = OnSetFile(file);
 		}
 	}
 
-	AudioVector OnSetDetection::normalise(AudioVector beats)
+	AudioVector OnSetDetection::normalise(const AudioVector& beats)
 	{
 		AudioVector normalised;
 		normalised.resize(beats.size());
@@ -141,14 +143,15 @@ namespace OnBeat
 		return normalised;
 	}
 
-	AudioVector OnSetDetection::validateAudioVector(AudioVector beats)
+	AudioVector OnSetDetection::validateAudioVector(const AudioVector& beats)
 	{
 		return beats;
 	}
 
-	int OnSetDetection::createBeatFile(AudioVector beats, const char* outputFile, int frameSize, double sampleRate)
+	int OnSetDetection::createBeatFile(const AudioVector& beats, std::string outputFile, int frameSize, double sampleRate)
 	{
 		//Todo check for directories and make if needed
+		OnBeat::Util::checkPath(outputFile, true);
 
 		std::ofstream outputStream(outputFile);
 
@@ -173,7 +176,7 @@ namespace OnBeat
 		return 1;
 	}
 
-	double OnSetDetection::findPeakThreshold(std::vector<double> beats)
+	double OnSetDetection::findPeakThreshold(const std::vector<double>& beats)
 	{
 
 		double sum = 0;
@@ -193,7 +196,7 @@ namespace OnBeat
 		return sum / size;
 	}
 
-	AudioVector OnSetDetection::findBeats(AudioVector beats)
+	AudioVector OnSetDetection::findBeats(const AudioVector& beats)
 	{
 		AudioVector beatPoints;
 		//Resize for channels
@@ -209,23 +212,23 @@ namespace OnBeat
 			{
 				//Calculate mean
 				double sum = 0;
-				for (int m = n - meanWindow; m <= n + meanWindow; m++)
+				for (int m = n - options.meanWindow; m <= n + options.meanWindow; m++)
 				{
 
 					sum += (m > 0 && m < beats[c].size()) ? beats[c][m] : beats[c][0];
 
 				}
 
-				double mean = sum / ((2 * meanWindow) + 1);
+				double mean = sum / ((2 * options.meanWindow) + 1);
 				//Check point is above mean
-				if (beats[c][n] > thresholdConstant + (thresholdMultiple * mean))
+				if (beats[c][n] > options.thresholdConstant + (options.thresholdMultiple * mean))
 				{
 					bool isLocalMaxima = true;
 					//Check point is local maxima
-					for (int m = n - maximaWindow; m < n + maximaWindow; m++)
+					for (int m = n - options.maximaWindow; m < n + options.maximaWindow; m++)
 					{
-						//Ensure m is a valid index
-						m = (m < 0) ? 0 : (m >= beats[c].size()) ? 0 : m;
+						//Ensure m is a valid index else m is looped around
+						m = (m < 0) ? m = 0 - m : (m >= beats[c].size()) ? m = m - beats[c].size() : m;
 						if (beats[c][n] < beats[c][m])
 						{
 							isLocalMaxima = false;
@@ -248,7 +251,7 @@ namespace OnBeat
 		return beatPoints;
 	}
 
-	AudioVector OnSetDetection::processAudioVector(AudioVector data)
+	AudioVector OnSetDetection::processAudioVector(const AudioVector& data)
 	{
 		AudioVector values;
 
@@ -278,11 +281,11 @@ namespace OnBeat
 
 	}
 
-	AudioVector OnSetDetection::processFile(const char* file)
+	AudioVector OnSetDetection::processFile(std::string file)
 	{
-		if (file)
+		if (std::filesystem::exists(file))
 		{
-			OnSetFile audioFile(file);
+			audioFile = OnSetFile(file);
 		}
 
 		if (audioFile.getFormat() == OnSetFormat::Error ||
@@ -292,19 +295,8 @@ namespace OnBeat
 			return {};
 		}
 
-		AudioVector fileSamples = audioFile.getSamples();
-
 		//All frames processed in both channels
-		return OnSetDetection::normalise(processAudioVector(fileSamples));
-
-	}
-
-	void OnSetDetection::setThresholdValues(double thresholdC, double thresholdM, int meanW, int maximaW)
-	{
-		thresholdConstant = (thresholdC == NULL) ? thresholdConstant : thresholdC;
-		thresholdMultiple = (thresholdM == NULL) ? thresholdMultiple : thresholdM;
-		meanWindow = (meanW == NULL) ? meanWindow : meanW;
-		maximaW = (maximaW == NULL) ? maximaWindow : maximaW;
+		return OnSetDetection::normalise(processAudioVector(audioFile.getSamples()));
 	}
 
 	OnSetDetection::~OnSetDetection()

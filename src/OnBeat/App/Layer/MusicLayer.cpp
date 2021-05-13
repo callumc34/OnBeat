@@ -4,7 +4,7 @@
 namespace OnBeat {
 	MusicLayer::MusicLayer(App* MainApp, const char* file,
 		float cameraVelocity, double sampleRate, int sampleSize)
-		: Layer(MainApp, "MusicLayer"), beatGen(0, 1, 8, 8, file)
+		: Layer(MainApp, "MusicLayer"), beatGen({ 0, 1, 8, 8 }, file)
 	{
 		auto& window = app->GetWindow();
 

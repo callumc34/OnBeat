@@ -15,5 +15,7 @@ namespace OnBeat
 		glm::vec4 arrayToVec4(nlohmann::json object);
 
 		float stringSizeToFloat(std::string val, Flag flag);
+
+		bool checkPath(std::string file, bool makePath);
 	}
 }
