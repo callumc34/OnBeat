@@ -92,7 +92,7 @@ namespace OnBeat
 			&sound
 		));
 
-		AP_LOG(std::string(std::string(audioFile) + "loaded...\n").c_str());
+		AP_LOG(std::string(std::string(audioFile) + " loaded...\n").c_str());
 		playing = false;
 
 		loaded = true;

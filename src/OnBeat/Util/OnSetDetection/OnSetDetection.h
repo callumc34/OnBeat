@@ -79,7 +79,7 @@ namespace OnBeat {
 			AudioVector findBeats(const AudioVector& beats);
 
 			//Gist onset detection of a .wav file using spectralDifference
-			AudioVector processFile(std::string file = nullptr);
+			AudioVector processFile(std::string file = "");
 			AudioVector processAudioVector(const AudioVector& data);
 
 			//Get private values

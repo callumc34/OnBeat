@@ -18,15 +18,13 @@ namespace OnBeat
 			virtual void OnAttach() override;
 			virtual void OnDetach() override;
 
-			void OnEvent(Hazel::Event& e) override;
+			void EventUpdate(Hazel::Event& e) override;
 			void OnUpdate(Hazel::Timestep ts) override;
 
 			virtual void OnImGuiRender() override;
 
 		private:
-			Hazel::Scope<Hazel::OrthographicCamera> cameraController;
 
-			App* app;
 			OnSetDetection beatGen;
 
 			//Textures & Shading
