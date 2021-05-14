@@ -199,5 +199,16 @@ namespace OnBeat
 			}
 		
 		}
+
+		MouseEvent::Button HazelMouseCodeToUl(int key)
+		{
+			switch (key)
+			{
+				case 0: return MouseEvent::kButton_Left;
+				case 1: return MouseEvent::kButton_Middle;
+				case 2: return MouseEvent::kButton_Right;
+				default:return MouseEvent::kButton_None;
+			}
+		}
 	}
 }

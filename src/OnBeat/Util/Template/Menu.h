@@ -25,6 +25,8 @@ namespace OnBeat
 				const ultralight::String& url) override;
 			void OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor) override;
 			bool OnMouseMove(Hazel::MouseMovedEvent& e);
+			bool OnMouseButtonPress(Hazel::MouseButtonPressedEvent& e);
+			bool OnMouseButtonRelease(Hazel::MouseButtonReleasedEvent& e);
 			bool OnKeyPress(Hazel::KeyPressedEvent& e);
 			bool OnKeyRelease(Hazel::KeyReleasedEvent& e);
 			bool OnKeyTyped(Hazel::KeyTypedEvent& e);
@@ -51,5 +53,11 @@ namespace OnBeat
 				GLFWcursor* cursor_hresize;
 				GLFWcursor* cursor_vresize;
 			} Cursors;
+
+			struct MousePos
+			{
+				double x;
+				double y;
+			} CurrentMouse = { 0, 0 };
 	};
 }

@@ -114,6 +114,8 @@ namespace OnBeat
 	{
 		Hazel::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Hazel::MouseMovedEvent>(HZ_BIND_EVENT_FN(Menu::OnMouseMove));
+		dispatcher.Dispatch<Hazel::MouseButtonPressedEvent>(HZ_BIND_EVENT_FN(Menu::OnMouseButtonPress));
+		dispatcher.Dispatch<Hazel::MouseButtonReleasedEvent>(HZ_BIND_EVENT_FN(Menu::OnMouseButtonRelease));
 		dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(Menu::OnKeyPress));
 		dispatcher.Dispatch<Hazel::KeyTypedEvent>(HZ_BIND_EVENT_FN(Menu::OnKeyTyped));
 		dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(Menu::ResizeView));
@@ -137,7 +139,32 @@ namespace OnBeat
 		evt.type = ul::MouseEvent::kType_MouseMoved;
 		evt.x = e.GetX();
 		evt.y = e.GetY();
+		CurrentMouse = { e.GetX(), e.GetY() };
 
+		view->FireMouseEvent(evt);
+		return true;
+	}
+
+	bool Menu::OnMouseButtonPress(Hazel::MouseButtonPressedEvent& e)
+	{
+		ul::MouseEvent evt;
+		evt.type = ul::MouseEvent::kType_MouseDown;
+		evt.button = Util::HazelMouseCodeToUl(e.GetMouseButton());
+		evt.x = CurrentMouse.x;
+		evt.y = CurrentMouse.y;
+
+		view->FireMouseEvent(evt);
+		return true;
+	}
+
+	bool Menu::OnMouseButtonRelease(Hazel::MouseButtonReleasedEvent& e)
+	{
+		ul::MouseEvent evt;
+		evt.type = ul::MouseEvent::kType_MouseUp;
+		evt.button = Util::HazelMouseCodeToUl(e.GetMouseButton());
+		evt.x = CurrentMouse.x;
+		evt.y = CurrentMouse.y;
+	
 		view->FireMouseEvent(evt);
 		return true;
 	}

@@ -1,4 +1,5 @@
 #pragma once
+#include <ultralight/MouseEvent.h>
 #include <glm/glm.hpp>
 #include <nlohmann/json.hpp>
 
@@ -21,5 +22,7 @@ namespace OnBeat
 		bool checkPath(std::string file, bool makePath);
 
 		int HazelKeyCodeToUl(int key);
+
+		ultralight::MouseEvent::Button HazelMouseCodeToUl(int key);
 	}
 }
