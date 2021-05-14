@@ -1,9 +1,8 @@
-#include <OnBeat/Ui/MainMenu/MainMenu.h>
 #include <OnBeat/App/App.h>
+#include <OnBeat/Ui/MainMenu/MainMenu.h>
 #include <Hazel/Core/EntryPoint.h>
+#include <glfw/glfw3.h>
 #include <stb_image/stb_image.h>
-
-#include <OnBeat/Util/OnSetDetection/OnSetDetection.h>
 
 namespace OnBeat
 {

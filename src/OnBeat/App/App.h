@@ -2,7 +2,8 @@
 #include <OnBeat/Config/Config.h>
 #include <OnBeat/Util/AudioPlayer/AudioPlayer.h>
 #include <Hazel/Core/Application.h>
-#include <glfw/glfw3.h>
+
+typedef struct GLFWwindow GLFWwindow;
 
 namespace OnBeat
 {

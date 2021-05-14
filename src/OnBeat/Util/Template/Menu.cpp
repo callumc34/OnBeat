@@ -1,7 +1,9 @@
 #include <OnBeat/Util/Template/Menu.h>
+#include <OnBeat/Util/AppUtil/AppUtil.h>
 #include <AppCore/Platform.h>
 #include <Hazel/Renderer/Renderer2D.h>
 #include <Hazel/Renderer/RenderCommand.h>
+#include <GLFW/glfw3.h>
 
 namespace ul = ultralight;
 
@@ -24,8 +26,17 @@ namespace OnBeat
 
 		renderer = ul::Renderer::Create();
 
+		// Create standard cursors
+		Cursors.cursor_ibeam = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
+		Cursors.cursor_crosshair = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+		Cursors.cursor_hand = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+		Cursors.cursor_hresize = glfwCreateStandardCursor(GLFW_HRESIZE_CURSOR);
+		Cursors.cursor_vresize = glfwCreateStandardCursor(GLFW_VRESIZE_CURSOR);
+
 		auto& window = Hazel::Application::Get().GetWindow();
 		view = renderer->CreateView(window.GetWidth(), window.GetHeight(), false, nullptr);
+		view->set_load_listener(this);
+		view->set_view_listener(this);
 
 		LoadDocument("file:///" + ul::String(document.c_str()));
 	}
@@ -34,6 +45,31 @@ namespace OnBeat
 	{
 		view->LoadURL(document);
 		view->Focus();
+	}
+
+	void Menu::SetCursor(ul::Cursor cursor)
+	{
+		//Todo fix Imgui resetting the cursor
+		switch (cursor)
+		{
+			case ultralight::kCursor_Cross:
+				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_crosshair);
+				break;
+			case ultralight::kCursor_Hand:
+				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_hand);
+				break;
+			case ultralight::kCursor_IBeam:
+				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_ibeam);
+				break;
+			case ultralight::kCursor_EastWestResize:
+				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_hresize);
+				break;
+			case ultralight::kCursor_NorthSouthResize:
+				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_vresize);
+				break;
+			default:
+				glfwSetCursor(MainApp->GetNativeWindow(), nullptr);
+		}
 	}
 
 	void Menu::OnUpdate(Hazel::Timestep ms)
@@ -78,8 +114,21 @@ namespace OnBeat
 	{
 		Hazel::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Hazel::MouseMovedEvent>(HZ_BIND_EVENT_FN(Menu::OnMouseMove));
+		dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(Menu::OnKeyPress));
+		dispatcher.Dispatch<Hazel::KeyTypedEvent>(HZ_BIND_EVENT_FN(Menu::OnKeyTyped));
 		dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(Menu::ResizeView));
 		Layer::OnEvent(e);
+	}
+
+	void Menu::OnDOMReady(ultralight::View* caller, uint64_t frame_id,
+		bool is_main_frame, const ultralight::String& url)
+	{
+		//Run scripts using view->EvaluateScript
+	}
+
+	void Menu::OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor)
+	{
+		SetCursor(cursor);
 	}
 
 	bool Menu::OnMouseMove(Hazel::MouseMovedEvent& e)
@@ -93,6 +142,44 @@ namespace OnBeat
 		return true;
 	}
 
+	bool Menu::OnKeyPress(Hazel::KeyPressedEvent& e)
+	{
+		ul::KeyEvent evt;
+		evt.type = ul::KeyEvent::kType_RawKeyDown;
+		evt.native_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
+		evt.modifiers = 0;
+		evt.native_key_code = 0;
+
+		ul::GetKeyIdentifierFromVirtualKeyCode(evt.virtual_key_code, evt.key_identifier);
+		view->FireKeyEvent(evt);
+		return true;
+	}
+
+	bool Menu::OnKeyRelease(Hazel::KeyReleasedEvent& e)
+	{
+		ul::KeyEvent evt;
+		evt.type = ul::KeyEvent::kType_KeyUp;
+		evt.native_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
+		evt.modifiers = 0;
+		evt.native_key_code = 0;
+
+		ul::GetKeyIdentifierFromVirtualKeyCode(evt.virtual_key_code, evt.key_identifier);
+		view->FireKeyEvent(evt);
+		return true;
+	}
+
+	bool Menu::OnKeyTyped(Hazel::KeyTypedEvent& e)
+	{
+		ul::KeyEvent evt;
+		evt.type = ul::KeyEvent::kType_Char;
+		ul::String text = ul::String32((const char32_t*)e.GetKeyCode(), 1);
+		evt.text = text;
+		evt.unmodified_text = text;
+
+		view->FireKeyEvent(evt);
+		return true;
+	}
+
 	bool Menu::ResizeView(Hazel::WindowResizeEvent& e)
 	{
 		view->Resize(e.GetWidth(), e.GetHeight());
@@ -101,6 +188,10 @@ namespace OnBeat
 
 	Menu::~Menu()
 	{
-
+		glfwDestroyCursor(Cursors.cursor_ibeam);
+		glfwDestroyCursor(Cursors.cursor_crosshair);
+		glfwDestroyCursor(Cursors.cursor_hand);
+		glfwDestroyCursor(Cursors.cursor_hresize);
+		glfwDestroyCursor(Cursors.cursor_vresize);
 	}
 }

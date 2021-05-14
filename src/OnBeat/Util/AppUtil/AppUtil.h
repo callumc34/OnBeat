@@ -2,6 +2,8 @@
 #include <glm/glm.hpp>
 #include <nlohmann/json.hpp>
 
+typedef struct GLFWcursor GLFWcursor;
+
 namespace OnBeat
 {
 	namespace Util
@@ -17,5 +19,7 @@ namespace OnBeat
 		float stringSizeToFloat(std::string val, Flag flag);
 
 		bool checkPath(std::string file, bool makePath);
+
+		int HazelKeyCodeToUl(int key);
 	}
 }
