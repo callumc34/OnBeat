@@ -122,12 +122,6 @@ namespace OnBeat
 		Layer::OnEvent(e);
 	}
 
-	void Menu::OnDOMReady(ultralight::View* caller, uint64_t frame_id,
-		bool is_main_frame, const ultralight::String& url)
-	{
-		//Run scripts using view->EvaluateScript
-	}
-
 	void Menu::OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor)
 	{
 		SetCursor(cursor);

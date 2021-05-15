@@ -41,6 +41,5 @@ namespace OnBeat
 
 	Layer::~Layer()
 	{
-		delete MainApp;
 	}
 }

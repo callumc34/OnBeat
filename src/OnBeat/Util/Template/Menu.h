@@ -19,10 +19,6 @@ namespace OnBeat
 
 			void OnUpdate(Hazel::Timestep ms) override;
 			void OnEvent(Hazel::Event& e) override;
-			void OnDOMReady(ultralight::View* caller,
-				uint64_t frame_id,
-				bool is_main_frame,
-				const ultralight::String& url) override;
 			void OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor) override;
 			bool OnMouseMove(Hazel::MouseMovedEvent& e);
 			bool OnMouseButtonPress(Hazel::MouseButtonPressedEvent& e);

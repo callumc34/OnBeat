@@ -3,6 +3,7 @@
 #include <Hazel/Core/EntryPoint.h>
 #include <glfw/glfw3.h>
 #include <stb_image/stb_image.h>
+#include <imgui.h>
 
 namespace OnBeat
 {
@@ -27,6 +28,10 @@ namespace OnBeat
 		{
 			glfwSetWindowSize(nativeWindow, Settings.DisplayWidth, Settings.DisplayHeight);
 		}
+
+		//Stop ImGui changing mouse cursor
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
 		PushLayer(new MainMenu(Settings.CurrentSkinPath + "/menu/MainMenu/main.html", this, "Main Menu"));
 	}

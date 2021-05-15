@@ -19,9 +19,8 @@ body {
 body, html {
   width: 100%;
   height: 100%;
-  margin: 0px;
-  background-image: url("./img/bg.png");
-  background-size: 100% auto;
+  margin: 0;
+  user-select: none;
 }
 
 .titleBackground {
@@ -30,6 +29,11 @@ body, html {
   margin-left: auto;
   margin-right: 0px;
   box-shadow: -4px 4px 8px 2px rgba(0,0,0,0.9);
+}
+
+.imgBackground {  
+  background-image: url("./img/bg.png");
+  background-size: 100% auto;
 }
 
 .title {
@@ -59,15 +63,35 @@ body, html {
 
 .left {
   width: 40%;
-}
+} 
 
 .right {
   width: 60%;
   height: 100%;
 }
 
-#Page {
+.header {
+  position: relative;
+  display: inline-block;
+  padding: 24px;
+  font-size: 50px;
+  color: #FDFDFD;
+}
+
+.header:after {
+  content: "|";
+  color: #FF1619;
+}
+
+.header:last-child:after {
+  content: "";
+}
+
+#MainMenu {
+  display: block;
   width: 100%;
+  height: 100%;
+  margin: 0px;
 }
 
 #Menu {
@@ -79,4 +103,37 @@ body, html {
   font-size: 96px;
   margin-left: 45%;
   padding-right: 12px;
+}
+
+#Settings {
+  display: none;
+}
+
+#SettingsSection {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #FF1619;
+  border-radius: 10px;
+}
+
+#Headers {
+  display: inline-block;
+  width: 100%;
+  height: fit-content;
+  border-bottom: 2px solid #FF1619;  
+}
+
+#SettingsQuit {
+  position: absolute;
+  font-size: 100px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #FF1619;
+  cursor: pointer;
+  transition: .5s ease all;
+}
+
+#SettingsQuit:hover {
+  color: #FDFDFD;
 }

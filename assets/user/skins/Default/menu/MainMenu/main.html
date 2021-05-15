@@ -1,36 +1,69 @@
 <head>
-	<link rel="stylesheet" type="text/css" href="./main.css">
 	<title>OnBeat</title>
+	<link rel="stylesheet" type="text/css" href="./main.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-	<div class="row">
-		<div class="column left">
-			<p></p>
-		</div>
-		<div class="column right">
-			<div id="Menu">
-		  		<div class="titleBackground">
-		  			<h1 id="GameTitle" class="title">OnBeat</h1>
-		  		</div>
-				
-		  		<div class="titleBackground subOption">
-		  			<h2 class="menuOption">Play Beat!</h2>
-		  		</div>
-		  		<div class="titleBackground subOption">
-		  			<h2 class="menuOption">Create Beat!</h2>
-		  		</div>
+<body class="imgBackground">
+	<div id="MainMenu">
+		<div class="row">
+			<div class="column left">
+				<p></p>
+			</div>
+			<div class="column right">
+				<div id="Menu">
+			  		<div class="titleBackground">
+			  			<h1 id="GameTitle" class="title">OnBeat</h1>
+			  		</div>
+					
+			  		<div class="titleBackground subOption">
+			  			<h2 class="menuOption">Play Beat!</h2>
+			  		</div>
+			  		<div class="titleBackground subOption">
+			  			<h2 class="menuOption">Create Beat!</h2>
+			  		</div>
 
-		  		<div class="titleBackground subOption">
-		  			<h2 class="menuOption">Game Settings!</h2>
-		  		</div>
+			  		<div class="titleBackground subOption" id="GameSettings">
+			  			<h2 class="menuOption">Game Settings!</h2>
+			  		</div>
 
 
-		  		<div class="titleBackground subOption">
-		  			<h2 class="menuOption" onclick="console.log(1)">Exit!</h2>
-		  		</div>
-		  	</div>
+			  		<div class="titleBackground subOption" onclick="ExitGame()">
+			  			<h2 class="menuOption">Exit!</h2>
+			  		</div>
+			  	</div>
+			</div>
 		</div>
 	</div>
-    
-    <script src="./main.js"></script>
+
+	<div id="Settings">
+		<div class="row">
+			<div class="column left">
+				<p></p>
+			</div>
+
+			<div class="column right">
+				<div id="SettingsSection">
+					<div id="Headers">
+						<div class="header">
+							Display
+						</div>
+
+						<div class="header">
+							Input
+						</div>
+
+						<div class="header">
+							Audio
+						</div>
+
+						<div class="header">
+							<a id="SettingsQuit">&times;</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
+    
+<script src="./main.js"></script>
