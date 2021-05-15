@@ -15,6 +15,33 @@ namespace OnBeat
 
 			return JSValueMakeNull(ctx);
 		}
+
+		//Select file callback
+		JSValueRef SelectFile(JSContextRef ctx, JSObjectRef function,
+			JSObjectRef thisObject, size_t argumentCount,
+			const JSValueRef arguments[], JSValueRef* exception)
+		{
+
+			return JSValueMakeNull(ctx);
+		}
+
+		//Apply settings callback
+		JSValueRef ApplySettings(JSContextRef ctx, JSObjectRef function,
+			JSObjectRef thisObject, size_t argumentCount,
+			const JSValueRef arguments[], JSValueRef* exception)
+		{
+
+			return JSValueMakeNull(ctx);
+		}
+
+		//Cancel settings callback
+		JSValueRef CancelSettings(JSContextRef ctx, JSObjectRef function,
+			JSObjectRef thisObject, size_t argumentCount,
+			const JSValueRef arguments[], JSValueRef* exception)
+		{
+
+			return JSValueMakeNull(ctx);
+		}
 	}
 
 	MainMenu::MainMenu(const std::string& document, App* MainApp, std::string layerName)

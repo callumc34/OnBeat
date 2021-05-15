@@ -44,21 +44,78 @@
 			<div class="column right">
 				<div id="SettingsSection">
 					<div id="Headers">
-						<div class="header">
+						<div class="header" id="DisplayHeader">
 							Display
 						</div>
 
-						<div class="header">
+						<div class="header" id="InputHeader">
 							Input
 						</div>
 
-						<div class="header">
+						<div class="header" id="AudioHeader">
 							Audio
 						</div>
 
 						<div class="header">
-							<a id="SettingsQuit">&times;</a>
+							<a id="SettingsQuit">X</a>
 						</div>
+					</div>
+					<div class="settingsOptions" id="DisplaySettings">
+						<div class="setting" id="Resolution">
+							<p>
+								Resolution:
+							</p>
+							<div>
+								<select id="ResolutionSelect" placeholder="Resolution">
+      								<option value="" disabled selected hidden>Resolution</option>
+								</select>
+							</div>
+						</div>
+						<div class="setting" id="Fullscreen">
+							<p>
+								Fullscreen:
+							</p>
+							<div>
+								<select id="FullScreenSelect">
+									<option value="" disabled selected hidden>Monitor</option>
+								</select>
+							</div>
+						</div>
+						<div class="setting" id="FpsCap">
+							<p>
+								Fps Cap:
+							</p>
+							<div>
+								<input type="number" placeholder="0">
+							</div>
+						</div>
+						<div class="setting" id="CurrentSkin">
+							<p>
+								Skin:
+							</p>
+							<div>
+								<input type="button" value="Select skin" id="SkinButton" onclick="SelectFile()">
+								<input type="text" placeholder="Default" id="SkinPath" disabled>
+							</div>
+						</div>
+					</div>
+					<div class="settingsOptions" id="InputSettings">
+						<div class="setting" id="LeftColumnKey">
+							<p>Left Column Key:</p>
+							<div>
+								<input type="text" id="LeftColumnKeySelect">
+							</div>
+						</div>
+					</div>
+					<div class="settingsOptions" id="AudioSettings">
+						<div class="setting" id="Volume">
+							<p>Volume:</p>
+							<input type="slider" id="VolumeSelect">
+						</div>
+					</div>
+					<div id="SettingsButtons">
+						<input type="button" value="Apply" onclick="ApplySettings()">
+						<input type="button" value="Cancel" onclick="CancelSettings()">
 					</div>
 				</div>
 			</div>
