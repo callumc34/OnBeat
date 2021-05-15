@@ -167,9 +167,9 @@ namespace OnBeat
 	{
 		ul::KeyEvent evt;
 		evt.type = ul::KeyEvent::kType_RawKeyDown;
-		evt.native_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
-		evt.modifiers = 0;
+		evt.virtual_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
 		evt.native_key_code = 0;
+		evt.modifiers = 0;
 
 		ul::GetKeyIdentifierFromVirtualKeyCode(evt.virtual_key_code, evt.key_identifier);
 		view->FireKeyEvent(evt);
@@ -180,9 +180,9 @@ namespace OnBeat
 	{
 		ul::KeyEvent evt;
 		evt.type = ul::KeyEvent::kType_KeyUp;
-		evt.native_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
-		evt.modifiers = 0;
+		evt.virtual_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
 		evt.native_key_code = 0;
+		evt.modifiers = 0;
 
 		ul::GetKeyIdentifierFromVirtualKeyCode(evt.virtual_key_code, evt.key_identifier);
 		view->FireKeyEvent(evt);
@@ -193,9 +193,8 @@ namespace OnBeat
 	{
 		ul::KeyEvent evt;
 		evt.type = ul::KeyEvent::kType_Char;
-		ul::String text = ul::String32((const char32_t*)e.GetKeyCode(), 1);
-		evt.text = text;
-		evt.unmodified_text = text;
+		evt.text = std::string(1, (char)e.GetKeyCode()).c_str();
+		evt.unmodified_text = evt.text;
 
 		view->FireKeyEvent(evt);
 		return true;
