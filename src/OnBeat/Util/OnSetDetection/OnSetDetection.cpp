@@ -72,7 +72,7 @@ namespace OnBeat
 		channels = fileInfo.channels;
 
 		//Add samples to AudioVector
-		samples.resize(fileInfo.channels);
+		samples.reserve(fileInfo.channels);
 		for (int c = 0; c < fileInfo.channels; c++)
 		{
 			//Copy buffer data from channel index to next channel
@@ -119,7 +119,7 @@ namespace OnBeat
 	AudioVector OnSetDetection::normalise(const AudioVector& beats)
 	{
 		AudioVector normalised;
-		normalised.resize(beats.size());
+		normalised.reserve(beats.size());
 		//Normalise each channel
 		for (int c = 0; c < beats.size(); c++)
 		{
@@ -132,7 +132,7 @@ namespace OnBeat
 				min = (val < min) ? val : min;
 			}
 			//New pass for normalised vector
-			normalised[c].resize(beats[c].size());
+			normalised[c].reserve(beats[c].size());
 			for (int n = 0; n < beats[c].size(); n++)
 			{
 				normalised[c][n] = (beats[c][n] - min) / (max - min);
@@ -200,13 +200,13 @@ namespace OnBeat
 	{
 		AudioVector beatPoints;
 		//Resize for channels
-		beatPoints.resize(beats.size());
+		beatPoints.reserve(beats.size());
 
 		//Loop through channels
 		for (int c = 0; c < beats.size(); c++)
 		{
 			//Resize for all points
-			beatPoints[c].resize(beats[c].size());
+			beatPoints[c].reserve(beats[c].size());
 			//Calculate threshold and find peaks for each channel
 			for (int n = 0; n < beats[c].size(); n++)
 			{
@@ -254,13 +254,13 @@ namespace OnBeat
 	AudioVector OnSetDetection::processAudioVector(const AudioVector& data)
 	{
 		AudioVector values;
-
+		values.reserve(data.size());
+		//Allocate framesize
+		std::vector<double> frame;
+		frame.reserve(getAudioFrameSize());
 		//Processing channels
 		for (int c = 0; c < data.size(); c++)
 		{
-			values.push_back(std::vector<double>());
-			std::vector<double> frame;
-
 			//Loop through each frame
 			for (int i = getAudioFrameSize(); i < data[c].size(); i += getAudioFrameSize())
 			{
