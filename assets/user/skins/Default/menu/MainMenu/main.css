@@ -37,6 +37,27 @@ input {
   width: 75%;
 }
 
+input[type="range"] {
+  background-color: transparent;
+  -webkit-appearance: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: #D64649;
+  color: #FDFDFD;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  margin-top: auto;
+  width: 23px;
+  height: 23px;
+  background: #FDFDFD;
+  border: 2.5px solid #1A1A1A;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
 input[type="button"]:hover {
   background-color: #FDFDFD;
   color: #D64649;
@@ -132,11 +153,15 @@ input[type="button"]:hover {
 }
 
 .setting > div {
-  display: block;
+  display: flex;
+  width: 100%;
+  height: fit-content;
   grid-column: option;
 }
 
 .setting > div > * {
+  display: inline-block;
+  margin-right: 2.5%;
 }
 
 .settingsOptions {  
@@ -191,6 +216,16 @@ input[type="button"]:hover {
 
 #SkinButton {
   display: inline-block;
+}
+
+#VolumeSelectNumber {
+  display: inline-block;
+  width: 25%;
+}
+
+#VolumeSelect {
+  display: inline-block;
+  width: 65%;
 }
 
 #SettingsButtons {

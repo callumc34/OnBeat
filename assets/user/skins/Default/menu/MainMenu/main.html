@@ -94,7 +94,7 @@
 								Skin:
 							</p>
 							<div>
-								<input type="button" value="Select skin" id="SkinButton" onclick="SelectFile()">
+								<input type="button" value="Select skin" id="SkinButton" onclick="selectSkin()">
 								<input type="text" placeholder="Default" id="SkinPath" disabled>
 							</div>
 						</div>
@@ -110,12 +110,15 @@
 					<div class="settingsOptions" id="AudioSettings">
 						<div class="setting" id="Volume">
 							<p>Volume:</p>
-							<input type="slider" id="VolumeSelect">
+							<div>
+								<input type="number" id="VolumeSelectNumber" min="0" max="100">
+								<input type="range" id="VolumeSelect">
+							</div>
 						</div>
 					</div>
 					<div id="SettingsButtons">
-						<input type="button" value="Apply" onclick="ApplySettings()">
-						<input type="button" value="Cancel" onclick="CancelSettings()">
+						<input type="button" value="Apply" onclick="applySettings()">
+						<input type="button" value="Cancel" onclick="cancelSettings()">
 					</div>
 				</div>
 			</div>
