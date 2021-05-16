@@ -74,7 +74,10 @@ input[type="button"]:hover {
 
 .imgBackground {  
   background-image: url("./img/bg.png");
-  background-size: 100% auto;
+  background-repeat: none;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
 }
 
 .title {
@@ -218,7 +221,7 @@ input[type="button"]:hover {
   display: inline-block;
 }
 
-#VolumeSelectNumber {
+#Volume {
   display: inline-block;
   width: 25%;
 }

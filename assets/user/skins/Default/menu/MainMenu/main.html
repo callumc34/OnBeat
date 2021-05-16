@@ -66,52 +66,52 @@
 								Resolution:
 							</p>
 							<div>
-								<select id="ResolutionSelect" placeholder="Resolution">
+								<select id="ResolutionSelect" placeholder="Resolution" class="configValue">
       								<option value="" disabled selected hidden>Resolution</option>
 								</select>
 							</div>
 						</div>
-						<div class="setting" id="Fullscreen">
+						<div class="setting" id="FullscreenSetting">
 							<p>
 								Fullscreen:
 							</p>
 							<div>
-								<select id="FullScreenSelect">
+								<select id="FullScreen" class="configValue">
 									<option value="" disabled selected hidden>Monitor</option>
 								</select>
 							</div>
 						</div>
-						<div class="setting" id="FpsCap">
+						<div class="setting" id="FpsCapSetting">
 							<p>
 								Fps Cap:
 							</p>
 							<div>
-								<input type="number" placeholder="0">
+								<input type="number" placeholder="0" id="FpsCap" class="configValue">
 							</div>
 						</div>
-						<div class="setting" id="CurrentSkin">
+						<div class="setting" id="CurrentSkinSetting">
 							<p>
 								Skin:
 							</p>
 							<div>
 								<input type="button" value="Select skin" id="SkinButton" onclick="selectSkin()">
-								<input type="text" placeholder="Default" id="SkinPath" disabled>
+								<input type="text" placeholder="Default" id="Skin" disabled class="configValue">
 							</div>
 						</div>
 					</div>
 					<div class="settingsOptions" id="InputSettings">
-						<div class="setting" id="LeftColumnKey">
+						<div class="setting" id="LeftColumnKeySetting">
 							<p>Left Column Key:</p>
 							<div>
-								<input type="text" id="LeftColumnKeySelect">
+								<input type="text" id="LeftColumnKey" class="configValue">
 							</div>
 						</div>
 					</div>
 					<div class="settingsOptions" id="AudioSettings">
-						<div class="setting" id="Volume">
+						<div class="setting" id="VolumeSetting">
 							<p>Volume:</p>
 							<div>
-								<input type="number" id="VolumeSelectNumber" min="0" max="100">
+								<input type="number" id="Volume" min="0" max="100" class="configValue">
 								<input type="range" id="VolumeSelect">
 							</div>
 						</div>

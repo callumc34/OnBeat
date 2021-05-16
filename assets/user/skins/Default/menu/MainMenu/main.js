@@ -1,6 +1,10 @@
 //JS calls into C api
 function applySettings() {
-    PushSettings({ volume: 5, FpsCap: 60});
+    let config = {};
+    for (let setting of document.getElementsByClassName("configValue")) {
+        if (setting.value.length != 0) config[setting.id] = setting.value;
+    }
+    PushSettings(config);
 }
 
 function cancelSettings() {
@@ -41,11 +45,11 @@ SettingsQuit.addEventListener("click", () => display(MainMenu,
  document.body.children, "block"));
 
 VolumeSelect.onchange = function() {
-    VolumeSelectNumber.value = this.value;
+    Volume.value = this.value;
 }
 
-VolumeSelectNumber.onchange = function() {
-    if (isNaN(this.value) || this.value > this.max || this.value < this.min) {
+Volume.onchange = function() {
+    if (isNaN(this.value) || Number(this.value) > this.max || Number(this.value) < this.min) {
         this.value = VolumeSelect.value;
         return;
     }
