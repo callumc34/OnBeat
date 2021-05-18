@@ -1,4 +1,5 @@
 #include <OnBeat/Ui/MainMenu/MainMenu.h>
+#include <AppCore/JSHelpers.h>
 
 namespace ul = ultralight;
 
@@ -21,6 +22,43 @@ namespace OnBeat
 			JSObjectRef thisObject, size_t argumentCount,
 			const JSValueRef arguments[], JSValueRef* exception)
 		{
+			JSValueRef e = nullptr;
+			ul::JSObject cfgObject = JSValueToObject(ctx, arguments[0], &e);
+			//Todo check exception
+			if (!e)
+			{
+				//Handle error
+			}
+
+			//Todo set newSettings to current settings and overwrite
+			Config::Settings newSettings;
+
+			//Convert all object properties to C variables
+			if (cfgObject.HasProperty("Resolution") && cfgObject["Resolution"].IsString())
+			{
+				ul::String resString = cfgObject["Resolution"].ToString();								
+			}
+			if (cfgObject.HasProperty("Fullscreen") && cfgObject["Fullscreen"].IsString())
+			{
+				int monitor = cfgObject["Resolution"].ToInteger();
+				newSettings.Fullscreen = monitor;
+			}
+			if (cfgObject.HasProperty("FpsCap") && cfgObject["FpsCap"].IsString())
+			{
+				newSettings.FpsCap = cfgObject["FpsCap"].ToInteger();
+			}
+			if (cfgObject.HasProperty("Skin") && cfgObject["Skin"].IsString())
+			{
+				ul::String skinPath = cfgObject["Skin"].ToString();
+			}
+			if (cfgObject.HasProperty("Volume") && cfgObject["Volume"].IsString())
+			{
+				newSettings.Volume = cfgObject["Volume"].ToInteger();
+			}
+
+
+
+
 			return JSValueMakeNull(ctx);
 		}
 
@@ -32,6 +70,8 @@ namespace OnBeat
 			//Todo cast these to JSObject types using JSValueToObject then to JSValue using JSObjectGetProperty
 			//Then cast to ctypes and check for errors if they havent been passed
 			//Update the MainApp->Config with the new values
+			const JSObjectRef cfgObject = JSValueToObject(ctx, arguments[0], 0);
+			
 			return JSValueMakeNull(ctx);
 		}
 
