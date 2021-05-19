@@ -22,42 +22,6 @@ namespace OnBeat
 			JSObjectRef thisObject, size_t argumentCount,
 			const JSValueRef arguments[], JSValueRef* exception)
 		{
-			JSValueRef e = nullptr;
-			ul::JSObject cfgObject = JSValueToObject(ctx, arguments[0], &e);
-			//Todo check exception
-			if (!e)
-			{
-				//Handle error
-			}
-
-			//Todo set newSettings to current settings and overwrite
-			Config::Settings newSettings;
-
-			//Convert all object properties to C variables
-			if (cfgObject.HasProperty("Resolution") && cfgObject["Resolution"].IsString())
-			{
-				ul::String resString = cfgObject["Resolution"].ToString();								
-			}
-			if (cfgObject.HasProperty("Fullscreen") && cfgObject["Fullscreen"].IsString())
-			{
-				int monitor = cfgObject["Resolution"].ToInteger();
-				newSettings.Fullscreen = monitor;
-			}
-			if (cfgObject.HasProperty("FpsCap") && cfgObject["FpsCap"].IsString())
-			{
-				newSettings.FpsCap = cfgObject["FpsCap"].ToInteger();
-			}
-			if (cfgObject.HasProperty("Skin") && cfgObject["Skin"].IsString())
-			{
-				ul::String skinPath = cfgObject["Skin"].ToString();
-			}
-			if (cfgObject.HasProperty("Volume") && cfgObject["Volume"].IsString())
-			{
-				newSettings.Volume = cfgObject["Volume"].ToInteger();
-			}
-
-
-
 
 			return JSValueMakeNull(ctx);
 		}
@@ -70,7 +34,69 @@ namespace OnBeat
 			//Todo cast these to JSObject types using JSValueToObject then to JSValue using JSObjectGetProperty
 			//Then cast to ctypes and check for errors if they havent been passed
 			//Update the MainApp->Config with the new values
-			const JSObjectRef cfgObject = JSValueToObject(ctx, arguments[0], 0);
+			JSValueRef e = nullptr;
+
+			JSObjectRef cfgObject = JSValueToObject(ctx, arguments[0], &e);
+			//Todo check exception
+			if (e)
+			{
+				//Handle error
+				return nullptr;
+			}
+
+			//Todo set newSettings to current settings and overwrite
+			Config::Settings newSettings;
+
+			//Convert all object properties to C variables
+			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Resolution")))
+			{
+				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Resolution"), 0);
+				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
+				ul::JSString ulJSStr = str;
+				ul::String ulString = ulJSStr;
+				std::string stdString = ulString.utf8().data();
+			}
+			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Fullscreen")))
+			{
+				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Fullscreen"), 0);
+				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
+				ul::JSString ulJSStr = str;
+				ul::String ulString = ulJSStr;
+				newSettings.Fullscreen = std::strtol(ulString.utf8().data(), nullptr, 10);
+			}
+			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("FpsCap")))
+			{
+				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("FpsCap"), 0);
+				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
+				ul::JSString ulJSStr = str;
+				ul::String ulString = ulJSStr;
+				newSettings.FpsCap = std::strtod(ulString.utf8().data(), nullptr);
+			}
+			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Skin")))
+			{
+				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Skin"), 0);
+				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
+				ul::JSString ulJSStr = str;
+				ul::String ulString = ulJSStr;
+				newSettings.CurrentSkinPath = std::string(ulString.utf8().data());
+			}
+			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("LeftColumnKey")))
+			{
+				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("LeftColumnKey"), 0);
+				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
+				ul::JSString ulJSStr = str;
+				ul::String ulString = ulJSStr;
+			}
+			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Volume")))
+			{
+				//Complete mess - may need to clean up but JSHelpers aren't working
+				JSValueRef value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Volume"), 0);
+				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
+				ul::JSString ulJSStr = str;
+				ul::String ulString = ulJSStr;
+				newSettings.Volume = std::strtod(ulString.utf8().data(), nullptr) / 100;
+			}
+
 			
 			return JSValueMakeNull(ctx);
 		}
