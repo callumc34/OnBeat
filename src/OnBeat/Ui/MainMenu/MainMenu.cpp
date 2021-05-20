@@ -45,47 +45,54 @@ namespace OnBeat
 			}
 
 			//Todo set newSettings to current settings and overwrite
-			Config::Settings newSettings;
+			Config::Settings newSettings = App::Get().Settings;
 
 			//Convert all object properties to C variables
 			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Resolution")))
 			{
-				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Resolution"), 0);
+				JSValueRef value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Resolution"), 0);
 				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
 				ul::JSString ulJSStr = str;
 				ul::String ulString = ulJSStr;
 				std::string stdString = ulString.utf8().data();
+				newSettings.DisplayWidth = std::stoi(stdString.substr(0, stdString.find("x", 0)).c_str());
+				newSettings.DisplayHeight = std::stoi(stdString.substr(stdString.find("x", 0) + 1, stdString.length()).c_str());
+				JSStringRelease(str);
 			}
 			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Fullscreen")))
 			{
-				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Fullscreen"), 0);
+				JSValueRef value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Fullscreen"), 0);
 				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
 				ul::JSString ulJSStr = str;
 				ul::String ulString = ulJSStr;
 				newSettings.Fullscreen = std::strtol(ulString.utf8().data(), nullptr, 10);
+				JSStringRelease(str);
 			}
 			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("FpsCap")))
 			{
-				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("FpsCap"), 0);
+				JSValueRef value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("FpsCap"), 0);
 				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
 				ul::JSString ulJSStr = str;
 				ul::String ulString = ulJSStr;
 				newSettings.FpsCap = std::strtod(ulString.utf8().data(), nullptr);
+				JSStringRelease(str);
 			}
 			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Skin")))
 			{
-				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Skin"), 0);
+				JSValueRef value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("Skin"), 0);
 				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
 				ul::JSString ulJSStr = str;
 				ul::String ulString = ulJSStr;
 				newSettings.CurrentSkinPath = std::string(ulString.utf8().data());
+				JSStringRelease(str);
 			}
 			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("LeftColumnKey")))
 			{
-				ul::JSValue value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("LeftColumnKey"), 0);
+				JSValueRef value = JSObjectGetProperty(ctx, cfgObject, ul::JSString("LeftColumnKey"), 0);
 				JSStringRef str = JSValueToStringCopy(ctx, value, 0);
 				ul::JSString ulJSStr = str;
 				ul::String ulString = ulJSStr;
+				JSStringRelease(str);
 			}
 			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("Volume")))
 			{
@@ -95,8 +102,10 @@ namespace OnBeat
 				ul::JSString ulJSStr = str;
 				ul::String ulString = ulJSStr;
 				newSettings.Volume = std::strtod(ulString.utf8().data(), nullptr) / 100;
+				JSStringRelease(str);
 			}
 
+			App::Get().Settings = newSettings;
 			
 			return JSValueMakeNull(ctx);
 		}

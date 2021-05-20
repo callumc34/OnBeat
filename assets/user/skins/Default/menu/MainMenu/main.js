@@ -5,7 +5,7 @@ function applySettings() {
         if (setting.value.length != 0) config[setting.id] = setting.value;
     }
     PushSettings(config);
-}
+}   
 
 function cancelSettings() {
     RevertSettings();
