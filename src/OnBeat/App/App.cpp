@@ -7,9 +7,14 @@
 
 namespace OnBeat
 {
+
+	App* App::instance = nullptr;
+
 	App::App()
 		: Application("OnBeat"), Settings("assets/user/UserConfig.json")
 	{
+		instance = this;
+
 		auto& window = Hazel::Application::Get().GetWindow();
 		nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 		SetWindowIcon("logo/logo-64.png");

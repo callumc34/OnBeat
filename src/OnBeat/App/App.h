@@ -14,6 +14,8 @@ namespace OnBeat
 			App();
 			~App();
 
+			static App& Get() { return *instance; }
+
 			AudioPlayer AudioPlayer;
 			Config::Settings Settings;
 
@@ -25,6 +27,8 @@ namespace OnBeat
 			GLFWwindow* GetNativeWindow() const { return nativeWindow; }
 
 		private:
+			static App* instance;
+
 			GLFWwindow* nativeWindow;
 			std::string cwd;
 	};
