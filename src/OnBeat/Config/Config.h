@@ -160,5 +160,7 @@ namespace OnBeat
 
 			float Volume;
 		};
+
+		void to_json(nlohmann::json& j, const Settings& s);
 	}
 }

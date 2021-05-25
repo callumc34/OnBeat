@@ -1,3 +1,5 @@
+//Required JS functions
+
 //JS calls into C api
 function applySettings() {
     let config = {};
@@ -15,6 +17,15 @@ function selectSkin() {
     SelectSkin();
 }
 
+//C callbacks to JS
+function setSettings(stringSettings) {
+    var settings = JSON.parse(stringSettings);
+    for (let key in settings) {
+        document.getElementById(key).value = settings[key];
+    }
+}
+
+//Non required JS functions
 
 //JS functions
 function display(element, hide, style) {

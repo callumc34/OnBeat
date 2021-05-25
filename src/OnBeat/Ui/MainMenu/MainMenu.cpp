@@ -115,6 +115,15 @@ namespace OnBeat
 			JSObjectRef thisObject, size_t argumentCount,
 			const JSValueRef arguments[], JSValueRef* exception)
 		{
+			//Create a JSON string and pass it to the JS function
+			nlohmann::json jsonSettings = App::Get().Settings;
+			std::string jsonString = jsonSettings.dump();
+			
+			//Call the JS function to set settings
+			JSStringRef SetSettingsName = JSStringCreateWithUTF8CString("setSettings");
+			JSObjectSetProperty(ctx, JSContextGetGlobalObject(ctx), SetSettingsName, 0, 0, 0);
+			JSStringRelease(SetSettingsName);
+
 			return JSValueMakeNull(ctx);
 		}
 	}
