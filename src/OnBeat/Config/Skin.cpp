@@ -161,9 +161,9 @@ namespace OnBeat
 			input.close();
 
 			SkinPath = path;
+			SkinName = config["Name"];
 
 			MusicSkin = Skin::MusicSkin(config["MusicSkin"], path);
-
 		}
 	}
 }

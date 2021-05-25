@@ -21,7 +21,12 @@ function selectSkin() {
 function setSettings(stringSettings) {
     var settings = JSON.parse(stringSettings);
     for (let key in settings) {
-        document.getElementById(key).value = settings[key];
+        let setting = document.getElementById(key);
+        if (!setting) {
+            continue;
+        }
+        setting.value = settings[key];    
+                
     }
 }
 

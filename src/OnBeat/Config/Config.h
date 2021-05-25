@@ -153,7 +153,7 @@ namespace OnBeat
 			int Fullscreen;
 			double FpsCap;
 
-			std::unordered_map < std::string, Hazel::KeyCode> Input;
+			std::unordered_map<std::string, Hazel::KeyCode> Input;
 
 			Skin::AppSkin CurrentSkin;
 			std::string CurrentSkinPath;
@@ -162,5 +162,7 @@ namespace OnBeat
 		};
 
 		void to_json(nlohmann::json& j, const Settings& s);
+
+		void from_json(const nlohmann::json& j, Settings& s);
 	}
 }

@@ -67,6 +67,7 @@ namespace OnBeat
 
 			MusicSkin MusicSkin;
 			std::string SkinPath;
+			std::string SkinName;
 		};
 	}
 }

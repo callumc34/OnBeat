@@ -1,5 +1,6 @@
 #include <OnBeat/Ui/MainMenu/MainMenu.h>
 #include <AppCore/JSHelpers.h>
+#include <JavaScriptCore/JSRetainPtr.h>
 
 namespace ul = ultralight;
 
@@ -34,7 +35,7 @@ namespace OnBeat
 			//Todo cast these to JSObject types using JSValueToObject then to JSValue using JSObjectGetProperty
 			//Then cast to ctypes and check for errors if they havent been passed
 			//Update the MainApp->Config with the new values
-			JSValueRef e = nullptr;
+			JSValueRef e = 0;
 
 			JSObjectRef cfgObject = JSValueToObject(ctx, arguments[0], &e);
 			//Todo check exception
@@ -118,11 +119,34 @@ namespace OnBeat
 			//Create a JSON string and pass it to the JS function
 			nlohmann::json jsonSettings = App::Get().Settings;
 			std::string jsonString = jsonSettings.dump();
+
+			HZ_INFO(jsonString);
 			
 			//Call the JS function to set settings
-			JSStringRef SetSettingsName = JSStringCreateWithUTF8CString("setSettings");
-			JSObjectSetProperty(ctx, JSContextGetGlobalObject(ctx), SetSettingsName, 0, 0, 0);
-			JSStringRelease(SetSettingsName);
+			JSRetainPtr<JSStringRef> str = adopt(JSStringCreateWithUTF8CString("setSettings"));
+			JSValueRef func = JSEvaluateScript(ctx, str.get(), 0, 0, 0, 0);
+
+			if (JSValueIsObject(ctx, func))
+			{
+				JSObjectRef funcObj = JSValueToObject(ctx, func, 0);
+
+				if (funcObj && JSObjectIsFunction(ctx, funcObj))
+				{
+					JSRetainPtr<JSStringRef> jsonArg = adopt(JSStringCreateWithUTF8CString(jsonString.c_str()));
+					const JSValueRef args[] = { JSValueMakeString(ctx, jsonArg.get()) };
+
+					size_t num_args = sizeof(args) / sizeof(JSValueRef*);
+
+					JSValueRef exception = 0;
+
+					JSValueRef result = JSObjectCallAsFunction(ctx, funcObj, 0, num_args, args, &exception);
+
+					if (exception)
+					{
+						//Handle error
+					}
+				}
+			}
 
 			return JSValueMakeNull(ctx);
 		}

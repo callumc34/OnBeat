@@ -2,6 +2,7 @@
 #include <magic_enum.hpp>
 #include <filesystem>
 #include <fstream>
+#include <algorithm>
 
 using json = nlohmann::json;
 
@@ -36,6 +37,7 @@ namespace OnBeat
 
 			CurrentSkinPath = std::filesystem::current_path().string()
 				+ "/assets/user/skins/" + std::string(config["CurrentSkin"]);
+			std::replace(CurrentSkinPath.begin(), CurrentSkinPath.end(), '\\', '/');
 			CurrentSkin = Skin::AppSkin(CurrentSkinPath.c_str());
 
 			Volume = config["Volume"];
@@ -45,8 +47,9 @@ namespace OnBeat
 		{
 			j["Resolution"] = std::string(s.DisplayWidth + "x" + s.DisplayHeight);
 			j["Fullscreen"] = s.Fullscreen;
-			j["Skin"] = s.CurrentSkinPath;
-			j["volume"] = s.Volume;
+			j["SkinPath"] = s.CurrentSkinPath;
+			j["Skin"] = s.CurrentSkin.SkinName;
+			j["Volume"] = s.Volume * 100;
 		}
 
 		void from_json(const json& j, Settings& s)
@@ -57,7 +60,7 @@ namespace OnBeat
 			j.at("Fullscreen").get_to(s.Fullscreen);
 			j.at("Skin").get_to(s.CurrentSkinPath);
 			s.CurrentSkin = Skin::AppSkin(s.CurrentSkinPath.c_str());
-			j.at("Volume").get_to(s.Volume);
+			s.Volume = j["Volume"] / 100;
 		}
 	}
 }
