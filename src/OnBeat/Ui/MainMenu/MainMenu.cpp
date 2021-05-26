@@ -8,6 +8,16 @@ namespace OnBeat
 {
 	namespace JSCallbacks
 	{
+		//Start game callback
+		JSValueRef StartGame(JSContextRef ctx, JSObjectRef function,
+			JSObjectRef thisObject, size_t argumentCount,
+			const JSValueRef arguments[], JSValueRef* exception)
+		{
+
+
+			return JSValueMakeNull(ctx);
+		}
+
 		//Exit game callback
 		JSValueRef ExitGame(JSContextRef ctx, JSObjectRef function,
 			JSObjectRef thisObject, size_t argumentCount,
@@ -169,6 +179,13 @@ namespace OnBeat
 		ul::Ref<ul::JSContext>context = caller->LockJSContext();
 		JSContextRef ctx = context.get();
 		JSObjectRef globalObj = JSContextGetGlobalObject(ctx);
+
+		//Start game callback
+		JSStringRef StartGameName = JSStringCreateWithUTF8CString("StartGame");
+		JSObjectRef SGfunc = JSObjectMakeFunctionWithCallback(ctx, StartGameName,
+			JSCallbacks::StartGame);
+		JSObjectSetProperty(ctx, globalObj, StartGameName, SGfunc, 0, 0);
+		JSStringRelease(StartGameName);
 
 		//Exit game callback
 		JSStringRef ExitGameName = JSStringCreateWithUTF8CString("ExitGame");

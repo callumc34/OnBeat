@@ -43,7 +43,6 @@ function display(element, hide, style) {
 
 
 //Event listeners
-//HTML onclick= is reserverd for C function callbacks
 GameSettings.addEventListener("click", () => display(Settings,
  document.body.children, "block"));
 
