@@ -35,20 +35,18 @@ namespace OnBeat
 				}
 			}
 
-			CurrentSkinPath = std::filesystem::current_path().string()
-				+ "/assets/user/skins/" + std::string(config["CurrentSkin"]);
-			std::replace(CurrentSkinPath.begin(), CurrentSkinPath.end(), '\\', '/');
-			CurrentSkin = Skin::AppSkin(CurrentSkinPath + "/Skin.json");
+			std::string skinPath = std::filesystem::current_path().string()
+				+ "/assets/user/skins/" + std::string(config["CurrentSkin"]) + "/Skin.json";
+			CurrentSkin = Skin::AppSkin(skinPath);
 
 			Volume = config["Volume"];
 		}
 
 		void to_json(json& j, const Settings& s)
 		{
-			j["Resolution"] = std::string(s.DisplayWidth + "x" + s.DisplayHeight);
+			j["Resolution"] = std::to_string(s.DisplayWidth) + "x" + std::to_string(s.DisplayHeight);
 			j["Fullscreen"] = s.Fullscreen;
-			j["SkinPath"] = s.CurrentSkinPath;
-			j["Skin"] = s.CurrentSkin.SkinName;
+			j["Skin"] = s.CurrentSkin.SkinPath;
 			j["Volume"] = s.Volume * 100;
 		}
 
@@ -58,8 +56,7 @@ namespace OnBeat
 			s.DisplayWidth = std::stoi(resString.substr(0, resString.find("x", 0)).c_str());
 			s.DisplayHeight = std::stoi(resString.substr(resString.find("x", 0) + 1, resString.length()).c_str());
 			j.at("Fullscreen").get_to(s.Fullscreen);
-			j.at("Skin").get_to(s.CurrentSkinPath);
-			s.CurrentSkin = Skin::AppSkin(s.CurrentSkinPath.c_str());
+			s.CurrentSkin = Skin::AppSkin(j["Skin"]);
 			s.Volume = j["Volume"] / 100;
 		}
 	}

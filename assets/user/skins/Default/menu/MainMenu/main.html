@@ -79,7 +79,7 @@
 							<div>
 								<select id="Fullscreen" class="configValue">
 									<option value="" disabled selected hidden>Monitor</option>
-									<option value="0">WIndowed</option>
+									<option value="0">Windowed</option>
 								</select>
 							</div>
 						</div>
@@ -96,7 +96,7 @@
 								Skin:
 							</p>
 							<div>
-								<input type="button" value="Select skin" id="SkinButton" onclick="SelectSkin()">
+								<input type="button" value="Select skin" id="SkinButton" onclick="setSkin()">
 								<input type="text" placeholder="Default" id="Skin" disabled class="configValue">
 							</div>
 						</div>
@@ -119,8 +119,8 @@
 						</div>
 					</div>
 					<div id="SettingsButtons">
-						<input type="button" value="Apply" onclick="applySettings()">
-						<input type="button" value="Cancel" onclick="cancelSettings()">
+						<input type="button" value="Apply" onclick="UpdateSettings()">
+						<input type="button" value="Cancel" onclick="RevertSettings()">
 					</div>
 				</div>
 			</div>

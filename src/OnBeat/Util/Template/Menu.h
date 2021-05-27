@@ -32,12 +32,12 @@ namespace OnBeat
 
 		protected:
 			std::string DocumentPath;
+			ultralight::RefPtr<ultralight::View> view;
 
 		private:
 			//Ultralight setup
 			ultralight::Config Config;
 			ultralight::RefPtr<ultralight::Renderer> renderer;
-			ultralight::RefPtr<ultralight::View> view;
 			std::unique_ptr<GLTextureSurfaceFactory> factory;
 
 			struct GLFWCursors

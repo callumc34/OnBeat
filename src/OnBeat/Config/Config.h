@@ -156,7 +156,6 @@ namespace OnBeat
 			std::unordered_map<std::string, Hazel::KeyCode> Input;
 
 			Skin::AppSkin CurrentSkin;
-			std::string CurrentSkinPath;
 
 			float Volume;
 		};

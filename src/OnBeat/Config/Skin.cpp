@@ -31,11 +31,6 @@ namespace OnBeat
 				Colour = Util::arrayToVec4(object["colour"]);
 			}
 
-			for (auto& value : object["dimensions"])
-			{
-
-			}
-
 			//Bit of a mess may need cleaning up
 			x = object["x"];
 			y = object["y"];

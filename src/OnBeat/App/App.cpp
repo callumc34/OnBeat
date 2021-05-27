@@ -23,8 +23,17 @@ namespace OnBeat
 
 		AudioPlayer.setVolume(Settings.Volume);
 
-		int fs = Settings.Fullscreen - 1;
+		SetWindowState(Settings.Fullscreen - 1);
 
+		//Stop ImGui changing mouse cursor
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+
+		PushLayer(new MainMenu(Settings.CurrentSkin.SkinDirectory + "/menu/MainMenu/main.html", "Main Menu"));
+	}
+
+	void App::SetWindowState(int fs)
+	{
 		if (fs >= 0)
 		{
 			SetFullScreen(fs);
@@ -33,12 +42,6 @@ namespace OnBeat
 		{
 			glfwSetWindowSize(nativeWindow, Settings.DisplayWidth, Settings.DisplayHeight);
 		}
-
-		//Stop ImGui changing mouse cursor
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
-
-		PushLayer(new MainMenu(Settings.CurrentSkinPath + "/menu/MainMenu/main.html", "Main Menu"));
 	}
 
 	void App::SetWindowIcon(const std::string& path)
@@ -73,11 +76,6 @@ namespace OnBeat
 
 		// switch to full screen
 		glfwSetWindowMonitor(nativeWindow, glfwMonitor, 0, 0, mode->width, mode->height, Settings.FpsCap);
-	}
-
-	void App::SetWindowed(int x, int y, int width, int height)
-	{
-		glfwSetWindowMonitor(nativeWindow, nullptr, x, y, width, height, Settings.FpsCap);
 	}
 
 	App::~App()

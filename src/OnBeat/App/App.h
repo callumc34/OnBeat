@@ -19,15 +19,17 @@ namespace OnBeat
 			AudioPlayer AudioPlayer;
 			Config::Settings Settings;
 
+			void SetWindowState(int fs);
+
 			void SetWindowIcon(const std::string& path);
-			//Window resize funcs
-			void SetFullScreen(int monitor);
-			void SetWindowed(int x, int y, int width, int height);
 
 			GLFWwindow* GetNativeWindow() const { return nativeWindow; }
 
 		private:
 			static App* instance;
+
+			//Window resize funcs
+			void SetFullScreen(int monitor);
 
 			GLFWwindow* nativeWindow;
 			std::string cwd;

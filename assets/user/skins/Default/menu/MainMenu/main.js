@@ -1,21 +1,7 @@
-//Required JS functions
-
-//JS calls into C api
-function applySettings() {
-    let config = {};
-    for (let setting of document.getElementsByClassName("configValue")) {
-        if (setting.value.length != 0) config[setting.id] = setting.value;
-    }
-    PushSettings(config);
-}   
-
-function cancelSettings() {
-    RevertSettings();
-}
-
 //C callbacks to JS
 function setSettings(stringSettings) {
-    var settings = JSON.parse(stringSettings);
+    //var settings = JSON.parse(stringSettings);
+    var settings = stringSettings;
     for (let key in settings) {
         let setting = document.getElementById(key);
         if (!setting) {
@@ -35,6 +21,13 @@ function display(element, hide, style) {
     }
 
     element.style.display = style;
+}
+
+function setSkin() {
+    let path = SelectSkin();
+    if (path) {
+        Skin.value = path;
+    }
 }
 
 
@@ -67,5 +60,6 @@ Volume.onchange = function() {
     VolumeSelect.value = this.value;
 }
 
-//Initial listener calls
+//Initial setup calls
 DisplayHeader.click();
+RevertSettings();
