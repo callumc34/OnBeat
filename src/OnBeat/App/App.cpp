@@ -38,7 +38,7 @@ namespace OnBeat
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-		PushLayer(new MainMenu(Settings.CurrentSkinPath + "/menu/MainMenu/main.html", this, "Main Menu"));
+		PushLayer(new MainMenu(Settings.CurrentSkinPath + "/menu/MainMenu/main.html", "Main Menu"));
 	}
 
 	void App::SetWindowIcon(const std::string& path)

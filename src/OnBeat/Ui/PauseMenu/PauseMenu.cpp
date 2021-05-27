@@ -2,8 +2,8 @@
 
 namespace OnBeat
 {
-	PauseMenu::PauseMenu(const std::string& document, App* MainApp, std::string layerName)
-		: Menu(document, MainApp, layerName)
+	PauseMenu::PauseMenu(const std::string& document, std::string layerName)
+		: Menu(document, layerName)
 	{
 	}
 

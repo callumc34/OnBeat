@@ -8,7 +8,7 @@ namespace OnBeat
 	class Layer : public Hazel::Layer
 	{
 		public:
-			Layer(App* App, std::string name = "OnBeatLayer");
+			Layer(std::string name = "OnBeatLayer");
 			~Layer();
 
 			void OnEvent(Hazel::Event& e) override;
@@ -17,7 +17,6 @@ namespace OnBeat
 			virtual void EventUpdate(Hazel::Event& e);
 
 		protected:
-			App* MainApp;
 			Hazel::Scope<Hazel::OrthographicCamera> CameraController;
 
 			void CreateCamera(uint32_t width, uint32_t height);

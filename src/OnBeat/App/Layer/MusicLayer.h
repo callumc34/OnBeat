@@ -11,7 +11,7 @@ namespace OnBeat
 		public:
 			//These need to all be variables from a style file when implemented
 
-			MusicLayer(App* MainApp, const char* file,
+			MusicLayer(const char* file,
 				float cameraVelocity, double sampleRate, int sampleSize);
 
 			//OnEvents

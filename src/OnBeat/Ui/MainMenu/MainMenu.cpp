@@ -1,6 +1,8 @@
 #include <OnBeat/Ui/MainMenu/MainMenu.h>
-#include <AppCore/JSHelpers.h>
+#include <Hazel/Utils/PlatformUtils.h>
 #include <JavaScriptCore/JSRetainPtr.h>
+#include <AppCore/JSHelpers.h>
+#include <algorithm>
 
 namespace ul = ultralight;
 
@@ -13,8 +15,7 @@ namespace OnBeat
 			JSObjectRef thisObject, size_t argumentCount,
 			const JSValueRef arguments[], JSValueRef* exception)
 		{
-
-
+			
 			return JSValueMakeNull(ctx);
 		}
 
@@ -33,7 +34,15 @@ namespace OnBeat
 			JSObjectRef thisObject, size_t argumentCount,
 			const JSValueRef arguments[], JSValueRef* exception)
 		{
-
+			auto dialog = Hazel::FileDialogs::OpenFile("All Files (.*)");
+			if (dialog.has_value())
+			{
+				//Injection unsafe but considering you can just edit the JS file yourself it's probably fine
+				std::string path = dialog.value();
+				std::replace(path.begin(), path.end(), '\\', '/');
+				std::string script = "Skin.value = '" + path + "';";
+				JSEvaluateScript(ctx, ul::JSString(script.c_str()), NULL, NULL, 0, 0);
+			}
 			return JSValueMakeNull(ctx);
 		}
 
@@ -44,7 +53,7 @@ namespace OnBeat
 		{
 			//Todo cast these to JSObject types using JSValueToObject then to JSValue using JSObjectGetProperty
 			//Then cast to ctypes and check for errors if they havent been passed
-			//Update the MainApp->Config with the new values
+			//Update the Config with the new values
 			JSValueRef e = 0;
 
 			JSObjectRef cfgObject = JSValueToObject(ctx, arguments[0], &e);
@@ -95,6 +104,12 @@ namespace OnBeat
 				ul::JSString ulJSStr = str;
 				ul::String ulString = ulJSStr;
 				newSettings.CurrentSkinPath = std::string(ulString.utf8().data());
+				newSettings.CurrentSkin = Skin::AppSkin(newSettings.CurrentSkinPath.c_str());
+
+				//Load the new menu document
+				Hazel::Application::Get().PushLayer(
+					new MainMenu(newSettings.CurrentSkinPath + "/menu/MainMenu/main.html", "MainMenu"));
+
 				JSStringRelease(str);
 			}
 			if (JSObjectHasProperty(ctx, cfgObject, ul::JSString("LeftColumnKey")))
@@ -162,8 +177,8 @@ namespace OnBeat
 		}
 	}
 
-	MainMenu::MainMenu(const std::string& document, App* MainApp, std::string layerName)
-		: Menu(document, MainApp, layerName)
+	MainMenu::MainMenu(const std::string& document, std::string layerName)
+		: Menu(document, layerName)
 	{
 	}
 

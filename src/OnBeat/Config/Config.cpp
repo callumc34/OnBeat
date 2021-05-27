@@ -38,7 +38,7 @@ namespace OnBeat
 			CurrentSkinPath = std::filesystem::current_path().string()
 				+ "/assets/user/skins/" + std::string(config["CurrentSkin"]);
 			std::replace(CurrentSkinPath.begin(), CurrentSkinPath.end(), '\\', '/');
-			CurrentSkin = Skin::AppSkin(CurrentSkinPath.c_str());
+			CurrentSkin = Skin::AppSkin(CurrentSkinPath + "/Skin.json");
 
 			Volume = config["Volume"];
 		}

@@ -9,8 +9,8 @@ namespace ul = ultralight;
 
 namespace OnBeat
 {
-	Menu::Menu(const std::string& document, App* MainApp, std::string layerName)
-		: Layer(MainApp, layerName)
+	Menu::Menu(const std::string& document, std::string layerName)
+		: Layer(layerName)
 	{
 		Config.resource_path = "assets/resources/";
 		Config.use_gpu_renderer = false;
@@ -53,22 +53,22 @@ namespace OnBeat
 		switch (cursor)
 		{
 			case ultralight::kCursor_Cross:
-				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_crosshair);
+				glfwSetCursor(App::Get().GetNativeWindow(), Cursors.cursor_crosshair);
 				break;
 			case ultralight::kCursor_Hand:
-				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_hand);
+				glfwSetCursor(App::Get().GetNativeWindow(), Cursors.cursor_hand);
 				break;
 			case ultralight::kCursor_IBeam:
-				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_ibeam);
+				glfwSetCursor(App::Get().GetNativeWindow(), Cursors.cursor_ibeam);
 				break;
 			case ultralight::kCursor_EastWestResize:
-				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_hresize);
+				glfwSetCursor(App::Get().GetNativeWindow(), Cursors.cursor_hresize);
 				break;
 			case ultralight::kCursor_NorthSouthResize:
-				glfwSetCursor(MainApp->GetNativeWindow(), Cursors.cursor_vresize);
+				glfwSetCursor(App::Get().GetNativeWindow(), Cursors.cursor_vresize);
 				break;
 			default:
-				glfwSetCursor(MainApp->GetNativeWindow(), nullptr);
+				glfwSetCursor(App::Get().GetNativeWindow(), nullptr);
 		}
 	}
 

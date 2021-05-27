@@ -2,11 +2,11 @@
 #include <Hazel/Renderer/RenderCommand.h>
 
 namespace OnBeat {
-	MusicLayer::MusicLayer(App* MainApp, const char* file,
+	MusicLayer::MusicLayer(const char* file,
 		float cameraVelocity, double sampleRate, int sampleSize)
-		: Layer(MainApp, "MusicLayer"), beatGen({ 0, 1, 8, 8 }, file)
+		: Layer("MusicLayer"), beatGen({ 0, 1, 8, 8 }, file)
 	{
-		auto& window = MainApp->GetWindow();
+		auto& window = App::Get().GetWindow();
 
 		//cameraVelocity in px/sec (900px/sec)
 		this->cameraVelocity = cameraVelocity;
@@ -15,10 +15,10 @@ namespace OnBeat {
 		this->sampleRate = sampleRate;
 		this->sampleSize = sampleSize;
 
-		skin = MainApp->Settings.CurrentSkin.MusicSkin;
+		skin = App::Get().Settings.CurrentSkin.MusicSkin;
 
 		musicFile = file;
-		MainApp->AudioPlayer.loadAudio(file);
+		App::Get().AudioPlayer.loadAudio(file);
 
 		beats = beatGen.findBeats(beatGen.processFile());
 
@@ -33,7 +33,7 @@ namespace OnBeat {
 	void MusicLayer::CreateBeatArea()
 	{
 		//Needs to be cleaned up
-		auto& window = MainApp->GetWindow();
+		auto& window = App::Get().GetWindow();
 
 		float length = window.GetHeight() / 100.0f;
 
@@ -53,7 +53,7 @@ namespace OnBeat {
 		skin.BeatArea.draw(-0.15f, 0.0f, yOffset);
 
 		//Beat Zone
-		skin.BeatZone.draw(0.2f, 0.0f, yOffset + position.y - MainApp->GetWindow().GetHeight() / 200);
+		skin.BeatZone.draw(0.2f, 0.0f, yOffset + position.y - App::Get().GetWindow().GetHeight() / 200);
 	}
 
 	void MusicLayer::CreateBeats()
@@ -86,15 +86,15 @@ namespace OnBeat {
 			skin.Beat.scaleY = std::to_string(scale * beatTextureHeight);
 
 			float offsetX = column.getX() + (scale * beatTextureWidth / 2);
-			float offsetY = (MainApp->GetWindow().GetHeight() / 200) + skin.BeatZone.getY();
+			float offsetY = (App::Get().GetWindow().GetHeight() / 200) + skin.BeatZone.getY();
 
 			for (auto& value : vector)
 			{
-				if (value > CameraController.get()->GetPosition().y + beatTextureHeight + (2 * MainApp->GetWindow().GetHeight() / 100.0f))
+				if (value > CameraController.get()->GetPosition().y + beatTextureHeight + (2 * App::Get().GetWindow().GetHeight() / 100.0f))
 				{
 					break;
 				}
-				else if (value < CameraController.get()->GetPosition().y - (MainApp->GetWindow().GetHeight() / 100.0f))
+				else if (value < CameraController.get()->GetPosition().y - (App::Get().GetWindow().GetHeight() / 100.0f))
 				{
 					continue;
 				}
@@ -155,7 +155,7 @@ namespace OnBeat {
 
 	void MusicLayer::OnAttach()
 	{
-		MainApp->AudioPlayer.playAudio();
+		App::Get().AudioPlayer.playAudio();
 	}
 
 	void MusicLayer::OnDetach()

@@ -6,7 +6,7 @@ namespace OnBeat
 	class MainMenu : public Menu
 	{
 		public:
-			MainMenu(const std::string& document, App* MainApp, std::string layerName);
+			MainMenu(const std::string& document, std::string layerName);
 			~MainMenu();
 
 			void UpdateMenu(Hazel::Timestep ms) override;

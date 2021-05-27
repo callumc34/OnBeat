@@ -10,7 +10,7 @@ namespace OnBeat
 	class Menu : public Layer, public ultralight::LoadListener, public ultralight::ViewListener
 	{
 		public:
-			Menu(const std::string& document, App* MainApp, std::string layerName);
+			Menu(const std::string& document,std::string layerName);
 			~Menu();
 
 			void LoadDocument(const ultralight::String& document);

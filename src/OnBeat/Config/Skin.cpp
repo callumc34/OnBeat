@@ -133,7 +133,7 @@ namespace OnBeat
 			this->BeatZone = BeatZone;
 		}
 
-		MusicSkin::MusicSkin(json object, const char* path)
+		MusicSkin::MusicSkin(json object, std::string path)
 		{
 			//Setup MusicSkin
 			for (auto& column : object["Columns"])
@@ -153,9 +153,9 @@ namespace OnBeat
 
 		}
 
-		AppSkin::AppSkin(const char* path)
+		AppSkin::AppSkin(std::string path)
 		{
-			std::ifstream input(std::string(path) + "/Skin.json");
+			std::ifstream input(path);
 			json config;
 			input >> config;
 			input.close();
@@ -163,7 +163,9 @@ namespace OnBeat
 			SkinPath = path;
 			SkinName = config["Name"];
 
-			MusicSkin = Skin::MusicSkin(config["MusicSkin"], path);
+			SkinDirectory = std::filesystem::path(path).parent_path().string();
+
+			MusicSkin = Skin::MusicSkin(config["MusicSkin"], SkinDirectory);
 		}
 	}
 }

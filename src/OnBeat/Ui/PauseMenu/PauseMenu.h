@@ -6,7 +6,7 @@ namespace OnBeat
 	class PauseMenu : public Menu
 	{
 		public:
-			PauseMenu(const std::string& document, App* MainApp, std::string layerName);
+			PauseMenu(const std::string& document, std::string layerName);
 			~PauseMenu();
 	};
 }

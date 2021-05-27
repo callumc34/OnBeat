@@ -13,10 +13,6 @@ function cancelSettings() {
     RevertSettings();
 }
 
-function selectSkin() {
-    SelectSkin();
-}
-
 //C callbacks to JS
 function setSettings(stringSettings) {
     var settings = JSON.parse(stringSettings);

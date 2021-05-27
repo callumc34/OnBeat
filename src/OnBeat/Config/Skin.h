@@ -52,7 +52,7 @@ namespace OnBeat
 				Quad BeatArea,
 				Quad BeatZone);
 			MusicSkin(std::vector<Quad>Columns, Quad Beat, Quad BeatArea, Quad BeatZone);
-			MusicSkin(nlohmann::json object, const char* path);
+			MusicSkin(nlohmann::json object, std::string path);
 
 			std::vector<Quad> Columns;
 			Quad Beat;
@@ -63,11 +63,12 @@ namespace OnBeat
 		struct AppSkin
 		{
 			AppSkin();
-			AppSkin(const char* path);
+			AppSkin(std::string path);
 
 			MusicSkin MusicSkin;
 			std::string SkinPath;
 			std::string SkinName;
+			std::string SkinDirectory;
 		};
 	}
 }

@@ -2,8 +2,8 @@
 
 namespace OnBeat
 {
-	Layer::Layer(App* MainApp, std::string name)
-		: MainApp(MainApp), Hazel::Layer(name)
+	Layer::Layer(std::string name)
+		: Hazel::Layer(name)
 	{
 		auto& window = Hazel::Application::Get().GetWindow();
 		CreateCamera(window.GetWidth(), window.GetHeight());
