@@ -1,6 +1,6 @@
+#include <OnBeat/App/App.h>
 #include <OnBeat/Config/Config.h>
 #include <magic_enum.hpp>
-#include <filesystem>
 #include <fstream>
 #include <algorithm>
 
@@ -10,24 +10,23 @@ namespace OnBeat
 {
 	namespace Config
 	{
-		//Setup onbeat settings from json file
-		Settings::Settings(const char* path)
+		Settings::Settings(const std::string& path)
 		{
 			std::ifstream input(path);
 			json config;
 			input >> config;
 			input.close();
 
-			DisplayWidth = config["Display"][0];
-			DisplayHeight = config["Display"][1];
-			Fullscreen = config["Fullscreen"];
+			Resolution = { config["Display"][0], config["Display"][1], config["Fullscreen"], config["FpsCap"] };
+
+			Volume = config["Volume"];
 
 			for (auto& [key, value] : config["Input"].items())
 			{
 				auto inputKey = magic_enum::enum_cast<Keys>(std::string(value));
 				if (inputKey.has_value())
 				{
-					Input[key] = inputKey.value();
+					Inputs[key] = inputKey.value();
 				}
 				else
 				{
@@ -57,26 +56,57 @@ namespace OnBeat
 				CurrentSkin = Skin::AppSkin(std::filesystem::current_path().string()
 					+ "/assets/user/skins/Default/Skin.json");
 			}
-
-			Volume = config["Volume"];
+		
 		}
 
-		void to_json(json& j, const Settings& s)
+		void Settings::setResolution(const ResolutionData& resolution)
+		{ 
+			this->Resolution = resolution;
+			App::Get().SetWindowState(Resolution.Fullscreen);
+		}
+
+		void Settings::setVolume(const float& volume)
 		{
-			j["Resolution"] = std::to_string(s.DisplayWidth) + "x" + std::to_string(s.DisplayHeight);
-			j["Fullscreen"] = s.Fullscreen;
-			j["Skin"] = s.CurrentSkin.SkinPath;
-			j["Volume"] = s.Volume * 100;
+			this->Volume = volume;
+			App::Get().AudioPlayer.setVolume(Volume);
 		}
 
-		void from_json(const json& j, Settings& s)
+		void Settings::setInputs(const InputMap& inputs)
+		{ 
+			this->Inputs = inputs;
+		}
+
+		void Settings::setCurrentSkin(const Skin::AppSkin& skin)
+		{ 
+			this->CurrentSkin = skin;
+		}
+
+		Settings& Settings::operator=(const json& j)
 		{
 			std::string resString = j["Resolution"];
-			s.DisplayWidth = std::stoi(resString.substr(0, resString.find("x", 0)).c_str());
-			s.DisplayHeight = std::stoi(resString.substr(resString.find("x", 0) + 1, resString.length()).c_str());
-			j.at("Fullscreen").get_to(s.Fullscreen);
-			s.CurrentSkin = Skin::AppSkin(j["Skin"]);
-			s.Volume = j["Volume"] / 100;
+			ResolutionData res = { 0, 0, j["Fullscreen"], j["FpsCap"] };
+			res.DisplayWidth = std::stoi(resString.substr(0, resString.find("x", 0)).c_str());
+			res.DisplayHeight = std::stoi(resString.substr(resString.find("x", 0) + 1, resString.length()).c_str());
+			Resolution = res;
+			CurrentSkin = Skin::AppSkin(j["Skin"]);
+			Volume = j["Volume"] / 100;
+			return *this;
+		}
+
+		Settings::operator nlohmann::json() const
+		{
+			json j;
+			j["Resolution"] = std::to_string(Resolution.DisplayWidth) + "x" + std::to_string(Resolution.DisplayHeight);
+			j["Fullscreen"] = Resolution.Fullscreen;
+			j["FpsCap"] = Resolution.FpsCap;
+			j["Skin"] = CurrentSkin.SkinPath;
+			j["Volume"] = Volume * 100;
+			return j;
+		}
+
+		Settings::~Settings()
+		{
+
 		}
 	}
 }

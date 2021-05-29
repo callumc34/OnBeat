@@ -36,6 +36,7 @@ namespace OnBeat
 		Config::Settings newSettings = App::Get().Settings;
 
 		//Convert all object properties to C variables
+		Config::ResolutionData newResolution = newSettings.getResolution();
 		if (obj.HasProperty("Resolution"))
 		{
 			//Cast to ultralight string
@@ -43,8 +44,8 @@ namespace OnBeat
 			std::string stdString = ulString.utf8().data();
 			if (stdString.length() > 0)
 			{
-				newSettings.DisplayWidth = std::stoi(stdString.substr(0, stdString.find("x", 0)).c_str());
-				newSettings.DisplayHeight = std::stoi(stdString.substr(stdString.find("x", 0) + 1, stdString.length()).c_str());
+				newResolution.DisplayWidth = std::stoi(stdString.substr(0, stdString.find("x", 0)).c_str());
+				newResolution.DisplayHeight = std::stoi(stdString.substr(stdString.find("x", 0) + 1, stdString.length()).c_str());
 			}
 		}
 		if (obj.HasProperty("Fullscreen"))
@@ -53,7 +54,7 @@ namespace OnBeat
 			std::string stdString = ulString.utf8().data();
 			if (stdString.length() > 0)
 			{
-				newSettings.Fullscreen = std::strtol(stdString.c_str(), nullptr, 10);
+				newResolution.Fullscreen = std::strtol(stdString.c_str(), nullptr, 10);
 			}
 		}
 		if (obj.HasProperty("FpsCap"))
@@ -62,9 +63,12 @@ namespace OnBeat
 			std::string stdString = ulString.utf8().data();
 			if (stdString.length() > 0)
 			{
-				newSettings.FpsCap = std::strtod(stdString.c_str(), nullptr);
+				newResolution.FpsCap = std::strtod(stdString.c_str(), nullptr);
 			}
 		}
+		//Set new resolution
+		newSettings.setResolution(newResolution);
+
 		if (obj.HasProperty("Skin"))
 		{
 			ul::String ulString = obj["Skin"].ToObject()["value"].ToString();
@@ -73,8 +77,8 @@ namespace OnBeat
 			{
 				try
 				{
-					newSettings.CurrentSkin = Skin::AppSkin(stdString);
-					LoadDocument((newSettings.CurrentSkin.SkinDirectory + "/menu/MainMenu/main.html").c_str());
+					newSettings.setCurrentSkin(Skin::AppSkin(stdString));
+					LoadDocument((newSettings.getCurrentSkin().SkinDirectory + "/menu/MainMenu/main.html").c_str());
 				}
 				catch (std::exception& e)
 				{
@@ -91,14 +95,11 @@ namespace OnBeat
 			std::string stdString = ulString.utf8().data();
 			if (stdString.length() > 0)
 			{
-				newSettings.Volume = std::strtod(stdString.c_str(), nullptr) / 100;
-				App::Get().AudioPlayer.setVolume(newSettings.Volume);
+				newSettings.setVolume(std::strtod(stdString.c_str(), nullptr) / 100);
 			}
 		}
 
 		App::Get().Settings = newSettings;
-
-		App::Get().SetWindowState(newSettings.Fullscreen - 1);
 		return;
 	}
 

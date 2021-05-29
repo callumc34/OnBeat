@@ -15,7 +15,7 @@ namespace OnBeat {
 		this->sampleRate = sampleRate;
 		this->sampleSize = sampleSize;
 
-		skin = App::Get().Settings.CurrentSkin.MusicSkin;
+		skin = App::Get().Settings.getCurrentSkin().MusicSkin;
 
 		musicFile = file;
 		App::Get().AudioPlayer.loadAudio(file);
