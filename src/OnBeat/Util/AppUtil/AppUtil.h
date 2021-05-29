@@ -1,9 +1,16 @@
 #pragma once
 #include <ultralight/MouseEvent.h>
 #include <glm/glm.hpp>
+#include <AppCore/JSHelpers.h>
 #include <nlohmann/json.hpp>
 
 typedef struct GLFWcursor GLFWcursor;
+
+namespace ultralight
+{
+	void to_json(nlohmann::json& j, const JSObject& obj);
+	void from_json(const nlohmann::json& j, JSObject& obj);
+}
 
 namespace OnBeat
 {
@@ -24,5 +31,6 @@ namespace OnBeat
 		int HazelKeyCodeToUl(int key);
 
 		ultralight::MouseEvent::Button HazelMouseCodeToUl(int key);
+
 	}
 }

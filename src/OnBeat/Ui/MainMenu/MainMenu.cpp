@@ -25,13 +25,13 @@ namespace OnBeat
 		return;
 	}
 
-	void MainMenu::ExitGame(const ultralight::JSObject& obj, const ultralight::JSArgs& args)
+	void MainMenu::ExitGame(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
 		Hazel::Application::Get().Close();
 		return;
 	}
 
-	void MainMenu::UpdateSettings(const ultralight::JSObject& obj, const ultralight::JSArgs& args)
+	void MainMenu::UpdateSettings(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
 		Config::Settings newSettings = App::Get().Settings;
 
@@ -103,7 +103,7 @@ namespace OnBeat
 		return;
 	}
 
-	void MainMenu::RevertSettings(const ultralight::JSObject& obj, const ultralight::JSArgs& args)
+	void MainMenu::RevertSettings(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
 		nlohmann::json jsonSettings = App::Get().Settings;
 		std::string script = "setSettings(" + jsonSettings.dump() + ");";
@@ -113,7 +113,7 @@ namespace OnBeat
 		return;
 	}
 
-	ultralight::JSValue MainMenu::SelectSkin(const ultralight::JSObject& obj, const ultralight::JSArgs& args)
+	ul::JSValue MainMenu::SelectSkin(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
 		auto dialog = Hazel::FileDialogs::OpenFile("JSON Skin (.json)");
 		if (dialog.has_value())
@@ -121,13 +121,13 @@ namespace OnBeat
 			//Injection unsafe but considering you can just edit the JS file yourself it's probably fine
 			std::string path = dialog.value();
 			std::replace(path.begin(), path.end(), '\\', '/');
-			return ultralight::JSValue(path.c_str());
+			return ul::JSValue(path.c_str());
 		}
-		return ultralight::JSValue(false);
+		return ul::JSValue(false);
 	}
 
-	void MainMenu::OnDOMReady(ultralight::View* caller, uint64_t frame_id,
-		bool is_main_frame, const ultralight::String& url)
+	void MainMenu::OnDOMReady(ul::View* caller, uint64_t frame_id,
+		bool is_main_frame, const ul::String& url)
 	{
 		//Create JS Callbacks
 		ul::Ref<ul::JSContext>context = caller->LockJSContext();
@@ -135,7 +135,7 @@ namespace OnBeat
 		//JSContextRef ctx = context.get();
 		ul::JSObject globalObj = ul::JSGlobalObject();
 
-		using namespace ultralight; //Prevent BindJSCallback error
+		using namespace ul; //Prevent BindJSCallback error
 
 		//C callbacks from JS
 		globalObj["StartGame"] = BindJSCallback(&MainMenu::StartGame);
