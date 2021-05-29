@@ -34,10 +34,29 @@ namespace OnBeat
 					//Todo error checking and defaulting
 				}
 			}
+			
+			//Try to find skin file
+			std::string skin = config["Skin"];
 
-			std::string skinPath = std::filesystem::current_path().string()
-				+ "/assets/user/skins/" + std::string(config["CurrentSkin"]) + "/Skin.json";
-			CurrentSkin = Skin::AppSkin(skinPath);
+			if (std::filesystem::is_regular_file(skin))
+			{
+				CurrentSkin = Skin::AppSkin(skin);
+			}
+			else if (std::filesystem::is_directory(skin))
+			{
+				CurrentSkin = Skin::AppSkin(skin + "/Skin.json");
+			}
+			else if (std::filesystem::is_directory(std::filesystem::current_path().string()
+				+ "/assets/user/skins/" + skin))
+			{
+				CurrentSkin = Skin::AppSkin(std::filesystem::current_path().string()
+					+ "/assets/user/skins/" + skin + "/Skin.json");
+			}
+			else
+			{
+				CurrentSkin = Skin::AppSkin(std::filesystem::current_path().string()
+					+ "/assets/user/skins/Default/Skin.json");
+			}
 
 			Volume = config["Volume"];
 		}

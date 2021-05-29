@@ -8,7 +8,7 @@
         "Column4" : "Period",
         "Pause" : "Escape"
     },
-    "CurrentSkin" : "Default",
+    "Skin" : "Default",
     "FpsCap": 0,
     "Volume" : 1.0
 }
