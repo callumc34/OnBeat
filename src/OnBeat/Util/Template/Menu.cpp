@@ -117,6 +117,7 @@ namespace OnBeat
 		dispatcher.Dispatch<Hazel::MouseButtonPressedEvent>(HZ_BIND_EVENT_FN(Menu::OnMouseButtonPress));
 		dispatcher.Dispatch<Hazel::MouseButtonReleasedEvent>(HZ_BIND_EVENT_FN(Menu::OnMouseButtonRelease));
 		dispatcher.Dispatch<Hazel::KeyPressedEvent>(HZ_BIND_EVENT_FN(Menu::OnKeyPress));
+		dispatcher.Dispatch<Hazel::KeyReleasedEvent>(HZ_BIND_EVENT_FN(Menu::OnKeyRelease));
 		dispatcher.Dispatch<Hazel::KeyTypedEvent>(HZ_BIND_EVENT_FN(Menu::OnKeyTyped));
 		dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(Menu::ResizeView));
 		Layer::OnEvent(e);
@@ -173,6 +174,7 @@ namespace OnBeat
 
 		ul::GetKeyIdentifierFromVirtualKeyCode(evt.virtual_key_code, evt.key_identifier);
 		view->FireKeyEvent(evt);
+
 		return true;
 	}
 

@@ -29,6 +29,7 @@ namespace OnBeat
 		bool checkPath(std::string file, bool makePath);
 
 		int HazelKeyCodeToUl(int key);
+		int UlKeyCodeToHazel(int key);
 
 		ultralight::MouseEvent::Button HazelMouseCodeToUl(int key);
 

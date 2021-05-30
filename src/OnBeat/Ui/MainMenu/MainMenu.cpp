@@ -143,6 +143,7 @@ namespace OnBeat
 		globalObj["UpdateSettings"] = BindJSCallback(&MainMenu::UpdateSettings);
 		globalObj["RevertSettings"] = BindJSCallback(&MainMenu::RevertSettings);
 		globalObj["SelectSkin"] = BindJSCallbackWithRetval(&MainMenu::SelectSkin);
+		RevertSettings(globalObj, ul::JSArgs());
 	}
 
 	MainMenu::~MainMenu()

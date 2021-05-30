@@ -229,6 +229,126 @@ namespace OnBeat
 		
 		}
 
+		int UlKeyCodeToHazel(int key)
+		{
+			switch (key)
+			{
+				case GK_SPACE: return Hazel::Key::Space;
+				case GK_OEM_7: return Hazel::Key::Apostrophe;
+				case GK_OEM_COMMA: return Hazel::Key::Comma;
+				case GK_OEM_MINUS: return Hazel::Key::Minus;
+				case GK_OEM_PERIOD: return Hazel::Key::Period;
+				case GK_OEM_2: return Hazel::Key::Slash;
+				case GK_0: return Hazel::Key::D0;
+				case GK_1: return Hazel::Key::D1;
+				case GK_2: return Hazel::Key::D2;
+				case GK_3: return Hazel::Key::D3;
+				case GK_4: return Hazel::Key::D4;
+				case GK_5: return Hazel::Key::D5;
+				case GK_6: return Hazel::Key::D6;
+				case GK_7: return Hazel::Key::D7;
+				case GK_8: return Hazel::Key::D8;
+				case GK_9: return Hazel::Key::D9;
+				case GK_OEM_1: return Hazel::Key::Semicolon;
+				case GK_OEM_PLUS: return Hazel::Key::Equal;
+				case GK_A: return Hazel::Key::A;
+				case GK_B: return Hazel::Key::B;
+				case GK_C: return Hazel::Key::C;
+				case GK_D: return Hazel::Key::D;
+				case GK_E: return Hazel::Key::E;
+				case GK_F: return Hazel::Key::F;
+				case GK_G: return Hazel::Key::G;
+				case GK_H: return Hazel::Key::H;
+				case GK_I: return Hazel::Key::I;
+				case GK_J: return Hazel::Key::J;
+				case GK_K: return Hazel::Key::K;
+				case GK_L: return Hazel::Key::L;
+				case GK_M: return Hazel::Key::M;
+				case GK_N: return Hazel::Key::N;
+				case GK_O: return Hazel::Key::O;
+				case GK_P: return Hazel::Key::P;
+				case GK_Q: return Hazel::Key::Q;
+				case GK_R: return Hazel::Key::R;
+				case GK_S: return Hazel::Key::S;
+				case GK_T: return Hazel::Key::T;
+				case GK_U: return Hazel::Key::U;
+				case GK_V: return Hazel::Key::V;
+				case GK_W: return Hazel::Key::W;
+				case GK_X: return Hazel::Key::X;
+				case GK_Y: return Hazel::Key::Y;
+				case GK_Z: return Hazel::Key::Z;
+				case GK_OEM_4: return Hazel::Key::LeftBracket;
+				case GK_OEM_5: return Hazel::Key::Backslash;
+				case GK_OEM_6: return Hazel::Key::RightBracket;
+				case GK_OEM_3: return Hazel::Key::GraveAccent;
+				case GK_ESCAPE: return Hazel::Key::Escape;
+				case GK_RETURN: return Hazel::Key::Enter;
+				case GK_TAB: return Hazel::Key::Tab;
+				case GK_BACK: return Hazel::Key::Backspace;
+				case GK_INSERT: return Hazel::Key::Insert;
+				case GK_DELETE: return Hazel::Key::Delete;
+				case GK_RIGHT: return Hazel::Key::Right;
+				case GK_LEFT: return Hazel::Key::Left;
+				case GK_DOWN: return Hazel::Key::Down;
+				case GK_UP: return Hazel::Key::Up;
+				case GK_PRIOR: return Hazel::Key::PageUp;
+				case GK_NEXT: return Hazel::Key::PageDown;
+				case GK_HOME: return Hazel::Key::Home;
+				case GK_END: return Hazel::Key::End;
+				case GK_CAPITAL: return Hazel::Key::CapsLock;
+				case GK_SCROLL: return Hazel::Key::ScrollLock;
+				case GK_NUMLOCK: return Hazel::Key::NumLock;
+				case GK_SNAPSHOT: return Hazel::Key::PrintScreen;
+				case GK_PAUSE: return Hazel::Key::Pause;
+				case GK_F1: return Hazel::Key::F1;
+				case GK_F2: return Hazel::Key::F2;
+				case GK_F3: return Hazel::Key::F3;
+				case GK_F4: return Hazel::Key::F4;
+				case GK_F5: return Hazel::Key::F5;
+				case GK_F6: return Hazel::Key::F6;
+				case GK_F7: return Hazel::Key::F7;
+				case GK_F8: return Hazel::Key::F8;
+				case GK_F9: return Hazel::Key::F9;
+				case GK_F10: return Hazel::Key::F10;
+				case GK_F11: return Hazel::Key::F11;
+				case GK_F12: return Hazel::Key::F12;
+				case GK_F13: return Hazel::Key::F13;
+				case GK_F14: return Hazel::Key::F14;
+				case GK_F15: return Hazel::Key::F15;
+				case GK_F16: return Hazel::Key::F16;
+				case GK_F17: return Hazel::Key::F17;
+				case GK_F18: return Hazel::Key::F18;
+				case GK_F19: return Hazel::Key::F19;
+				case GK_F20: return Hazel::Key::F20;
+				case GK_F21: return Hazel::Key::F21;
+				case GK_F22: return Hazel::Key::F22;
+				case GK_F23: return Hazel::Key::F23;
+				case GK_F24: return Hazel::Key::F24;
+				case GK_UNKNOWN: return Hazel::Key::F25;
+				case GK_NUMPAD0: return Hazel::Key::KP0;
+				case GK_NUMPAD1: return Hazel::Key::KP1;
+				case GK_NUMPAD2: return Hazel::Key::KP2;
+				case GK_NUMPAD3: return Hazel::Key::KP3;
+				case GK_NUMPAD4: return Hazel::Key::KP4;
+				case GK_NUMPAD5: return Hazel::Key::KP5;
+				case GK_NUMPAD6: return Hazel::Key::KP6;
+				case GK_NUMPAD7: return Hazel::Key::KP7;
+				case GK_NUMPAD8: return Hazel::Key::KP8;
+				case GK_NUMPAD9: return Hazel::Key::KP9;
+				case GK_DECIMAL: return Hazel::Key::KPDecimal;
+				case GK_DIVIDE: return Hazel::Key::KPDivide;
+				case GK_MULTIPLY: return Hazel::Key::KPMultiply;
+				case GK_SUBTRACT: return Hazel::Key::KPSubtract;
+				case GK_ADD: return Hazel::Key::KPAdd;
+				case GK_SHIFT: return Hazel::Key::LeftShift;
+				case GK_CONTROL: return Hazel::Key::LeftControl;
+				case GK_MENU: return Hazel::Key::LeftAlt;
+				case GK_LWIN: return Hazel::Key::LeftSuper;
+				case GK_RWIN: return Hazel::Key::RightSuper;
+				default: return -1;
+			}
+		}
+
 		MouseEvent::Button HazelMouseCodeToUl(int key)
 		{
 			switch (key)

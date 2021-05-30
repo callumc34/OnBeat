@@ -7,8 +7,7 @@ function setSettings(stringSettings) {
         if (!setting) {
             continue;
         }
-        setting.value = settings[key];    
-                
+        setting.value = settings[key];                
     }
 }
 
@@ -28,6 +27,14 @@ function setSkin() {
     if (path) {
         Skin.value = path;
     }
+}
+
+function setKeyCode(event) {
+    document.getElementById(this.dataset.setting).value = event.keyCode;
+}
+
+function preventKeyAppear(event) {
+    this.value = "";
 }
 
 
@@ -52,6 +59,12 @@ VolumeSelect.onchange = function() {
     Volume.value = this.value;
 }
 
+for (let ele of document.getElementsByClassName("KeyInput")) {
+    ele.addEventListener("keyup", setKeyCode);
+    ele.addEventListener("keydown", preventKeyAppear);
+}
+
+
 Volume.onchange = function() {
     if (isNaN(this.value) || Number(this.value) > this.max || Number(this.value) < this.min) {
         this.value = VolumeSelect.value;
@@ -62,4 +75,3 @@ Volume.onchange = function() {
 
 //Initial setup calls
 DisplayHeader.click();
-RevertSettings();
