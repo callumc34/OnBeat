@@ -1,6 +1,6 @@
 #pragma once
 #include <OnBeat/Util/Template/Menu.h>
-#include <AppCore/JSHelpers.h>
+#include <OnBeat/Util/JS/JS.h>
 
 namespace OnBeat
 {

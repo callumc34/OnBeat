@@ -11,36 +11,45 @@ namespace OnBeat
 	App* App::instance = nullptr;
 
 	App::App()
-		: Application("OnBeat"), Settings("assets/user/UserConfig.json")
+		: Application("OnBeat")
 	{
+		Settings = Config::Settings::Create(OB_SETTINGS);
 		instance = this;
 
 		auto& window = Hazel::Application::Get().GetWindow();
 		nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 		SetWindowIcon("logo/logo-64.png");
 
-		cwd = std::filesystem::current_path().string();
-
-		AudioPlayer.setVolume(Settings.Volume);
-
-		SetWindowState(Settings.Fullscreen - 1);
+		RefreshSettings();
 
 		//Stop ImGui changing mouse cursor
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-		PushLayer(new MainMenu(Settings.CurrentSkin.SkinDirectory + "/menu/MainMenu/main.html", "Main Menu"));
+		PushLayer(new MainMenu(Settings.CurrentSkin.SkinDirectory + OB_MAIN_MENU, "Main Menu"));
+	}
+
+	void App::RefreshSettings()
+	{
+		if (!Config::validateSettings(Settings, false))
+		{
+			HZ_WARN("Settings refreshed with invalid settings. Falling back to default settings");
+			Settings = Config::Settings::Create(OB_DEFAULT_SETTINGS);
+		}
+		SetWindowState(Settings.Resolution.Fullscreen);
+		AudioPlayer.setVolume(Settings.Volume);
 	}
 
 	void App::SetWindowState(int fs)
 	{
+		fs -= 1;
 		if (fs >= 0)
 		{
 			SetFullScreen(fs);
 		}
 		else
 		{
-			glfwSetWindowSize(nativeWindow, Settings.DisplayWidth, Settings.DisplayHeight);
+			glfwSetWindowSize(nativeWindow, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight);
 		}
 	}
 
@@ -75,7 +84,7 @@ namespace OnBeat
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwMonitor);
 
 		// switch to full screen
-		glfwSetWindowMonitor(nativeWindow, glfwMonitor, 0, 0, mode->width, mode->height, Settings.FpsCap);
+		glfwSetWindowMonitor(nativeWindow, glfwMonitor, 0, 0, mode->width, mode->height, Settings.Resolution.FpsCap);
 	}
 
 	App::~App()

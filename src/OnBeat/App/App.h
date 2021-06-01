@@ -19,6 +19,8 @@ namespace OnBeat
 			AudioPlayer AudioPlayer;
 			Config::Settings Settings;
 
+			void RefreshSettings();
+
 			void SetWindowState(int fs);
 
 			void SetWindowIcon(const std::string& path);
@@ -32,6 +34,5 @@ namespace OnBeat
 			void SetFullScreen(int monitor);
 
 			GLFWwindow* nativeWindow;
-			std::string cwd;
 	};
 }

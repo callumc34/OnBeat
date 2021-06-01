@@ -2,6 +2,15 @@
 #include <OnBeat/Config/Skin.h>
 #include <Hazel/Core/KeyCodes.h>
 
+#define OB_DEFAULT_SKIN "assets/user/skins/Default"
+#define OB_DEFAULT_SETTINGS "assets/user/DefaultConfig.json"
+#define OB_SETTINGS "assets/user/UserConfig.json"
+#define OB_MAIN_MENU "/menu/MainMenu/main.html"
+
+//Generic settings to be checked against upon swapping values
+//Bit of an issue if one of the settings has to be 100000
+#define OB_UNDEFINED_INT 100000
+
 //magic_enum throws error if this is not defined
 int main(int argc, char** argv);
 
@@ -9,6 +18,7 @@ namespace OnBeat
 {
 	namespace Config
 	{
+
 		//Had to redefine Keys to work with magic_cast
 		enum Keys : uint16_t
 		{
@@ -145,20 +155,41 @@ namespace OnBeat
 			Menu = 348,
 		};
 
+		struct InputMap
+		{
+			uint16_t
+				KEY_FAR_LEFT_COLUMN,
+				KEY_LEFT_COLUMN,
+				KEY_RIGHT_COLUMN,
+				KEY_FAR_RIGHT_COLUMN;				
+		};
+
+		void to_json(nlohmann::json& j, const InputMap& i);
+		void from_json(const nlohmann::json& j, InputMap& i);
+
 		struct Settings
 		{
-			Settings(const char* path = "assets/user/DefaultConfig.json");
+			static Settings Create(const std::string& path);
+			
+			struct
+			{
+				int DisplayWidth = OB_UNDEFINED_INT, DisplayHeight = OB_UNDEFINED_INT;
+				int Fullscreen = OB_UNDEFINED_INT;
+				double FpsCap = OB_UNDEFINED_INT;
+			} Resolution;
 
-			int DisplayWidth, DisplayHeight;
-			int Fullscreen;
-			double FpsCap;
-
-			std::unordered_map<std::string, Hazel::KeyCode> Input;
+			InputMap Input;
 
 			Skin::AppSkin CurrentSkin;
 
-			float Volume;
+			float Volume = OB_UNDEFINED_INT;
 		};
+
+		bool swapSettings(Settings& newS, const Settings& oldS);
+
+		bool validateSettings(const Settings& s, bool allowUndefined = true);
+
+		void setResolution(Settings& s, const std::string& res);
 
 		void to_json(nlohmann::json& j, const Settings& s);
 

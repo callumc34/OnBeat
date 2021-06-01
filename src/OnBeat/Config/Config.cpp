@@ -10,73 +10,121 @@ namespace OnBeat
 {
 	namespace Config
 	{
+		//Cast input struct to and from json
+		void to_json(json& j, const InputMap& i)
+		{
+
+		}
+
+		void from_json(const json& j, InputMap& i)
+		{
+
+		}
+
 		//Setup onbeat settings from json file
-		Settings::Settings(const char* path)
+		Settings Settings::Create(const std::string& path)
 		{
 			std::ifstream input(path);
 			json config;
 			input >> config;
 			input.close();
 
-			DisplayWidth = config["Display"][0];
-			DisplayHeight = config["Display"][1];
-			Fullscreen = config["Fullscreen"];
+			return config;
+		}
 
-			for (auto& [key, value] : config["Input"].items())
+		bool swapSettings(Settings& newS, const Settings& oldS)
+		{
+			if (!validateSettings(newS) && !validateSettings(oldS))
+				return false;
+
+			//Quick define swapping variables
+			auto set = [](auto& newS, const auto& oldS)
 			{
-				auto inputKey = magic_enum::enum_cast<Keys>(std::string(value));
-				if (inputKey.has_value())
+				if (oldS != OB_UNDEFINED_INT)
+					newS = oldS;
+			};
+
+			//Quick set values that can be defined by an int
+			set(newS.Resolution.DisplayWidth, oldS.Resolution.DisplayWidth);
+			set(newS.Resolution.DisplayHeight, oldS.Resolution.DisplayHeight);
+			set(newS.Resolution.Fullscreen, oldS.Resolution.Fullscreen);
+			set(newS.Resolution.FpsCap, oldS.Resolution.FpsCap);
+			set(newS.Volume, oldS.Volume);
+
+			return true;
+		}
+
+		//Ensure that a settings struct has been made correctly
+		bool validateSettings(const Settings& s, bool allowUndefined)
+		{
+			auto checkRange = [allowUndefined](auto& val, const auto& min, const auto& max)
+			{
+				if (allowUndefined)
 				{
-					Input[key] = inputKey.value();
+					if (val == OB_UNDEFINED_INT)
+					{
+						return true;
+					}
+					else if ((val > max || val < min))
+					{
+						return false;
+					}
 				}
 				else
 				{
-					//Todo error checking and defaulting
+					if (val == OB_UNDEFINED_INT || (val > max || val < min))
+					{
+						return false;
+					}
 				}
-			}
-			
-			//Try to find skin file
-			std::string skin = config["Skin"];
+				return true;
+			};
 
-			if (std::filesystem::is_regular_file(skin))
-			{
-				CurrentSkin = Skin::AppSkin(skin);
-			}
-			else if (std::filesystem::is_directory(skin))
-			{
-				CurrentSkin = Skin::AppSkin(skin + "/Skin.json");
-			}
-			else if (std::filesystem::is_directory(std::filesystem::current_path().string()
-				+ "/assets/user/skins/" + skin))
-			{
-				CurrentSkin = Skin::AppSkin(std::filesystem::current_path().string()
-					+ "/assets/user/skins/" + skin + "/Skin.json");
-			}
-			else
-			{
-				CurrentSkin = Skin::AppSkin(std::filesystem::current_path().string()
-					+ "/assets/user/skins/Default/Skin.json");
-			}
-
-			Volume = config["Volume"];
+			if (!checkRange(s.Resolution.DisplayWidth, 64, 16000)) return false;
+			if (!checkRange(s.Resolution.DisplayHeight, 64, 16000)) return false;
+			if (!checkRange(s.Resolution.Fullscreen, -1, 64)) return false;
+			if (!checkRange(s.Resolution.FpsCap, 0, 64)) return false;
+			if (!checkRange(s.Volume, 0, 1)) return false;
+			return true;
 		}
 
+		//Set resolution from a json resolution string
+		void setResolution(Settings& s, const std::string& resString)
+		{
+			try
+			{
+				s.Resolution.DisplayWidth = std::stoi(resString.substr(0, resString.find("x", 0)).c_str());
+				s.Resolution.DisplayHeight = std::stoi(resString.substr(resString.find("x", 0) + 1, resString.length()).c_str());
+			}
+			catch (const std::exception& e)
+			{
+				s.Resolution.DisplayWidth == OB_UNDEFINED_INT;
+				s.Resolution.DisplayHeight == OB_UNDEFINED_INT;
+			}
+		}
+
+
+		//Cast settings to and from json
 		void to_json(json& j, const Settings& s)
 		{
-			j["Resolution"] = std::to_string(s.DisplayWidth) + "x" + std::to_string(s.DisplayHeight);
-			j["Fullscreen"] = s.Fullscreen;
+			j["Resolution"] = std::to_string(s.Resolution.DisplayWidth) + "x" + std::to_string(s.Resolution.DisplayHeight);
+			j["Fullscreen"] = s.Resolution.Fullscreen;
+			j["FpsCap"] = s.Resolution.FpsCap;
 			j["Skin"] = s.CurrentSkin.SkinPath;
-			j["Volume"] = s.Volume * 100;
+			j["Volume"] = s.Volume;
 		}
 
 		void from_json(const json& j, Settings& s)
 		{
-			std::string resString = j["Resolution"];
-			s.DisplayWidth = std::stoi(resString.substr(0, resString.find("x", 0)).c_str());
-			s.DisplayHeight = std::stoi(resString.substr(resString.find("x", 0) + 1, resString.length()).c_str());
-			j.at("Fullscreen").get_to(s.Fullscreen);
-			s.CurrentSkin = Skin::AppSkin(j["Skin"]);
-			s.Volume = j["Volume"] / 100;
+			setResolution(s, j.value("Resolution", ""));
+
+			s.Resolution.Fullscreen = j.value("Fullscreen", OB_UNDEFINED_INT);
+
+			s.Resolution.FpsCap = j.value("FpsCap", OB_UNDEFINED_INT);
+
+			s.CurrentSkin = Skin::AppSkin(j.value("Skin", OB_DEFAULT_SKIN));
+
+			s.Volume = j.value("Volume", OB_UNDEFINED_INT);
 		}
 	}
 }

@@ -5,6 +5,8 @@
 
 #include "AppUtil/AppUtil.h"
 
+#include "JS/JS.h"
+
 #include "Template/GLTextureSurface.h"
 #include "Template/Layer.h"
 #include "Template/Menu.h"

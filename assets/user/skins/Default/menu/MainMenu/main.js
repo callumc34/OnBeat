@@ -1,4 +1,5 @@
 //C callbacks to JS
+//Required JS Functions
 function setSettings(stringSettings) {
     //var settings = JSON.parse(stringSettings);
     var settings = stringSettings;
@@ -11,9 +12,26 @@ function setSettings(stringSettings) {
     }
 }
 
-//Non required JS functions
+//JS functions - non required
+function getAsNumber(val) {
+    let value = Number(val);
+    if (value == NaN) {
+        return val;
+    }
+    return value;
+}
 
-//JS functions
+function applySettings() {
+    let config = {
+        "Resolution": Resolution.value,
+        "Fullscreen": Fullscreen.valueAsNumber,
+        "FpsCap": FpsCap.valueAsNumber,
+        "Skin": Skin.value,
+        "Volume": Volume.valueAsNumber
+    };
+    UpdateSettings(config);
+}   
+
 function display(element, hide, style) {
     for (let ele of hide) {
         ele.style.display = "none";

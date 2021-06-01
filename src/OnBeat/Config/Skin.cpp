@@ -150,6 +150,27 @@ namespace OnBeat
 
 		AppSkin::AppSkin(std::string path)
 		{
+			//Find path
+			if (std::filesystem::is_regular_file(path))
+			{
+				
+			}
+			else if (std::filesystem::is_directory(path))
+			{
+				path = path + "/Skin.json";
+			}
+			else if (std::filesystem::is_directory(std::filesystem::current_path().string()
+				+ "/assets/user/skins/" + path))
+			{
+				path = std::filesystem::current_path().string()
+					+ "/assets/user/skins/" + path + "/Skin.json";
+			}
+			else
+			{
+				path = std::filesystem::current_path().string()
+					+ "/assets/user/skins/Default/Skin.json";
+			}
+
 			std::ifstream input(path);
 			json config;
 			input >> config;

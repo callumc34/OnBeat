@@ -1,6 +1,5 @@
 #include <OnBeat/Ui/MainMenu/MainMenu.h>
 #include <Hazel/Utils/PlatformUtils.h>
-#include <JavaScriptCore/JSRetainPtr.h>
 #include <algorithm>
 
 namespace ul = ultralight;
@@ -33,72 +32,36 @@ namespace OnBeat
 
 	void MainMenu::UpdateSettings(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
-		Config::Settings newSettings = App::Get().Settings;
+		if (args.size() != 1)
+		{
+			//Push error to menu
+			HZ_WARN("UpdateSettings recieved invalid args of size: " + args.size());
+			return;
+		}
+		nlohmann::json config = args[0];
 
-		//Convert all object properties to C variables
-		if (obj.HasProperty("Resolution"))
-		{
-			//Cast to ultralight string
-			ul::String ulString = obj["Resolution"].ToObject()["value"].ToString();
-			std::string stdString = ulString.utf8().data();
-			if (stdString.length() > 0)
-			{
-				newSettings.DisplayWidth = std::stoi(stdString.substr(0, stdString.find("x", 0)).c_str());
-				newSettings.DisplayHeight = std::stoi(stdString.substr(stdString.find("x", 0) + 1, stdString.length()).c_str());
-			}
-		}
-		if (obj.HasProperty("Fullscreen"))
-		{
-			ul::String ulString = obj["Fullscreen"].ToObject()["value"].ToString();
-			std::string stdString = ulString.utf8().data();
-			if (stdString.length() > 0)
-			{
-				newSettings.Fullscreen = std::strtol(stdString.c_str(), nullptr, 10);
-			}
-		}
-		if (obj.HasProperty("FpsCap"))
-		{
-			ul::String ulString = obj["FpsCap"].ToObject()["value"].ToString();
-			std::string stdString = ulString.utf8().data();
-			if (stdString.length() > 0)
-			{
-				newSettings.FpsCap = std::strtod(stdString.c_str(), nullptr);
-			}
-		}
-		if (obj.HasProperty("Skin"))
-		{
-			ul::String ulString = obj["Skin"].ToObject()["value"].ToString();
-			std::string stdString = ulString.utf8().data();
-			if (stdString.length() > 0)
-			{
-				try
-				{
-					newSettings.CurrentSkin = Skin::AppSkin(stdString);
-					LoadDocument((newSettings.CurrentSkin.SkinDirectory + "/menu/MainMenu/main.html").c_str());
-				}
-				catch (std::exception& e)
-				{
-					//Display error
-				}
+		Config::Settings newSettings = config;
 
-				//Load the new menu document
-			}
-		}
-		if (obj.HasProperty("Volume"))
+		try
 		{
-			//Complete mess - may need to clean up but JSHelpers aren't working
-			ul::String ulString = obj["Volume"].ToObject()["value"].ToString();
-			std::string stdString = ulString.utf8().data();
-			if (stdString.length() > 0)
-			{
-				newSettings.Volume = std::strtod(stdString.c_str(), nullptr) / 100;
-				App::Get().AudioPlayer.setVolume(newSettings.Volume);
-			}
+			newSettings = config;
+		}
+		catch (const std::exception& e)
+		{
+			//Push error to menu
+			HZ_ERROR("Error casting arguments to settings.");
+			return;
 		}
 
-		App::Get().Settings = newSettings;
+		if (!Config::validateSettings(newSettings))
+		{
+			HZ_WARN("UpdateSettings received an invalid settings json.");
+			return;
+		}
 
-		App::Get().SetWindowState(newSettings.Fullscreen - 1);
+		Config::swapSettings(App::Get().Settings, newSettings);
+
+		App::Get().RefreshSettings();
 		return;
 	}
 

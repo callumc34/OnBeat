@@ -135,13 +135,13 @@
 						<div class="setting" id="VolumeSetting">
 							<p>Volume:</p>
 							<div>
-								<input type="number" id="Volume" min="0" max="100" class="configValue">
-								<input type="range" id="VolumeSelect">
+								<input type="number" id="Volume" min="0" max="1" step="0.1" class="configValue">
+								<input type="range" id="VolumeSelect" min="0" max="1" step="0.01">
 							</div>
 						</div>
 					</div>
 					<div id="SettingsButtons">
-						<input type="button" value="Apply" onclick="UpdateSettings()">
+						<input type="button" value="Apply" onclick="applySettings()">
 						<input type="button" value="Cancel" onclick="RevertSettings()">
 					</div>
 				</div>

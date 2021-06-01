@@ -1,5 +1,5 @@
 {
-    "Display" : [1600, 900],
+    "Resolution": "1600x900",
     "Fullscreen" : 0,
     "Input" : {
         "Column1" : "Z",
