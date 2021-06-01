@@ -21,27 +21,26 @@ namespace OnBeat
 
 		cwd = std::filesystem::current_path().string();
 
-		AudioPlayer.setVolume(Settings.getVolume());
+		AudioPlayer.setVolume(Settings.Volume);
 
-		SetWindowState(Settings.getResolution().Fullscreen);
+		SetWindowState(Settings.Fullscreen - 1);
 
 		//Stop ImGui changing mouse cursor
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-		PushLayer(new MainMenu(Settings.getCurrentSkin().SkinDirectory + "/menu/MainMenu/main.html", "Main Menu"));
+		PushLayer(new MainMenu(Settings.CurrentSkin.SkinDirectory + "/menu/MainMenu/main.html", "Main Menu"));
 	}
 
 	void App::SetWindowState(int fs)
 	{
-		fs -= 1;
 		if (fs >= 0)
 		{
 			SetFullScreen(fs);
 		}
 		else
 		{
-			glfwSetWindowSize(nativeWindow, Settings.getResolution().DisplayWidth, Settings.getResolution().DisplayHeight);
+			glfwSetWindowSize(nativeWindow, Settings.DisplayWidth, Settings.DisplayHeight);
 		}
 	}
 
@@ -76,7 +75,7 @@ namespace OnBeat
 		const GLFWvidmode* mode = glfwGetVideoMode(glfwMonitor);
 
 		// switch to full screen
-		glfwSetWindowMonitor(nativeWindow, glfwMonitor, 0, 0, mode->width, mode->height, Settings.getResolution().FpsCap);
+		glfwSetWindowMonitor(nativeWindow, glfwMonitor, 0, 0, mode->width, mode->height, Settings.FpsCap);
 	}
 
 	App::~App()

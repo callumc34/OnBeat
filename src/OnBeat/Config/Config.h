@@ -1,13 +1,14 @@
 #pragma once
 #include <OnBeat/Config/Skin.h>
 #include <Hazel/Core/KeyCodes.h>
-#include <filesystem>
+
+//magic_enum throws error if this is not defined
+int main(int argc, char** argv);
 
 namespace OnBeat
 {
 	namespace Config
 	{
-		typedef std::unordered_map<std::string, Hazel::KeyCode> InputMap;
 		//Had to redefine Keys to work with magic_cast
 		enum Keys : uint16_t
 		{
@@ -144,41 +145,23 @@ namespace OnBeat
 			Menu = 348,
 		};
 
-		struct ResolutionData
+		struct Settings
 		{
-			int DisplayWidth;
-			int DisplayHeight;
+			Settings(const char* path = "assets/user/DefaultConfig.json");
+
+			int DisplayWidth, DisplayHeight;
 			int Fullscreen;
 			double FpsCap;
+
+			std::unordered_map<std::string, Hazel::KeyCode> Input;
+
+			Skin::AppSkin CurrentSkin;
+
+			float Volume;
 		};
 
-		class Settings
-		{
-			public:
-				Settings(const std::string& path = std::filesystem::current_path().string() + "assets/user/skins/Default");
-				~Settings();
+		void to_json(nlohmann::json& j, const Settings& s);
 
-				//Get functions
-				ResolutionData getResolution() const { return Resolution; };
-				float getVolume() const { return Volume; };
-				InputMap getInputs() const { return Inputs; };
-				Skin::AppSkin getCurrentSkin() const { return CurrentSkin; };
-
-				//Set functions
-				void setResolution(const ResolutionData& resolution);
-				void setVolume(const float& volume);
-				void setInputs(const InputMap& inputs);
-				void setCurrentSkin(const Skin::AppSkin& skin);
-
-				//JSON assignment
-				Settings& operator=(const nlohmann::json& j);
-				operator nlohmann::json() const;
-
-			private:
-				ResolutionData Resolution;
-				float Volume;
-				InputMap Inputs;
-				Skin::AppSkin CurrentSkin;
-		};
+		void from_json(const nlohmann::json& j, Settings& s);
 	}
 }
