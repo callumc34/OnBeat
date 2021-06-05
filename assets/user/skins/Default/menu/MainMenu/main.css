@@ -1,3 +1,10 @@
+:root {
+--white: #FDFDFD;
+--black: #1A1A1A;
+--light-red: #D64649;
+--dark-red: #FF1619;
+}
+
 @font-face {
   font-family: "Walkway Expand Black";
   src: url("../fonts/Walkway Expand Black.ttf");
@@ -23,12 +30,12 @@ body, html {
 }
 
 input, select {
-  border: 2px solid #D64649;
+  border: 2px solid var(--light-red);
   border-radius: 6px;
   padding: 8px;
   font-size: 28px;
-  background-color: #1A1A1A;
-  color: #FDFDFD;
+  background-color: var(--black);
+  color: var(--white);
   transition: .5s ease all;
   user-select: all;
 }
@@ -43,30 +50,30 @@ input[type="range"] {
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
-  background-color: #D64649;
-  color: #FDFDFD;
+  background-color: var(--light-red);
+  color: var(--white);
 }
 
 input[type="range"]::-webkit-slider-thumb {
   margin-top: auto;
   width: 23px;
   height: 23px;
-  background: #FDFDFD;
-  border: 2.5px solid #1A1A1A;
+  background: var(--white);
+  border: 2.5px solid var(--black);
   border-radius: 12px;
   cursor: pointer;
   -webkit-appearance: none;
 }
 
 input[type="button"]:hover {
-  background-color: #FDFDFD;
-  color: #D64649;
+  background-color: var(--white);
+  color: var(--light-red);
   cursor: pointer;
 }
 
 .titleBackground {
   text-align: right;
-  background-color: #FDFDFD;
+  background-color: var(--white);
   margin-left: auto;
   margin-right: 0px;
   box-shadow: -4px 4px 8px 2px rgba(0,0,0,0.9);
@@ -86,12 +93,12 @@ input[type="button"]:hover {
 
 .subOption {
   width: 80%;
-  background-color: #D64649;
+  background-color: var(--light-red);
   box-shadow: -4px 4px 8px 2px rgba(0,0,0,0.9);
 }
 
 .subOption:hover {
-  background-color: #FF1619;
+  background-color: var(--dark-red);
   transition: .5s ease all;
   cursor: pointer;
 }
@@ -117,25 +124,25 @@ input[type="button"]:hover {
 .header {
   padding: 12px;
   font-size: 38px;
-  color: #FDFDFD;
+  color: var(--white);
 }
 
 .header:hover {
   cursor: pointer;
-  background-color: #D64649;
+  background-color: var(--light-red);
 }
 
 .header:hover:after {
-  color: #FDFDFD;
+  color: var(--white);
 }
 
 .header:after {
   content: "|";
-  color: #D64649;
+  color: var(--light-red);
 }
 
 .header:last-child:hover {
-  background-color: #1A1A1A;
+  background-color: var(--black);
 }
 
 .header:last-child:after {
@@ -145,7 +152,7 @@ input[type="button"]:hover {
 .setting {
   display: grid;
   grid-template-columns: [setting] 60% [option] 40%;
-  color: #FDFDFD;
+  color: var(--white);
   font-size: 44px;
   place-items: center;
 }
@@ -205,7 +212,7 @@ input[type="button"]:hover {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  border: 2px solid #D64649;
+  border: 2px solid var(--light-red);
   border-radius: 10px;
 }
 
@@ -214,7 +221,7 @@ input[type="button"]:hover {
   grid-template-columns: [display] 1fr [input] 1fr [audio] 1fr [space] auto [exit] 0.33fr;
   width: 100%;
   height: fit-content;
-  border-bottom: 2px solid #D64649;  
+  border-bottom: 2px solid var(--light-red);  
 }
 
 #DisplaySettings {
@@ -252,11 +259,11 @@ input[type="button"]:hover {
 }
 
 #SettingsQuit {
-  color: #D64649;
+  color: var(--light-red);
   cursor: pointer;
   transition: .5s ease all;
 }
 
 #SettingsQuit:hover {
-  color: #FDFDFD;
+  color: var(--white);
 }

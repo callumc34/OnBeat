@@ -92,12 +92,12 @@ namespace OnBeat
 				uint32_t height = textureSurface->height();
 				GLuint textureId = textureSurface->GetTextureAndSyncIfNeeded();
 
-				GLubyte* data = new GLubyte[width * height * 4];
+				GLubyte* data = new GLubyte[textureSurface->size()];
 
-				glGetTextureImage(textureId, 0, GL_RGBA, GL_UNSIGNED_BYTE, width * height * 4, data);
+				glGetTextureImage(textureId, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureSurface->size(), data);
 
 				Hazel::Ref<Hazel::Texture2D> texture = Hazel::Texture2D::Create(width, height);
-				texture->SetData(data, width * height * 4);
+				texture->SetData(data, textureSurface->size());
 
 				Hazel::Renderer2D::BeginScene(*CameraController);
 

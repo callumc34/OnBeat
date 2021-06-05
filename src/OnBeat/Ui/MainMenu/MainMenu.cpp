@@ -1,5 +1,6 @@
 #include <OnBeat/Ui/MainMenu/MainMenu.h>
 #include <Hazel/Utils/PlatformUtils.h>
+#include <glfw/glfw3.h>
 #include <algorithm>
 
 namespace ul = ultralight;
@@ -67,10 +68,13 @@ namespace OnBeat
 
 	void MainMenu::RevertSettings(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
-		nlohmann::json jsonSettings = App::Get().Settings;
-		std::string script = "setSettings(" + jsonSettings.dump() + ");";
-		
-		view->EvaluateScript(script.c_str());
+		if (obj["SetSettings"].IsFunction())
+		{
+			nlohmann::json jsonSettings = App::Get().Settings;
+			ul::JSObject arg = jsonSettings;
+
+			obj["SetSettings"].ToFunction()(ul::JSArgs{ (ul::JSValue)arg });
+		}
 
 		return;
 	}
@@ -86,6 +90,31 @@ namespace OnBeat
 			return ul::JSValue(path.c_str());
 		}
 		return ul::JSValue(false);
+	}
+
+	ul::JSValue MainMenu::GetHWInfo(const ul::JSObject& obj, const ul::JSArgs& args)
+	{
+		int count;
+		GLFWmonitor** monitors = glfwGetMonitors(&count);
+
+		int Lwidth = 0, Lheight = 0;
+
+		for (int i = 0; i < count; i++)
+		{
+			const GLFWvidmode* mode = glfwGetVideoMode(monitors[i]);
+
+			if (mode->width > Lwidth)
+				Lwidth = mode->width;
+
+			if (mode->height > Lheight)
+				Lheight = mode->height;
+		}
+
+		ul::JSObject ret;
+		ret["width"] = Lwidth;
+		ret["height"] = Lheight;
+		ret["monitors"] = count;
+		return (ul::JSValue)ret;
 	}
 
 	void MainMenu::OnDOMReady(ul::View* caller, uint64_t frame_id,
@@ -105,7 +134,12 @@ namespace OnBeat
 		globalObj["UpdateSettings"] = BindJSCallback(&MainMenu::UpdateSettings);
 		globalObj["RevertSettings"] = BindJSCallback(&MainMenu::RevertSettings);
 		globalObj["SelectSkin"] = BindJSCallbackWithRetval(&MainMenu::SelectSkin);
+		globalObj["GetHWInfo"] = BindJSCallbackWithRetval(&MainMenu::GetHWInfo);
 		RevertSettings(globalObj, ul::JSArgs());
+
+		//Notify JS Content is loaded
+		if (globalObj["DOMLoaded"].IsFunction())
+			globalObj["DOMLoaded"].ToFunction()(ul::JSArgs());
 	}
 
 	MainMenu::~MainMenu()

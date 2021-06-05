@@ -1,6 +1,6 @@
 //C callbacks to JS
 //Required JS Functions
-function setSettings(settings) {
+function SetSettings(settings) {
     for (let key in settings) {
         let setting = document.getElementById(key);
         if (!setting) {
@@ -15,7 +15,51 @@ function setSettings(settings) {
     PAUSE.value = settings["Input"]["PAUSE"];
 }
 
+function DOMLoaded() {
+    setHWInfo();
+}
+
 //JS functions - non required
+function setHWInfo() {
+    info = GetHWInfo();
+    //Set monitors
+    for (let m = 1; m <= info.monitors; m++) {
+        let opt = document.createElement("option");
+        opt.value = m;
+        opt.appendChild(document.createTextNode("Monitor " + m));
+
+        Fullscreen.appendChild(opt);
+    }
+
+    //Set resolution values
+    var resolutions = [
+        {width: 7680, height: 4320, res: "7680x4320"},
+        {width: 3840, height: 2160, res: "3840x2160"},
+        {width: 3840, height: 1440, res: "3840x1440"},
+        {width: 2560, height: 1440, res: "2560x1440"},
+        {width: 1920, height: 1080, res: "1920x1080"},
+        {width: 1920, height: 1200, res: "1920x1200"},
+        {width: 1680, height: 1050, res: "1680x1050"},
+        {width: 1600, height: 900, res: "1600x900"},
+        {width: 1440, height: 900, res: "1440x900"},
+        {width: 1366, height: 768, res: "1366x768"},
+        {width: 1280, height: 720, res: "1280x720"},
+        {width: 1024, height: 768, res: "1024x768"},
+    ];
+    
+    for (let res of resolutions) {
+        if (res.width > info.width || res.height > info.height) {
+            continue;
+        }
+
+        let opt = document.createElement("option");
+        opt.value = res.res;
+        opt.appendChild(document.createTextNode(res.res));
+
+        Resolution.appendChild(opt);
+    }
+}
+
 function getAsNumber(val) {
     let value = Number(val);
     if (value == NaN) {
@@ -27,7 +71,7 @@ function getAsNumber(val) {
 function applySettings() {
     let config = {
         "Resolution": Resolution.value,
-        "Fullscreen": Fullscreen.valueAsNumber,
+        "Fullscreen": Number(Fullscreen.value),
         "FpsCap": FpsCap.valueAsNumber,
         "Skin": Skin.value,
         "Volume": Volume.valueAsNumber,

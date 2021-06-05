@@ -16,6 +16,7 @@ namespace OnBeat
 			void UpdateSettings(const ultralight::JSObject& obj, const ultralight::JSArgs& args);
 			void RevertSettings(const ultralight::JSObject& obj, const ultralight::JSArgs& args);
 			ultralight::JSValue SelectSkin(const ultralight::JSObject& obj, const ultralight::JSArgs& args);
+			ultralight::JSValue GetHWInfo(const ultralight::JSObject& obj, const ultralight::JSArgs& args);
 
 			void UpdateMenu(Hazel::Timestep ms) override;
 
