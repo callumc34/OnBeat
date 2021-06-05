@@ -155,7 +155,7 @@ namespace OnBeat
 			RightSuper = 347,
 			Menu = 348,
 
-			Undefined = -1,
+			Undefined = 500,
 		};
 
 		struct InputMap

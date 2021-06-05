@@ -20,6 +20,13 @@ namespace OnBeat
 			void OnUpdate(Hazel::Timestep ms) override;
 			void OnEvent(Hazel::Event& e) override;
 			void OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor) override;
+			void OnAddConsoleMessage(ultralight::View* caller,
+				ultralight::MessageSource source,
+				ultralight::MessageLevel level,
+				const ultralight::String& message,
+				uint32_t line_number,
+				uint32_t column_number,
+				const ultralight::String& source_id) override;
 			bool OnMouseMove(Hazel::MouseMovedEvent& e);
 			bool OnMouseButtonPress(Hazel::MouseButtonPressedEvent& e);
 			bool OnMouseButtonRelease(Hazel::MouseButtonReleasedEvent& e);

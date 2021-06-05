@@ -58,12 +58,63 @@ function setSkin() {
     }
 }
 
-function setKeyCode(event) {
-    document.getElementById(this.dataset.setting).value = event.keyCode;
+function codeToString(key) {
+    switch (key) {
+        case 8:
+            return "Backspace";
+        case 9:
+            return "Tab";
+        case 13:
+            return "Enter";
+        case 27:
+            return "Escape";
+        case 32:
+            return "Space";
+        case 39:
+            return "Apoostrophe";
+        case 44:
+            return "Comma";
+        case 45:
+            return "Minus";
+        case 46:
+            return "Period";
+        case 47:
+            return "Slash";
+        case 48:
+            return "D0";
+        case 49:
+            return "D1";
+        case 50:
+            return "D2";
+        case 51:
+            return "D3";
+        case 52:
+            return "D4";
+        case 53:
+            return "D5";
+        case 54:
+            return "D6";
+        case 55:
+            return "D7";
+        case 56:
+            return "D8";
+        case 57:
+            return "D9";
+        default:
+            let char = String.fromCharCode(key.toUpperCase());
+            if (char == "") {
+                return "Undefined";
+            }
+            return char;
+    }
 }
 
-function preventKeyAppear(event) {
-    this.value = "";
+function keyUpCheck(event) {  
+    this.value = codeToString(event.keyCode);
+}
+
+function inputToUpper(event) {
+    this.value = event.data.toUpperCase();
 }
 
 
@@ -89,8 +140,8 @@ VolumeSelect.onchange = function() {
 }
 
 for (let ele of document.getElementsByClassName("KeyInput")) {
-    ele.addEventListener("keyup", setKeyCode);
-    ele.addEventListener("keydown", preventKeyAppear);
+    ele.addEventListener("input", inputToUpper);
+    ele.addEventListener("keyup", keyUpCheck);
 }
 
 

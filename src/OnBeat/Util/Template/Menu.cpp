@@ -128,6 +128,19 @@ namespace OnBeat
 		SetCursor(cursor);
 	}
 
+	void Menu::OnAddConsoleMessage(ultralight::View* caller, ultralight::MessageSource source,
+		ultralight::MessageLevel level, const ultralight::String& message,
+		uint32_t line_number, uint32_t column_number,
+		const ultralight::String& source_id)
+	{
+#ifdef _DEBUG
+		HZ_INFO(message.utf8().data());
+		return;
+#else
+		return;
+#endif
+	}
+
 	bool Menu::OnMouseMove(Hazel::MouseMovedEvent& e)
 	{
 		ul::MouseEvent evt;

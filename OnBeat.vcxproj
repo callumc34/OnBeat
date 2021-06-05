@@ -182,11 +182,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
