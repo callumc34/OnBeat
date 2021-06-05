@@ -2,11 +2,11 @@
     "Resolution": "1600x900",
     "Fullscreen" : 0,
     "Input" : {
-        "Column1" : "Z",
-        "Column2" : "X",
-        "Column3" : "Comma",
-        "Column4" : "Period",
-        "Pause" : "Escape"
+        "COLUMN_1" : "Z",
+        "COLUMN_2" : "X",
+        "COLUMN_3" : "Comma",
+        "COLUMN_4" : "Period",
+        "PAUSE" : "Escape"
     },
     "Skin" : "Default",
     "FpsCap": 0,

@@ -40,7 +40,7 @@ namespace OnBeat
 		}
 		nlohmann::json config = args[0];
 
-		Config::Settings newSettings = config;
+		Config::Settings newSettings;
 
 		try
 		{

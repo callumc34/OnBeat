@@ -10,6 +10,7 @@
 //Generic settings to be checked against upon swapping values
 //Bit of an issue if one of the settings has to be 100000
 #define OB_UNDEFINED_INT 100000
+#define OB_UNDEFINED_KEY "Undefined"
 
 //magic_enum throws error if this is not defined
 int main(int argc, char** argv);
@@ -153,15 +154,19 @@ namespace OnBeat
 			RightAlt = 346,
 			RightSuper = 347,
 			Menu = 348,
+
+			Undefined = -1,
 		};
 
 		struct InputMap
 		{
-			uint16_t
-				KEY_FAR_LEFT_COLUMN,
-				KEY_LEFT_COLUMN,
-				KEY_RIGHT_COLUMN,
-				KEY_FAR_RIGHT_COLUMN;				
+			Keys
+				COLUMN_1,
+				COLUMN_2,
+				COLUMN_3,
+				COLUMN_4,
+				PAUSE
+				;				
 		};
 
 		void to_json(nlohmann::json& j, const InputMap& i);

@@ -1,8 +1,6 @@
 //C callbacks to JS
 //Required JS Functions
-function setSettings(stringSettings) {
-    //var settings = JSON.parse(stringSettings);
-    var settings = stringSettings;
+function setSettings(settings) {
     for (let key in settings) {
         let setting = document.getElementById(key);
         if (!setting) {
@@ -10,6 +8,11 @@ function setSettings(stringSettings) {
         }
         setting.value = settings[key];                
     }
+    COLUMN_1.value = settings["Input"]["COLUMN_1"];
+    COLUMN_2.value = settings["Input"]["COLUMN_2"];
+    COLUMN_3.value = settings["Input"]["COLUMN_3"];
+    COLUMN_4.value = settings["Input"]["COLUMN_4"];
+    PAUSE.value = settings["Input"]["PAUSE"];
 }
 
 //JS functions - non required
@@ -27,7 +30,15 @@ function applySettings() {
         "Fullscreen": Fullscreen.valueAsNumber,
         "FpsCap": FpsCap.valueAsNumber,
         "Skin": Skin.value,
-        "Volume": Volume.valueAsNumber
+        "Volume": Volume.valueAsNumber,
+
+        "Input": {
+            "COLUMN_1" : COLUMN_1.value,
+            "COLUMN_2" : COLUMN_2.value,
+            "COLUMN_3" : COLUMN_3.value,
+            "COLUMN_4" : COLUMN_4.value,
+            "PAUSE"       : PAUSE.value
+        }
     };
     UpdateSettings(config);
 }   
