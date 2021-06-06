@@ -135,7 +135,6 @@ namespace OnBeat
 		globalObj["RevertSettings"] = BindJSCallback(&MainMenu::RevertSettings);
 		globalObj["SelectSkin"] = BindJSCallbackWithRetval(&MainMenu::SelectSkin);
 		globalObj["GetHWInfo"] = BindJSCallbackWithRetval(&MainMenu::GetHWInfo);
-		RevertSettings(globalObj, ul::JSArgs());
 
 		//Notify JS Content is loaded
 		if (globalObj["DOMLoaded"].IsFunction())

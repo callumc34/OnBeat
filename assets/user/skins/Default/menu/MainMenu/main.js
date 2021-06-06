@@ -17,6 +17,7 @@ function SetSettings(settings) {
 
 function DOMLoaded() {
     setHWInfo();
+    RevertSettings();
 }
 
 //JS functions - non required

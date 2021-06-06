@@ -21,8 +21,6 @@ namespace OnBeat
 
 			void RefreshSettings();
 
-			void SetWindowState(int fs);
-
 			void SetWindowIcon(const std::string& path);
 
 			GLFWwindow* GetNativeWindow() const { return nativeWindow; }

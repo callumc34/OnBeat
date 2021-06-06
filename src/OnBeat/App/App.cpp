@@ -36,21 +36,8 @@ namespace OnBeat
 			HZ_WARN("Settings refreshed with invalid settings. Falling back to default settings");
 			Settings = Config::Settings::Create(OB_DEFAULT_SETTINGS);
 		}
-		SetWindowState(Settings.Resolution.Fullscreen);
+		SetFullScreen(Settings.Resolution.Fullscreen);
 		AudioPlayer.setVolume(Settings.Volume);
-	}
-
-	void App::SetWindowState(int fs)
-	{
-		fs -= 1;
-		if (fs >= 0)
-		{
-			SetFullScreen(fs);
-		}
-		else
-		{
-			glfwSetWindowSize(nativeWindow, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight);
-		}
 	}
 
 	void App::SetWindowIcon(const std::string& path)
@@ -68,23 +55,41 @@ namespace OnBeat
 		stbi_image_free(data);
 	}
 
-	void App::SetFullScreen(int monitor)
+	void App::SetFullScreen(int fs)
 	{
+		fs -= 1;
+
 		int count;
 		GLFWmonitor** monitors = glfwGetMonitors(&count);
 
-		if (monitor > count)
+		if (fs > count)
 		{
 			//Error
 			return;
+		}		
+
+		GLFWmonitor* monitor;
+		int xOff, yOff;
+
+		if (fs < 0)
+		{
+			monitor = glfwGetPrimaryMonitor();
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+			xOff = (mode->width - Settings.Resolution.DisplayWidth) / 2;
+			yOff = (mode->height - Settings.Resolution.DisplayHeight) / 2;
+			monitor = nullptr;
+		}
+		else
+		{
+			monitor = monitors[fs];
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+			xOff = 0;
+			yOff = 0;
 		}
 
-		GLFWmonitor* glfwMonitor = monitors[monitor];
-
-		const GLFWvidmode* mode = glfwGetVideoMode(glfwMonitor);
 
 		// switch to full screen
-		glfwSetWindowMonitor(nativeWindow, glfwMonitor, 0, 0, mode->width, mode->height, Settings.Resolution.FpsCap);
+		glfwSetWindowMonitor(nativeWindow, monitor, xOff, yOff, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight, Settings.Resolution.FpsCap);
 	}
 
 	App::~App()
