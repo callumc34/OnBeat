@@ -66,7 +66,7 @@ namespace OnBeat {
 	{
 		public:
 			OnSetDetection(OnSetOptions options,
-				std::string file = "",	double frameSize = 512, double sampleRate = 44100);
+				std::string file = "",	int frameSize = 512, int sampleRate = 44100);
 			~OnSetDetection();
 
 			static AudioVector normalise(const AudioVector& beats);
@@ -97,12 +97,12 @@ namespace OnBeat {
 			}
 
 		private:
-		//Threshold values
-		//Recommended 0 1 8 8
-		OnSetOptions options;
+			//Threshold values
+			//Recommended 0 1 8 8
+			OnSetOptions options;
 
-		//AudioFile currently wav only
-		OnSetFile audioFile;
+			//AudioFile currently wav only
+			OnSetFile audioFile;
 
 	};
 }

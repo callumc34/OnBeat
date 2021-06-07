@@ -18,17 +18,17 @@ namespace OnBeat
 		float stringSizeToFloat(std::string val, Flag flag)
 		{
 			std::string type = val.substr(val.size() - 1, val.size());
-			float n = std::atof(val.c_str());
+			float n = (float)std::atof(val.c_str());
 			if (type == "%")
 			{
 				float scale = 1600.0f;
 				if (flag == Flag::HEIGHT)
 				{
-					scale = Hazel::Application::Get().GetWindow().GetHeight();
+					scale = (float)Hazel::Application::Get().GetWindow().GetHeight();
 				}
 				if (flag == Flag::WIDTH)
 				{
-					scale = Hazel::Application::Get().GetWindow().GetWidth();
+					scale = (float)Hazel::Application::Get().GetWindow().GetWidth();
 				}
 				return n * scale / 10000;
 			}
@@ -37,11 +37,11 @@ namespace OnBeat
 				float scale;
 				if (flag == Flag::HEIGHT)
 				{
-					scale = Hazel::Application::Get().GetWindow().GetHeight();
+					scale = (float)Hazel::Application::Get().GetWindow().GetHeight();
 				}
 				if (flag == Flag::WIDTH)
 				{
-					scale = Hazel::Application::Get().GetWindow().GetWidth();
+					scale = (float)Hazel::Application::Get().GetWindow().GetWidth();
 				}
 				return n / 100;
 			}

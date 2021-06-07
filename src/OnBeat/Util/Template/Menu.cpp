@@ -1,4 +1,5 @@
 #include <OnBeat/Util/Template/Menu.h>
+#include <OnBeat/App/App.h>
 #include <OnBeat/Util/AppUtil/AppUtil.h>
 #include <AppCore/Platform.h>
 #include <Hazel/Renderer/Renderer2D.h>
@@ -72,7 +73,7 @@ namespace OnBeat
 		}
 	}
 
-	void Menu::OnUpdate(Hazel::Timestep ms)
+	void Menu::OnUpdate(Hazel::Timestep ts)
 	{
 		{
 			Hazel::RenderCommand::SetClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
@@ -94,10 +95,10 @@ namespace OnBeat
 
 				GLubyte* data = new GLubyte[textureSurface->size()];
 
-				glGetTextureImage(textureId, 0, GL_RGBA, GL_UNSIGNED_BYTE, textureSurface->size(), data);
+				glGetTextureImage(textureId, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLsizei)textureSurface->size(), data);
 
 				Hazel::Ref<Hazel::Texture2D> texture = Hazel::Texture2D::Create(width, height);
-				texture->SetData(data, textureSurface->size());
+				texture->SetData(data, (uint32_t)textureSurface->size());
 
 				Hazel::Renderer2D::BeginScene(*CameraController);
 
@@ -107,7 +108,7 @@ namespace OnBeat
 			}
 		}
 
-		UpdateMenu(ms);
+		UpdateMenu(ts);
 	}
 
 	void Menu::OnEvent(Hazel::Event& e)
@@ -145,8 +146,8 @@ namespace OnBeat
 	{
 		ul::MouseEvent evt;
 		evt.type = ul::MouseEvent::kType_MouseMoved;
-		evt.x = e.GetX();
-		evt.y = e.GetY();
+		evt.x = (int)e.GetX();
+		evt.y = (int)e.GetY();
 		CurrentMouse = { e.GetX(), e.GetY() };
 
 		view->FireMouseEvent(evt);
@@ -158,8 +159,8 @@ namespace OnBeat
 		ul::MouseEvent evt;
 		evt.type = ul::MouseEvent::kType_MouseDown;
 		evt.button = Util::HazelMouseCodeToUl(e.GetMouseButton());
-		evt.x = CurrentMouse.x;
-		evt.y = CurrentMouse.y;
+		evt.x = (int)CurrentMouse.x;
+		evt.y = (int)CurrentMouse.y;
 
 		view->FireMouseEvent(evt);
 		return true;
@@ -170,8 +171,8 @@ namespace OnBeat
 		ul::MouseEvent evt;
 		evt.type = ul::MouseEvent::kType_MouseUp;
 		evt.button = Util::HazelMouseCodeToUl(e.GetMouseButton());
-		evt.x = CurrentMouse.x;
-		evt.y = CurrentMouse.y;
+		evt.x = (int)CurrentMouse.x;
+		evt.y = (int)CurrentMouse.y;
 	
 		view->FireMouseEvent(evt);
 		return true;

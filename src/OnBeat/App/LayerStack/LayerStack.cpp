@@ -7,11 +7,11 @@ namespace OnBeat {
 
 	}
 
-	void LayerStack::OnUpdate(Hazel::Timestep ms)
+	void LayerStack::OnUpdate(Hazel::Timestep ts)
 	{
 		for (auto it = this->begin(); it != this->end(); it++)
 		{
-			static_cast<Hazel::Layer*>(*it)->OnUpdate(ms);
+			static_cast<Hazel::Layer*>(*it)->OnUpdate(ts);
 		}
 	}
 

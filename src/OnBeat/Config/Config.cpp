@@ -129,8 +129,9 @@ namespace OnBeat
 			}
 			catch (const std::exception& e)
 			{
-				s.Resolution.DisplayWidth == OB_UNDEFINED_INT;
-				s.Resolution.DisplayHeight == OB_UNDEFINED_INT;
+				HZ_WARN("Invalid resolution string: " + std::string(e.what()));
+				s.Resolution.DisplayWidth = OB_UNDEFINED_INT;
+				s.Resolution.DisplayHeight = OB_UNDEFINED_INT;
 			}
 		}
 

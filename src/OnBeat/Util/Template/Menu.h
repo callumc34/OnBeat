@@ -1,6 +1,9 @@
 #pragma once
 #include <OnBeat/Util/Template/GLTextureSurface.h>
 #include <OnBeat/Util/Template/Layer.h>
+#include <Hazel/Events/MouseEvent.h>
+#include <Hazel/Events/KeyEvent.h>
+#include <Hazel/Events/ApplicationEvent.h>
 #include <Ultralight/Ultralight.h>
 
 typedef struct GLFWcursor GLFWcursor;
@@ -17,7 +20,7 @@ namespace OnBeat
 
 			void SetCursor(ultralight::Cursor cursor);
 
-			void OnUpdate(Hazel::Timestep ms) override;
+			void OnUpdate(Hazel::Timestep ts) override;
 			void OnEvent(Hazel::Event& e) override;
 			void OnChangeCursor(ultralight::View* caller, ultralight::Cursor cursor) override;
 			void OnAddConsoleMessage(ultralight::View* caller,

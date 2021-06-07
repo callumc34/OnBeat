@@ -1,6 +1,7 @@
 #pragma once
 #include <OnBeat/Util/Template/Layer.h>
 #include <OnBeat/Util/OnSetDetection/OnSetDetection.h>
+#include <OnBeat/Config/Skin.h>
 #include <Hazel/Renderer/Shader.h>
 #include <Hazel/Renderer/Renderer2D.h>
 

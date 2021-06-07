@@ -1,4 +1,5 @@
 #include <OnBeat/App/Layer/MusicLayer.h>
+#include <OnBeat/App/App.h>
 #include <Hazel/Renderer/RenderCommand.h>
 
 namespace OnBeat {
@@ -38,7 +39,7 @@ namespace OnBeat {
 		float length = window.GetHeight() / 100.0f;
 
 		float yOffset = CameraController.get()->GetPosition().y;
-		float columnOffset;
+
 		glm::vec2 position = skin.BackgroundTexture.toPositionVec();
 		//Background
 		skin.BackgroundTexture.draw(-0.5f, position.x, position.y + yOffset);
@@ -67,7 +68,7 @@ namespace OnBeat {
 			beatTextureWidth = beatTexture.get()->GetWidth() / 100.0f;
 
 		}
-		catch (std::bad_variant_access const& ex)
+		catch (std::bad_variant_access const&)
 		{
 			glm::vec2 beatTexture = skin.Beat.toScaleVec();
 			beatTextureHeight = beatTexture[1];
@@ -109,7 +110,7 @@ namespace OnBeat {
 						{ offsetX, value - offsetY, zIndex },
 						{ scale * beatTextureWidth, scale * beatTextureHeight }, std::get<Hazel::Ref<Hazel::Texture2D>>(skin.Beat.Colour));
 				}
-				catch (std::bad_variant_access const& ex)
+				catch (std::bad_variant_access const&)
 				{
 					Hazel::Renderer2D::DrawQuad(
 						{ offsetX, value - offsetY, zIndex },
@@ -147,7 +148,7 @@ namespace OnBeat {
 				{
 					continue;
 				}
-				beatHeights[(beats[c][n] > threshold) ? opt1 : opt2].push_back(cameraVelocityRatio * time * (n+1));
+				beatHeights[(beats[c][n] > threshold) ? opt1 : opt2].push_back(cameraVelocityRatio * (float)time * (n+1));
 			}
 		}
 

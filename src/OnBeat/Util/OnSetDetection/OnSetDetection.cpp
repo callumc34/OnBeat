@@ -68,7 +68,7 @@ namespace OnBeat
 
 		fileFormat = OnSetFormat::MP3;
 		sampleRate = fileInfo.hz;
-		lengthSeconds = (fileInfo.samples / fileInfo.channels) / fileInfo.hz;
+		lengthSeconds = (double)(fileInfo.samples / fileInfo.channels) / fileInfo.hz;
 		channels = fileInfo.channels;
 
 		//Add samples to AudioVector
@@ -107,7 +107,7 @@ namespace OnBeat
 	}
 
 	OnSetDetection::OnSetDetection(OnSetOptions options,
-		std::string file, double frameSize, double sampleRate)
+		std::string file, int frameSize, int sampleRate)
 		: Gist<double>(frameSize, sampleRate), options(options)
 	{
 		if (std::filesystem::exists(file))
@@ -180,7 +180,7 @@ namespace OnBeat
 	{
 
 		double sum = 0;
-		int size = beats.size();
+		int size = (int)beats.size();
 		for (auto& beat : beats)
 		{
 			if (beat == 0)
@@ -228,7 +228,7 @@ namespace OnBeat
 					for (int m = n - options.maximaWindow; m < n + options.maximaWindow; m++)
 					{
 						//Ensure m is a valid index else m is looped around
-						m = (m < 0) ? m = 0 - m : (m >= beats[c].size()) ? m = m - beats[c].size() : m;
+						m = (m < 0) ? m = 0 - m : (m >= beats[c].size()) ? m = m - (int)beats[c].size() : m;
 						if (beats[c][n] < beats[c][m])
 						{
 							isLocalMaxima = false;

@@ -1,4 +1,5 @@
 #include <OnBeat/Ui/MainMenu/MainMenu.h>
+#include <OnBeat/App/App.h>
 #include <Hazel/Utils/PlatformUtils.h>
 #include <glfw/glfw3.h>
 #include <algorithm>
@@ -50,7 +51,7 @@ namespace OnBeat
 		catch (const std::exception& e)
 		{
 			//Push error to menu
-			HZ_ERROR("Error casting arguments to settings.");
+			HZ_ERROR("Error casting arguments to settings. Exception: " + std::string(e.what()));
 			return;
 		}
 

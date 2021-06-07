@@ -11,10 +11,10 @@ namespace OnBeat
 	{
 		Quad::Quad()
 		{
-			this->x = 0.0f;
-			this->y = 0.0f;
-			this->scaleX = 1.0f;
-			this->scaleY = 1.0f;
+			this->x = std::string("0.0f");
+			this->y = std::string("0.0f");
+			this->scaleX = std::string("1.0f");
+			this->scaleY = std::string("1.0f");
 			this->Colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 
@@ -91,7 +91,7 @@ namespace OnBeat
 					{ getX() + xOffset, getY() + yOffset, z },
 					toScaleVec(), pval);
 			}
-			catch (std::bad_variant_access const& ex)
+			catch (std::bad_variant_access const&)
 			{
 				Hazel::Ref<Hazel::Texture2D> pval = std::get<Hazel::Ref<Hazel::Texture2D>>(Colour);
 				Hazel::Renderer2D::DrawQuad(

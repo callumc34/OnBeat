@@ -1,4 +1,5 @@
 #include <OnBeat/Util/Template/Layer.h>
+#include <OnBeat/App/App.h>
 
 namespace OnBeat
 {

@@ -89,7 +89,7 @@ namespace OnBeat
 
 
 		// switch to full screen
-		glfwSetWindowMonitor(nativeWindow, monitor, xOff, yOff, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight, Settings.Resolution.FpsCap);
+		glfwSetWindowMonitor(nativeWindow, monitor, xOff, yOff, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight, (int)Settings.Resolution.FpsCap);
 	}
 
 	App::~App()

@@ -1,6 +1,6 @@
 #pragma once
-#include <OnBeat/App/App.h>
 #include <Hazel/Core/Layer.h>
+#include <Hazel/Events/ApplicationEvent.h>
 #include <Hazel/Renderer/OrthographicCamera.h>
 
 namespace OnBeat

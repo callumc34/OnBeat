@@ -122,7 +122,7 @@ namespace OnBeat
 
 	float AudioPlayer::getVolume()
 	{
-		return volume;
+		return (float)volume;
 	}
 
 	const char* AudioPlayer::getAudioFile()
