@@ -180,6 +180,7 @@ namespace OnBeat
 			{
 				int DisplayWidth = OB_UNDEFINED_INT, DisplayHeight = OB_UNDEFINED_INT;
 				int Fullscreen = OB_UNDEFINED_INT;
+				int VSync = OB_UNDEFINED_INT;
 				double FpsCap = OB_UNDEFINED_INT;
 			} Resolution;
 

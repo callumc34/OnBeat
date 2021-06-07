@@ -53,6 +53,7 @@ namespace OnBeat
 			Settings = Config::Settings::Create(OB_DEFAULT_SETTINGS);
 		}
 		SetFullScreen(Settings.Resolution.Fullscreen);
+		glfwSwapInterval(Settings.Resolution.VSync);
 		AudioPlayer.SetVolume(Settings.Volume);
 	}
 

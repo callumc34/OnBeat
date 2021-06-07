@@ -73,6 +73,7 @@ function applySettings() {
     let config = {
         "Resolution": Resolution.value,
         "Fullscreen": Number(Fullscreen.value),
+        "VSync": Number(VSync.value),
         "FpsCap": FpsCap.valueAsNumber,
         "Skin": Skin.value,
         "Volume": Volume.valueAsNumber,

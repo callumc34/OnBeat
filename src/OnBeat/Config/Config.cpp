@@ -76,6 +76,7 @@ namespace OnBeat
 			set(newS.Resolution.DisplayWidth, oldS.Resolution.DisplayWidth);
 			set(newS.Resolution.DisplayHeight, oldS.Resolution.DisplayHeight);
 			set(newS.Resolution.Fullscreen, oldS.Resolution.Fullscreen);
+			set(newS.Resolution.VSync, oldS.Resolution.VSync);
 			set(newS.Resolution.FpsCap, oldS.Resolution.FpsCap);
 			set(newS.Volume, oldS.Volume);
 
@@ -114,6 +115,7 @@ namespace OnBeat
 			if (!checkRange(s.Resolution.DisplayWidth, 64, 16000)) return false;
 			if (!checkRange(s.Resolution.DisplayHeight, 64, 16000)) return false;
 			if (!checkRange(s.Resolution.Fullscreen, -1, 64)) return false;
+			if (!checkRange(s.Resolution.VSync, 0, 1000)) return false;
 			if (!checkRange(s.Resolution.FpsCap, 0, 1000)) return false;
 			if (!checkRange(s.Volume, 0, 1)) return false;
 			return true;
@@ -141,6 +143,7 @@ namespace OnBeat
 		{
 			j["Resolution"] = std::to_string(s.Resolution.DisplayWidth) + "x" + std::to_string(s.Resolution.DisplayHeight);
 			j["Fullscreen"] = s.Resolution.Fullscreen;
+			j["VSync"] = s.Resolution.FpsCap;
 			j["FpsCap"] = s.Resolution.FpsCap;
 			j["Skin"] = s.CurrentSkin.SkinPath;
 			j["Volume"] = s.Volume;
@@ -152,6 +155,8 @@ namespace OnBeat
 			setResolution(s, j.value("Resolution", ""));
 
 			s.Resolution.Fullscreen = j.value("Fullscreen", OB_UNDEFINED_INT);
+
+			s.Resolution.VSync = j.value("VSync", OB_UNDEFINED_INT);
 
 			s.Resolution.FpsCap = j.value("FpsCap", OB_UNDEFINED_INT);
 
