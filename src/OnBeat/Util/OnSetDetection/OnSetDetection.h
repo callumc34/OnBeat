@@ -10,10 +10,10 @@ namespace OnBeat {
 
 	struct OnSetOptions
 	{
-		double thresholdConstant;
-		double thresholdMultiple;
-		int meanWindow;
-		int maximaWindow;
+		double ThresholdConstant;
+		double ThresholdMultiple;
+		int MeanWindow;
+		int MaximaWindow;
 	};
 
 	enum class OnSetFormat
@@ -32,34 +32,34 @@ namespace OnBeat {
 			OnSetFile();
 			OnSetFile(const std::string& file);
 
-			void reset();
+			void Reset();
 
-			int loadMp3(const std::string& file);
-			int loadWav(const std::string& file);
+			int LoadMP3(const std::string& file);
+			int LoadWAV(const std::string& file);
 
-			const AudioVector& getSamples() const { return samples; }
-			const std::string& getPath() const { return path; }
-			OnSetFormat getFormat() const { return fileFormat; }
-			double getSamplingFrequency() const { return sampleRate; }
-			double getLengthInSeconds() const { return lengthSeconds; }
-			int getChannels() const { return channels; }
+			const AudioVector& GetSamples() const { return samples; }
+			const std::string& GetPath() const { return path; }
+			OnSetFormat GetFormat() const { return FileFormat; }
+			double GetSamplingFrequency() const { return SampleRate; }
+			double GetLengthInSeconds() const { return LengthSeconds; }
+			int GetChannels() const { return channels; }
 
 		private:
-			OnSetFormat fileFormat;
+			OnSetFormat FileFormat;
 			AudioVector samples;
 
 			std::string path;
 
-			double sampleRate;
-			double lengthSeconds;
+			double SampleRate;
+			double LengthSeconds;
 			int channels;
 
 			//Wav values
-			AudioFile<double> wavFile;
+			AudioFile<double> WAVFile;
 
 			//Mp3 values
-			mp3dec_t mp3Decoder;
-			mp3dec_file_info_t fileInfo;
+			mp3dec_t MP3Decoder;
+			mp3dec_file_info_t MP3FileInfo;
 	};
 
 	class OnSetDetection : public Gist<double>
@@ -69,31 +69,31 @@ namespace OnBeat {
 				const std::string& file = "",	int frameSize = 512, int sampleRate = 44100);
 			~OnSetDetection();
 
-			static AudioVector normalise(const AudioVector& beats);
-			static AudioVector validateAudioVector(const AudioVector& beats);
-			static int createBeatFile(const AudioVector& beats, const std::string& outputFile, int frameSize = 512, double sampleRate = 44100);
-			static double findPeakThreshold(const std::vector<double>& beats);
+			static AudioVector Normalise(const AudioVector& beats);
+			static AudioVector ValidateAudioVector(const AudioVector& beats);
+			static int CreateBeatFile(const AudioVector& beats, const std::string& outputFile, int frameSize = 512, double sampleRate = 44100);
+			static double FindPeakThreshold(const std::vector<double>& beats);
 
 
 			//Peak detection algorithm
-			AudioVector findBeats(const AudioVector& beats);
+			AudioVector FindBeats(const AudioVector& beats);
 
 			//Gist onset detection of a .wav file using spectralDifference
-			AudioVector processFile(const std::string& file = "");
-			AudioVector processAudioVector(const AudioVector& data);
+			AudioVector ProcessFile(const std::string& file = "");
+			AudioVector ProcessAudioVector(const AudioVector& data);
 
 			//Get private values
-			const OnSetOptions& getOptions() const { return options; }
-			const OnSetFile& getAudioFile() const { return audioFile; }
+			const OnSetOptions& GetOptions() const { return options; }
+			const OnSetFile& GetAudioFile() const { return AudioFile; }
 
-			void setOptions(OnSetOptions options)
+			void SetOptions(OnSetOptions options)
 			{
 				this->options = options;
 			}
 
-			void setAudioFile(OnSetFile audioFile)
+			void SetAudioFile(OnSetFile audioFile)
 			{
-				this->audioFile = audioFile;
+				this->AudioFile = audioFile;
 			}
 
 		private:
@@ -101,8 +101,7 @@ namespace OnBeat {
 			//Recommended 0 1 8 8
 			OnSetOptions options;
 
-			//AudioFile currently wav only
-			OnSetFile audioFile;
+			OnSetFile AudioFile;
 
 	};
 }

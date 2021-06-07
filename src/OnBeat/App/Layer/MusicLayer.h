@@ -35,21 +35,15 @@ namespace OnBeat
 
 			Skin::MusicSkin skin;
 
-			std::unordered_map<int, std::vector<float>> beatHeights;
-
-			Hazel::Ref<Hazel::Texture2D> beatTexture;
-			Hazel::Ref<Hazel::Shader> flatColorShader;
-			Hazel::Ref<Hazel::Shader> textureShader;
-			Hazel::ShaderLibrary shaderLibrary;
+			std::unordered_map<int, std::vector<float>> BeatHeights;
 
 			//Blit calculations
 			AudioVector beats;
-			float cameraVelocity;
-			float cameraVelocityRatio;
+			float CameraVelocity;
 
-			int sampleSize;
-			double sampleRate;
+			int SampleSize;
+			double SampleRate;
 
-			std::string musicFile;
+			std::string file;
 	};
 }

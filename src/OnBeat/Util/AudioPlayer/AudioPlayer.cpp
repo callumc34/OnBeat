@@ -24,7 +24,7 @@ namespace OnBeat
 	}
 
 
-	int AudioPlayer::pauseAudio(bool pause)
+	int AudioPlayer::PauseAudio(bool pause)
 	{
 		//Set paused state of audio to passed var
 		if (FMOD_ERRCHECK(
@@ -40,10 +40,10 @@ namespace OnBeat
 		}
 	}
 
-	int AudioPlayer::playAudio()
+	int AudioPlayer::PlayAudio()
 	{
 		//Reset audio if already playing
-		//Plays audio from audioFile
+		//Plays audio from AudioFile
 		//Assigns channel handle
 		if (playing)
 		{
@@ -64,35 +64,35 @@ namespace OnBeat
 				&channel
 			)))
 		{
-			AP_WARN(std::string("Error playing song " + std::string(audioFile) + "\n").c_str());
+			AP_WARN(std::string("Error playing song " + std::string(AudioFile) + "\n").c_str());
 			return 0;
 		}
 
-		channel->setChannelGroup(channelGroup);
+		channel->setChannelGroup(ChannelGroup);
 		system->update();
 		return 1;
 
 
 	}
 
-	int AudioPlayer::loadAudio(const std::string& audioLocation)
+	int AudioPlayer::LoadAudio(const std::string& audioLocation)
 	{
 		//Loads audio into FMOD player
-		if (audioLocation.empty() && audioFile.empty())
+		if (audioLocation.empty() && AudioFile.empty())
 		{
 			AP_WARN("No audio file given\n");
 			return 0;
 		}
 
-		audioFile = audioLocation;
+		AudioFile = audioLocation;
 		FMOD_ERRCHECK(system->createSound(
-			audioFile.c_str(),
+			AudioFile.c_str(),
 			FMOD_DEFAULT,
 			0,
 			&sound
 		));
 
-		AP_LOG(std::string(std::string(audioFile) + " loaded...\n").c_str());
+		AP_LOG(std::string(std::string(AudioFile) + " loaded...\n").c_str());
 		playing = false;
 
 		loaded = true;
@@ -101,15 +101,15 @@ namespace OnBeat
 
 	}
 
-	int AudioPlayer::releaseSound()
+	int AudioPlayer::ReleaseSound()
 	{
 		sound->release();
 		return 1;
 	}
 
-	bool AudioPlayer::setVolume(float volume)
+	bool AudioPlayer::SetVolume(float volume)
 	{
-		if (!FMOD_ERRCHECK(channelGroup->setVolume(volume)))
+		if (!FMOD_ERRCHECK(ChannelGroup->setVolume(volume)))
 		{
 			return false;
 		}
@@ -120,17 +120,17 @@ namespace OnBeat
 		}
 	}
 
-	float AudioPlayer::getVolume()
+	float AudioPlayer::GetVolume()
 	{
 		return (float)volume;
 	}
 
-	const std::string& AudioPlayer::getAudioFile()
+	const std::string& AudioPlayer::GetAudioFile()
 	{
-		return audioFile;
+		return AudioFile;
 	}
 
-	bool AudioPlayer::getPlaying()
+	bool AudioPlayer::GetPlaying()
 	{
 		if (!FMOD_ERRCHECK(channel->isPlaying(&playing)))
 		{
@@ -142,7 +142,7 @@ namespace OnBeat
 		}
 	}
 
-	unsigned int AudioPlayer::getLength()
+	unsigned int AudioPlayer::GetLength()
 	{
 		if (!FMOD_ERRCHECK(sound->getLength(&length, FMOD_TIMEUNIT_MS)))
 		{
@@ -154,12 +154,12 @@ namespace OnBeat
 		}
 	}
 
-	bool AudioPlayer::getLoaded()
+	bool AudioPlayer::GetLoaded()
 	{
 		return loaded;
 	}
 
-	unsigned int AudioPlayer::getCurrentPos()
+	unsigned int AudioPlayer::GetCurrentPos()
 	{
 		//Returns the current position in milliseconds
 		if (!FMOD_ERRCHECK(channel->isPlaying(&playing)))
@@ -182,7 +182,7 @@ namespace OnBeat
 	AudioPlayer::AudioPlayer(const std::string& audioLocation)
 	{
 		//Initialises the FMOD system
-		audioFile = audioLocation;
+		AudioFile = audioLocation;
 
 		sound = nullptr;
 
@@ -192,12 +192,12 @@ namespace OnBeat
 		result = system->init(32, FMOD_INIT_NORMAL, 0);
 		if (!FMOD_ERRCHECK(result)) return;
 
-		result = system->createChannelGroup("AudioPlayer", &channelGroup);
+		result = system->createChannelGroup("AudioPlayer", &ChannelGroup);
 		if (!FMOD_ERRCHECK(result)) return;
 
 		if (!audioLocation.empty())
 		{
-			loadAudio(audioLocation);
+			LoadAudio(audioLocation);
 		}
 
 		AP_LOG("Initialised");
@@ -206,7 +206,7 @@ namespace OnBeat
 	AudioPlayer::~AudioPlayer()
 	{
 		//Stop audio processing
-		releaseSound();
+		ReleaseSound();
 		delete channel;
 		delete sound;
 		delete channel;

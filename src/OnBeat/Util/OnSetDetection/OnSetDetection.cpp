@@ -9,46 +9,46 @@ namespace OnBeat
 
 	OnSetFile::OnSetFile()
 	{
-		reset();
+		Reset();
 	}
 
 	OnSetFile::OnSetFile(const std::string& file)
 	{
 		path = file;
 		std::string format = path.substr(path.size() - 3, path.size());
-		fileFormat = OnSetFormat::NotLoaded;
+		FileFormat = OnSetFormat::NotLoaded;
 		if (format == "mp3")
 		{
-			loadMp3(file);
+			LoadMP3(file);
 		}
 		else if (format == "wav")
 		{
-			loadWav(file);
+			LoadWAV(file);
 		}
 		else
 		{
-			fileFormat = OnSetFormat::Unsupported;
+			FileFormat = OnSetFormat::Unsupported;
 		}
 	}
 
-	void OnSetFile::reset()
+	void OnSetFile::Reset()
 	{
-		fileFormat = OnSetFormat::NotLoaded;
+		FileFormat = OnSetFormat::NotLoaded;
 		samples = AudioVector{};
 		path = "";
 
-		sampleRate = 0;
-		lengthSeconds = 0;
+		SampleRate = 0;
+		LengthSeconds = 0;
 		channels = 0;
 
-		wavFile = AudioFile<double>();
-		mp3Decoder = {};
-		fileInfo = {};
+		WAVFile = AudioFile<double>();
+		MP3Decoder = {};
+		MP3FileInfo = {};
 	}
 
-	int OnSetFile::loadMp3(const std::string& file)
+	int OnSetFile::LoadMP3(const std::string& file)
 	{
-		if (fileFormat != OnSetFormat::NotLoaded)
+		if (FileFormat != OnSetFormat::NotLoaded)
 		{
 			return 0;
 		}
@@ -60,49 +60,49 @@ namespace OnBeat
 			return 0;
 		}
 
-		if (mp3dec_load(&mp3Decoder, path.c_str(), &fileInfo, NULL, NULL))
+		if (mp3dec_load(&MP3Decoder, path.c_str(), &MP3FileInfo, NULL, NULL))
 		{
-			fileFormat = OnSetFormat::Error;
+			FileFormat = OnSetFormat::Error;
 			return 0;
 		}
 
-		fileFormat = OnSetFormat::MP3;
-		sampleRate = fileInfo.hz;
-		lengthSeconds = (double)(fileInfo.samples / fileInfo.channels) / fileInfo.hz;
-		channels = fileInfo.channels;
+		FileFormat = OnSetFormat::MP3;
+		SampleRate = MP3FileInfo.hz;
+		LengthSeconds = (double)(MP3FileInfo.samples / MP3FileInfo.channels) / MP3FileInfo.hz;
+		channels = MP3FileInfo.channels;
 
 		//Add samples to AudioVector
-		samples.reserve(fileInfo.channels);
-		for (int c = 0; c < fileInfo.channels; c++)
+		samples.reserve(MP3FileInfo.channels);
+		for (int c = 0; c < MP3FileInfo.channels; c++)
 		{
 			//Copy buffer data from channel index to next channel
-			samples[c] = std::vector<double>(fileInfo.buffer + ((c * fileInfo.samples) / fileInfo.channels),
-				fileInfo.buffer + (((c + 1) * fileInfo.samples) / fileInfo.channels));
+			samples[c] = std::vector<double>(MP3FileInfo.buffer + ((c * MP3FileInfo.samples) / MP3FileInfo.channels),
+				MP3FileInfo.buffer + (((c + 1) * MP3FileInfo.samples) / MP3FileInfo.channels));
 		}
 
-		free(fileInfo.buffer);
+		free(MP3FileInfo.buffer);
 
 		return 1;
 	}
 
-	int OnSetFile::loadWav(const std::string& file)
+	int OnSetFile::LoadWAV(const std::string& file)
 	{
-		if (fileFormat != OnSetFormat::NotLoaded)
+		if (FileFormat != OnSetFormat::NotLoaded)
 		{
 			return 0;
 		}
 
-		if (!wavFile.load(file))
+		if (!WAVFile.load(file))
 		{
-			fileFormat = OnSetFormat::Error;
+			FileFormat = OnSetFormat::Error;
 			return 0;
 		}
 
-		fileFormat = OnSetFormat::Wave;
-		sampleRate = wavFile.getSampleRate();
-		lengthSeconds = wavFile.getLengthInSeconds();
-		channels = wavFile.getNumChannels();
-		samples = wavFile.samples;
+		FileFormat = OnSetFormat::Wave;
+		SampleRate = WAVFile.getSampleRate();
+		LengthSeconds = WAVFile.getLengthInSeconds();
+		channels = WAVFile.getNumChannels();
+		samples = WAVFile.samples;
 		return 1;
 	}
 
@@ -112,11 +112,11 @@ namespace OnBeat
 	{
 		if (std::filesystem::exists(file))
 		{
-			audioFile = OnSetFile(file);
+			AudioFile = OnSetFile(file);
 		}
 	}
 
-	AudioVector OnSetDetection::normalise(const AudioVector& beats)
+	AudioVector OnSetDetection::Normalise(const AudioVector& beats)
 	{
 		AudioVector normalised;
 		normalised.reserve(beats.size());
@@ -149,12 +149,12 @@ namespace OnBeat
 		return normalised;
 	}
 
-	AudioVector OnSetDetection::validateAudioVector(const AudioVector& beats)
+	AudioVector OnSetDetection::ValidateAudioVector(const AudioVector& beats)
 	{
 		return beats;
 	}
 
-	int OnSetDetection::createBeatFile(const AudioVector& beats, const std::string& outputFile, int frameSize, double sampleRate)
+	int OnSetDetection::CreateBeatFile(const AudioVector& beats, const std::string& outputFile, int frameSize, double sampleRate)
 	{
 		OnBeat::Util::checkPath(outputFile, true);
 
@@ -181,7 +181,7 @@ namespace OnBeat
 		return 1;
 	}
 
-	double OnSetDetection::findPeakThreshold(const std::vector<double>& beats)
+	double OnSetDetection::FindPeakThreshold(const std::vector<double>& beats)
 	{
 
 		double sum = 0;
@@ -201,7 +201,7 @@ namespace OnBeat
 		return sum / size;
 	}
 
-	AudioVector OnSetDetection::findBeats(const AudioVector& beats)
+	AudioVector OnSetDetection::FindBeats(const AudioVector& beats)
 	{
 		AudioVector beatPoints;
 		//Resize for channels
@@ -221,20 +221,20 @@ namespace OnBeat
 			{
 				//Calculate mean
 				double sum = 0;
-				for (int m = n - options.meanWindow; m <= n + options.meanWindow; m++)
+				for (int m = n - options.MeanWindow; m <= n + options.MeanWindow; m++)
 				{
 
 					sum += (m > 0 && m < beats[c].size()) ? beats[c][m] : beats[c][0];
 
 				}
 
-				double mean = sum / ((2 * options.meanWindow) + 1);
+				double mean = sum / ((2 * options.MeanWindow) + 1);
 				//Check point is above mean
-				if (beats[c][n] > options.thresholdConstant + (options.thresholdMultiple * mean))
+				if (beats[c][n] > options.ThresholdConstant + (options.ThresholdMultiple * mean))
 				{
 					bool isLocalMaxima = true;
 					//Check point is local maxima
-					for (int m = n - options.maximaWindow; m < n + options.maximaWindow; m++)
+					for (int m = n - options.MaximaWindow; m < n + options.MaximaWindow; m++)
 					{
 						//Ensure m is a valid index else m is looped around
 						m = (m < 0) ? m = 0 - m : (m >= beats[c].size()) ? m = m - (int)beats[c].size() : m;
@@ -261,7 +261,7 @@ namespace OnBeat
 		return beatPoints;
 	}
 
-	AudioVector OnSetDetection::processAudioVector(const AudioVector& data)
+	AudioVector OnSetDetection::ProcessAudioVector(const AudioVector& data)
 	{
 		AudioVector values;
 		values.reserve(data.size());
@@ -288,26 +288,26 @@ namespace OnBeat
 		}
 
 		//All frames processed in both channels
-		return OnSetDetection::normalise(values);
+		return OnSetDetection::Normalise(values);
 
 	}
 
-	AudioVector OnSetDetection::processFile(const std::string& file)
+	AudioVector OnSetDetection::ProcessFile(const std::string& file)
 	{
 		if (std::filesystem::exists(file))
 		{
-			audioFile = OnSetFile(file);
+			AudioFile = OnSetFile(file);
 		}
 
-		if (audioFile.getFormat() == OnSetFormat::Error ||
-			audioFile.getFormat() == OnSetFormat::NotLoaded ||
-			audioFile.getFormat() == OnSetFormat::Unsupported)
+		if (AudioFile.GetFormat() == OnSetFormat::Error ||
+			AudioFile.GetFormat() == OnSetFormat::NotLoaded ||
+			AudioFile.GetFormat() == OnSetFormat::Unsupported)
 		{
 			return {};
 		}
 
 		//All frames processed in both channels
-		return OnSetDetection::normalise(processAudioVector(audioFile.getSamples()));
+		return OnSetDetection::Normalise(ProcessAudioVector(AudioFile.GetSamples()));
 	}
 
 	OnSetDetection::~OnSetDetection()

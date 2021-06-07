@@ -71,7 +71,7 @@ namespace OnBeat
 		using namespace ultralight;
 		using namespace ultralight::KeyCodes;
 
-		int HazelKeyCodeToUl(int key)
+		int hazelKeyCodeToUl(int key)
 		{
 			switch (key)
 			{
@@ -200,7 +200,7 @@ namespace OnBeat
 		
 		}
 
-		int UlKeyCodeToHazel(int key)
+		int ulKeyCodeToHazel(int key)
 		{
 			switch (key)
 			{

@@ -41,7 +41,7 @@ namespace OnBeat
 		MainMenu = nullptr;
 
 		//TODO(Callum): Get these from settings
-		MusicLayer = new OnBeat::MusicLayer(song, 900.0f, 512, 44100);
+		MusicLayer = new OnBeat::MusicLayer(song, 90.0f, 512, 44100);
 		LayerStack->PushLayer(MusicLayer);
 	}
 
@@ -53,7 +53,7 @@ namespace OnBeat
 			Settings = Config::Settings::Create(OB_DEFAULT_SETTINGS);
 		}
 		SetFullScreen(Settings.Resolution.Fullscreen);
-		AudioPlayer.setVolume(Settings.Volume);
+		AudioPlayer.SetVolume(Settings.Volume);
 	}
 
 	int App::SetSettings(const Config::Settings& newS)

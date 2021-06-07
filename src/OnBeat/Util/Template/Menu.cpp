@@ -181,7 +181,7 @@ namespace OnBeat
 	{
 		ul::KeyEvent evt;
 		evt.type = ul::KeyEvent::kType_RawKeyDown;
-		evt.virtual_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
+		evt.virtual_key_code = Util::hazelKeyCodeToUl(e.GetKeyCode());
 		evt.native_key_code = 0;
 		evt.modifiers = 0;
 
@@ -195,7 +195,7 @@ namespace OnBeat
 	{
 		ul::KeyEvent evt;
 		evt.type = ul::KeyEvent::kType_KeyUp;
-		evt.virtual_key_code = Util::HazelKeyCodeToUl(e.GetKeyCode());
+		evt.virtual_key_code = Util::hazelKeyCodeToUl(e.GetKeyCode());
 		evt.native_key_code = 0;
 		evt.modifiers = 0;
 

@@ -9,19 +9,19 @@ namespace OnBeat {
 	{
 		auto& window = App::Get().GetWindow();
 
-		//cameraVelocity in px/sec (900px/sec)
-		this->cameraVelocity = cameraVelocity;
-		this->cameraVelocityRatio = cameraVelocity / 100.0f;
+		//CameraVelocity in px/sec (900px/sec)
+		this->CameraVelocity = cameraVelocity;
 
-		this->sampleRate = sampleRate;
-		this->sampleSize = sampleSize;
+		this->SampleRate = sampleRate;
+		this->SampleSize = sampleSize;
+
+		this->file = file;
 
 		skin = App::Get().GetSettings().CurrentSkin.MusicSkin;
 
-		musicFile = file;
-		App::Get().GetAudioPlayer().loadAudio(file);
+		App::Get().GetAudioPlayer().LoadAudio(file);
 
-		beats = beatGen.findBeats(beatGen.processFile());
+		beats = beatGen.FindBeats(beatGen.ProcessFile());
 
 		HZ_ASSERT(beats.size() != 0, "Invalid beats vector.");
 
@@ -74,7 +74,7 @@ namespace OnBeat {
 			beatTextureHeight = beatTexture[1];
 			beatTextureWidth = beatTexture[0];
 		}
-		for (const auto& [key, vector] : beatHeights)
+		for (const auto& [key, vector] : BeatHeights)
 		{
 			float zIndex = 0.01f;
 			int index = 0;
@@ -126,10 +126,10 @@ namespace OnBeat {
 	{
 		//Blit y = Camera velocity * time of blit
 		//Possible adjustment needed to represent middle of sample size however sample size so small likely unneccessary
-		double time = (sampleSize) / sampleRate;
+		double time = (SampleSize) / SampleRate;
 		for (int c = 0; c < beats.size(); c++)
 		{
-			double threshold = OnSetDetection::findPeakThreshold(beats[c]);
+			double threshold = OnSetDetection::FindPeakThreshold(beats[c]);
 			int opt1, opt2;
 			if (c == 0)
 			{
@@ -148,7 +148,7 @@ namespace OnBeat {
 				{
 					continue;
 				}
-				beatHeights[(beats[c][n] > threshold) ? opt1 : opt2].push_back(cameraVelocityRatio * (float)time * (n+1));
+				BeatHeights[(beats[c][n] > threshold) ? opt1 : opt2].push_back(CameraVelocity * (float)time * (n+1));
 			}
 		}
 
@@ -156,7 +156,7 @@ namespace OnBeat {
 
 	void MusicLayer::OnAttach()
 	{
-		App::Get().GetAudioPlayer().playAudio();
+		App::Get().GetAudioPlayer().PlayAudio();
 	}
 
 	void MusicLayer::OnDetach()
@@ -187,7 +187,7 @@ namespace OnBeat {
 	
 		//TODO(Callum): Regulate framerate
 		glm::vec3 cameraPos = CameraController.get()->GetPosition();
-		cameraPos.y += cameraVelocityRatio * ts.GetSeconds();
+		cameraPos.y += CameraVelocity * ts.GetSeconds();
 		CameraController.get()->SetPosition(cameraPos);
 	}
 

@@ -10,38 +10,38 @@ namespace OnBeat
 	class AudioPlayer
 	{
 		public:
-		AudioPlayer(const std::string& audioFile = "");
+			AudioPlayer(const std::string& audioFile = "");
+			~AudioPlayer();
 
-		int pauseAudio(bool pause);
-		int playAudio();
-		int loadAudio(const std::string& audioLocation = "");
-		int releaseSound();
+			int PauseAudio(bool pause);
+			int PlayAudio();
+			int LoadAudio(const std::string& audioLocation = "");
+			int ReleaseSound();
 
-		bool setVolume(float volume);
+			bool SetVolume(float volume);
 
-		float getVolume();
-		const std::string& getAudioFile();
-		unsigned int getCurrentPos();
-		unsigned int getLength();
-		bool getLoaded();
-		bool getPlaying();
+			float GetVolume();
+			const std::string& GetAudioFile();
+			unsigned int GetCurrentPos();
+			unsigned int GetLength();
+			bool GetLoaded();
+			bool GetPlaying();
 
-		~AudioPlayer();
 
-		FMOD_RESULT result;
+			FMOD_RESULT result;
 		private:
-		FMOD::System* system = nullptr;
-		FMOD::Sound* sound = nullptr;
-		FMOD::ChannelGroup* channelGroup = nullptr;
-		FMOD::Channel* channel = nullptr;
+			FMOD::System* system = nullptr;
+			FMOD::Sound* sound = nullptr;
+			FMOD::ChannelGroup* ChannelGroup = nullptr;
+			FMOD::Channel* channel = nullptr;
 
-		double volume = 1.0;
-		int channelID = 0;
-		unsigned int length = 0;
-		unsigned int time = 0;
-		std::string audioFile;
+			double volume = 1.0;
+			int ChannelID = 0;
+			unsigned int length = 0;
+			unsigned int time = 0;
+			std::string AudioFile;
 
-		bool playing = false;
-		bool loaded = false;
+			bool playing = false;
+			bool loaded = false;
 	};
 }
