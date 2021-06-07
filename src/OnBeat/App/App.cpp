@@ -13,19 +13,23 @@ namespace OnBeat
 	App::App()
 		: Application("OnBeat")
 	{
-		Settings = Config::Settings::Create(OB_SETTINGS);
 		instance = this;
-
+	
+		//Window setup
 		auto& window = Hazel::Application::Get().GetWindow();
-		nativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
+		NativeWindow = static_cast<GLFWwindow*>(window.GetNativeWindow());
 		SetWindowIcon("logo/logo-64.png");
 
+		//Settings initialisation
+		Settings = Config::Settings::Create(OB_SETTINGS);
 		RefreshSettings();
+
 
 		//Stop ImGui changing mouse cursor
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
+		//Setup layers
 		PushLayer(new MainMenu(Settings.CurrentSkin.SkinDirectory + OB_MAIN_MENU, "Main Menu"));
 	}
 
@@ -40,6 +44,17 @@ namespace OnBeat
 		AudioPlayer.setVolume(Settings.Volume);
 	}
 
+	int App::SetSettings(const Config::Settings& newS)
+	{
+		if (!Config::validateSettings(newS))
+		{
+			return -1;
+		}
+		Config::swapSettings(Settings, newS);
+		RefreshSettings();
+		return 0;
+	}
+
 	void App::SetWindowIcon(const std::string& path)
 	{
 		int width, height, channels;
@@ -51,7 +66,7 @@ namespace OnBeat
 		images[0].width = width;
 		images[0].height = height;
 		images[0].pixels = data;
-		glfwSetWindowIcon(nativeWindow, 1, images);
+		glfwSetWindowIcon(NativeWindow, 1, images);
 		stbi_image_free(data);
 	}
 
@@ -64,7 +79,7 @@ namespace OnBeat
 
 		if (fs > count)
 		{
-			//Error
+			HZ_WARN("Fullscreen request greater than monitor count.");
 			return;
 		}		
 
@@ -89,7 +104,7 @@ namespace OnBeat
 
 
 		// switch to full screen
-		glfwSetWindowMonitor(nativeWindow, monitor, xOff, yOff, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight, (int)Settings.Resolution.FpsCap);
+		glfwSetWindowMonitor(NativeWindow, monitor, xOff, yOff, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight, (int)Settings.Resolution.FpsCap);
 	}
 
 	App::~App()

@@ -16,10 +16,10 @@ namespace OnBeat {
 		this->sampleRate = sampleRate;
 		this->sampleSize = sampleSize;
 
-		skin = App::Get().Settings.CurrentSkin.MusicSkin;
+		skin = App::Get().GetSettings().CurrentSkin.MusicSkin;
 
 		musicFile = file;
-		App::Get().AudioPlayer.loadAudio(file);
+		App::Get().GetAudioPlayer().loadAudio(file);
 
 		beats = beatGen.findBeats(beatGen.processFile());
 
@@ -156,7 +156,7 @@ namespace OnBeat {
 
 	void MusicLayer::OnAttach()
 	{
-		App::Get().AudioPlayer.playAudio();
+		App::Get().GetAudioPlayer().playAudio();
 	}
 
 	void MusicLayer::OnDetach()

@@ -61,7 +61,7 @@ namespace OnBeat
 			return;
 		}
 
-		Config::swapSettings(App::Get().Settings, newSettings);
+		App::Get().SetSettings(newSettings);
 
 		App::Get().RefreshSettings();
 		return;
@@ -71,7 +71,7 @@ namespace OnBeat
 	{
 		if (obj["SetSettings"].IsFunction())
 		{
-			nlohmann::json jsonSettings = App::Get().Settings;
+			nlohmann::json jsonSettings = App::Get().GetSettings();
 			ul::JSObject arg = jsonSettings;
 
 			obj["SetSettings"].ToFunction()(ul::JSArgs{ (ul::JSValue)arg });

@@ -14,23 +14,23 @@ namespace OnBeat
 			App();
 			~App();
 
-			static App& Get() { return *instance; }
-
-			AudioPlayer AudioPlayer;
-			Config::Settings Settings;
-
 			void RefreshSettings();
+			int SetSettings(const Config::Settings& newS);
 
-			void SetWindowIcon(const std::string& path);
-
-			GLFWwindow* GetNativeWindow() const { return nativeWindow; }
+			//Get functions
+			static App& Get() { return *instance; }
+			GLFWwindow* GetNativeWindow() const { return NativeWindow; }
+			AudioPlayer& GetAudioPlayer() { return AudioPlayer; }
+			const Config::Settings& GetSettings() const { return Settings;  }
 
 		private:
 			static App* instance;
 
-			//Window resize funcs
 			void SetFullScreen(int monitor);
+			void SetWindowIcon(const std::string& path);
 
-			GLFWwindow* nativeWindow;
+			GLFWwindow* NativeWindow;
+			AudioPlayer AudioPlayer;
+			Config::Settings Settings;
 	};
 }
