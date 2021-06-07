@@ -1,7 +1,6 @@
 {
     "Name" : "Default",
     "TextureDir" : "textures/",
-    "RmlDir" : "rml/",
     "MusicSkin" : {
         "Columns": [
             {

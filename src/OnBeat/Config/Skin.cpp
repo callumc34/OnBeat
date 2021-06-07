@@ -135,7 +135,7 @@ namespace OnBeat
 			{
 				Columns.push_back(Quad(column, path));
 			}
-
+			//Todo pass in texturePath from the skin.json not the skin path
 			Beat = Quad(object["Beat"], path);
 			BeatArea = Quad(object["BeatArea"], path);
 			BeatZone = Quad(object["BeatZone"], path);
