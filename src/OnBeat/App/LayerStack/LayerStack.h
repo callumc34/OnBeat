@@ -11,6 +11,7 @@ namespace OnBeat
 			~LayerStack();
 
 			void OnUpdate(Hazel::Timestep ts) override;
+			void OnEvent(Hazel::Event& e) override;
 
 
 		private:

@@ -22,7 +22,7 @@ namespace OnBeat
 
 	void MainMenu::StartGame(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
-		
+		App::Get().StartGame("testing/testMusic/test.wav");
 		return;
 	}
 

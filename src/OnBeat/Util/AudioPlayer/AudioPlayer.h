@@ -10,17 +10,17 @@ namespace OnBeat
 	class AudioPlayer
 	{
 		public:
-		AudioPlayer(const char* audioFile = nullptr);
+		AudioPlayer(const std::string& audioFile = "");
 
 		int pauseAudio(bool pause);
 		int playAudio();
-		int loadAudio(const char* audioLocation = nullptr);
+		int loadAudio(const std::string& audioLocation = "");
 		int releaseSound();
 
 		bool setVolume(float volume);
 
 		float getVolume();
-		const char* getAudioFile();
+		const std::string& getAudioFile();
 		unsigned int getCurrentPos();
 		unsigned int getLength();
 		bool getLoaded();
@@ -39,7 +39,7 @@ namespace OnBeat
 		int channelID = 0;
 		unsigned int length = 0;
 		unsigned int time = 0;
-		const char* audioFile;
+		std::string audioFile;
 
 		bool playing = false;
 		bool loaded = false;

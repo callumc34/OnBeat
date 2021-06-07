@@ -75,10 +75,10 @@ namespace OnBeat
 
 	}
 
-	int AudioPlayer::loadAudio(const char* audioLocation)
+	int AudioPlayer::loadAudio(const std::string& audioLocation)
 	{
 		//Loads audio into FMOD player
-		if (audioLocation == nullptr && audioFile == nullptr)
+		if (audioLocation.empty() && audioFile.empty())
 		{
 			AP_WARN("No audio file given\n");
 			return 0;
@@ -86,7 +86,7 @@ namespace OnBeat
 
 		audioFile = audioLocation;
 		FMOD_ERRCHECK(system->createSound(
-			audioFile,
+			audioFile.c_str(),
 			FMOD_DEFAULT,
 			0,
 			&sound
@@ -125,7 +125,7 @@ namespace OnBeat
 		return (float)volume;
 	}
 
-	const char* AudioPlayer::getAudioFile()
+	const std::string& AudioPlayer::getAudioFile()
 	{
 		return audioFile;
 	}
@@ -179,7 +179,7 @@ namespace OnBeat
 		}
 	}
 
-	AudioPlayer::AudioPlayer(const char* audioLocation)
+	AudioPlayer::AudioPlayer(const std::string& audioLocation)
 	{
 		//Initialises the FMOD system
 		audioFile = audioLocation;
@@ -195,7 +195,7 @@ namespace OnBeat
 		result = system->createChannelGroup("AudioPlayer", &channelGroup);
 		if (!FMOD_ERRCHECK(result)) return;
 
-		if (audioLocation)
+		if (!audioLocation.empty())
 		{
 			loadAudio(audioLocation);
 		}

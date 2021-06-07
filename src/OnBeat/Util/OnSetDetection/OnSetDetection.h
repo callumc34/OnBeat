@@ -30,19 +30,19 @@ namespace OnBeat {
 	{
 		public:
 			OnSetFile();
-			OnSetFile(std::string file);
+			OnSetFile(const std::string& file);
 
 			void reset();
 
-			int loadMp3(std::string file);
-			int loadWav(std::string file);
+			int loadMp3(const std::string& file);
+			int loadWav(const std::string& file);
 
-			AudioVector getSamples() { return samples; }
-			std::string getPath() { return path; }
-			OnSetFormat getFormat() { return fileFormat; }
-			double getSamplingFrequency() { return sampleRate; }
-			double getLengthInSeconds() { return lengthSeconds; }
-			int getChannels() { return channels; }
+			const AudioVector& getSamples() const { return samples; }
+			const std::string& getPath() const { return path; }
+			OnSetFormat getFormat() const { return fileFormat; }
+			double getSamplingFrequency() const { return sampleRate; }
+			double getLengthInSeconds() const { return lengthSeconds; }
+			int getChannels() const { return channels; }
 
 		private:
 			OnSetFormat fileFormat;
@@ -66,12 +66,12 @@ namespace OnBeat {
 	{
 		public:
 			OnSetDetection(OnSetOptions options,
-				std::string file = "",	int frameSize = 512, int sampleRate = 44100);
+				const std::string& file = "",	int frameSize = 512, int sampleRate = 44100);
 			~OnSetDetection();
 
 			static AudioVector normalise(const AudioVector& beats);
 			static AudioVector validateAudioVector(const AudioVector& beats);
-			static int createBeatFile(const AudioVector& beats, std::string outputFile, int frameSize = 512, double sampleRate = 44100);
+			static int createBeatFile(const AudioVector& beats, const std::string& outputFile, int frameSize = 512, double sampleRate = 44100);
 			static double findPeakThreshold(const std::vector<double>& beats);
 
 
@@ -79,12 +79,12 @@ namespace OnBeat {
 			AudioVector findBeats(const AudioVector& beats);
 
 			//Gist onset detection of a .wav file using spectralDifference
-			AudioVector processFile(std::string file = "");
+			AudioVector processFile(const std::string& file = "");
 			AudioVector processAudioVector(const AudioVector& data);
 
 			//Get private values
-			OnSetOptions getOptions() { return options; }
-			OnSetFile getAudioFile() { return audioFile; }
+			const OnSetOptions& getOptions() const { return options; }
+			const OnSetFile& getAudioFile() const { return audioFile; }
 
 			void setOptions(OnSetOptions options)
 			{

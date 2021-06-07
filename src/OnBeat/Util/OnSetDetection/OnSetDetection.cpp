@@ -12,7 +12,7 @@ namespace OnBeat
 		reset();
 	}
 
-	OnSetFile::OnSetFile(std::string file)
+	OnSetFile::OnSetFile(const std::string& file)
 	{
 		path = file;
 		std::string format = path.substr(path.size() - 3, path.size());
@@ -46,7 +46,7 @@ namespace OnBeat
 		fileInfo = {};
 	}
 
-	int OnSetFile::loadMp3(std::string file)
+	int OnSetFile::loadMp3(const std::string& file)
 	{
 		if (fileFormat != OnSetFormat::NotLoaded)
 		{
@@ -85,7 +85,7 @@ namespace OnBeat
 		return 1;
 	}
 
-	int OnSetFile::loadWav(std::string file)
+	int OnSetFile::loadWav(const std::string& file)
 	{
 		if (fileFormat != OnSetFormat::NotLoaded)
 		{
@@ -107,7 +107,7 @@ namespace OnBeat
 	}
 
 	OnSetDetection::OnSetDetection(OnSetOptions options,
-		std::string file, int frameSize, int sampleRate)
+		const std::string& file, int frameSize, int sampleRate)
 		: Gist<double>(frameSize, sampleRate), options(options)
 	{
 		if (std::filesystem::exists(file))
@@ -121,8 +121,14 @@ namespace OnBeat
 		AudioVector normalised;
 		normalised.reserve(beats.size());
 		//Normalise each channel
+
+		std::vector<double> channel;
+		channel.reserve(beats[0].size());
+
 		for (int c = 0; c < beats.size(); c++)
 		{
+			normalised.push_back(channel);
+
 			double max = beats[c][0];
 			double min = beats[c][0];
 			//Pre pass to get max and min
@@ -135,9 +141,9 @@ namespace OnBeat
 			normalised[c].reserve(beats[c].size());
 			for (int n = 0; n < beats[c].size(); n++)
 			{
-				normalised[c][n] = (beats[c][n] - min) / (max - min);
+				normalised[c].push_back((beats[c][n] - min) / (max - min));
 			}
-
+			channel.clear();
 		}
 
 		return normalised;
@@ -148,9 +154,8 @@ namespace OnBeat
 		return beats;
 	}
 
-	int OnSetDetection::createBeatFile(const AudioVector& beats, std::string outputFile, int frameSize, double sampleRate)
+	int OnSetDetection::createBeatFile(const AudioVector& beats, const std::string& outputFile, int frameSize, double sampleRate)
 	{
-		//Todo check for directories and make if needed
 		OnBeat::Util::checkPath(outputFile, true);
 
 		std::ofstream outputStream(outputFile);
@@ -202,9 +207,13 @@ namespace OnBeat
 		//Resize for channels
 		beatPoints.reserve(beats.size());
 
+		std::vector<double> channel;
+		channel.reserve(beats[0].size());
+
 		//Loop through channels
 		for (int c = 0; c < beats.size(); c++)
 		{
+			beatPoints.push_back(channel);
 			//Resize for all points
 			beatPoints[c].reserve(beats[c].size());
 			//Calculate threshold and find peaks for each channel
@@ -237,14 +246,15 @@ namespace OnBeat
 					}
 					if (isLocalMaxima)
 					{
-						beatPoints[c][n] = beats[c][n];
+						beatPoints[c].push_back(beats[c][n]);
 					}
 				}
 				else
 				{
-					beatPoints[c][n] = 0;
+					beatPoints[c].push_back(0);
 				}
 			}
+			channel.clear();
 
 		}
 
@@ -261,6 +271,7 @@ namespace OnBeat
 		//Processing channels
 		for (int c = 0; c < data.size(); c++)
 		{
+			values.push_back(frame);
 			//Loop through each frame
 			for (int i = getAudioFrameSize(); i < data[c].size(); i += getAudioFrameSize())
 			{
@@ -281,7 +292,7 @@ namespace OnBeat
 
 	}
 
-	AudioVector OnSetDetection::processFile(std::string file)
+	AudioVector OnSetDetection::processFile(const std::string& file)
 	{
 		if (std::filesystem::exists(file))
 		{

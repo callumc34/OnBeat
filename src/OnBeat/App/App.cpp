@@ -1,5 +1,4 @@
 #include <OnBeat/App/App.h>
-#include <OnBeat/Ui/MainMenu/MainMenu.h>
 #include <Hazel/Core/EntryPoint.h>
 #include <glfw/glfw3.h>
 #include <stb_image/stb_image.h>
@@ -30,7 +29,20 @@ namespace OnBeat
 		io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
 		//Setup layers
-		PushLayer(new MainMenu(Settings.CurrentSkin.SkinDirectory + OB_MAIN_MENU, "Main Menu"));
+		PushLayer(LayerStack);
+
+		MainMenu = new OnBeat::MainMenu(Settings.CurrentSkin.SkinDirectory + OB_MAIN_MENU, "Main Menu");
+		LayerStack->PushLayer(MainMenu);
+	}
+
+	void App::StartGame(const std::string& song)
+	{
+		LayerStack->PopLayer(MainMenu);
+		MainMenu = nullptr;
+
+		//TODO(Callum): Get these from settings
+		MusicLayer = new OnBeat::MusicLayer(song, 900.0f, 512, 44100);
+		LayerStack->PushLayer(MusicLayer);
 	}
 
 	void App::RefreshSettings()

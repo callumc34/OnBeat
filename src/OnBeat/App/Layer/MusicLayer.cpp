@@ -3,7 +3,7 @@
 #include <Hazel/Renderer/RenderCommand.h>
 
 namespace OnBeat {
-	MusicLayer::MusicLayer(const char* file,
+	MusicLayer::MusicLayer(const std::string& file,
 		float cameraVelocity, double sampleRate, int sampleSize)
 		: Layer("MusicLayer"), beatGen({ 0, 1, 8, 8 }, file)
 	{
@@ -166,7 +166,7 @@ namespace OnBeat {
 
 	void MusicLayer::OnUpdate(Hazel::Timestep ts)
 	{
-		//Todo Keep track of time and end scene when done
+		//TODO(Callum): Keep track of time and end scene when done
 		// 
 		// 
 		//Clear scene
@@ -185,7 +185,7 @@ namespace OnBeat {
 			Hazel::Renderer2D::EndScene();
 		}	 
 	
-		//Todo regulate framerate
+		//TODO(Callum): Regulate framerate
 		glm::vec3 cameraPos = CameraController.get()->GetPosition();
 		cameraPos.y += cameraVelocityRatio * ts.GetSeconds();
 		CameraController.get()->SetPosition(cameraPos);

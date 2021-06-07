@@ -12,7 +12,7 @@ namespace OnBeat
 		public:
 			//These need to all be variables from a style file when implemented
 
-			MusicLayer(const char* file,
+			MusicLayer(const std::string& file,
 				float cameraVelocity, double sampleRate, int sampleSize);
 
 			//OnEvents

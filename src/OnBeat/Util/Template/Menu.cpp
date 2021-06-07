@@ -50,7 +50,6 @@ namespace OnBeat
 
 	void Menu::SetCursor(ul::Cursor cursor)
 	{
-		//Todo fix Imgui resetting the cursor
 		switch (cursor)
 		{
 			case ultralight::kCursor_Cross:
