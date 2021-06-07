@@ -63,6 +63,9 @@
     <ClInclude Include="src\OnBeat\Util\JS\JS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\OnBeat\App\LayerStack\LayerStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc">
@@ -112,6 +115,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\OnBeat\Util\JS\JS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OnBeat\App\LayerStack\LayerStack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -30,6 +30,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="src\OnBeat.h" />
     <ClInclude Include="src\OnBeat\App\App.h" />
+    <ClInclude Include="src\OnBeat\App\LayerStack\LayerStack.h" />
     <ClInclude Include="src\OnBeat\App\Layer\MusicLayer.h" />
     <ClInclude Include="src\OnBeat\Config\Config.h" />
     <ClInclude Include="src\OnBeat\Config\Skin.h" />
@@ -52,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OnBeat\App\App.cpp" />
+    <ClCompile Include="src\OnBeat\App\LayerStack\LayerStack.cpp" />
     <ClCompile Include="src\OnBeat\App\Layer\MusicLayer.cpp" />
     <ClCompile Include="src\OnBeat\Config\Config.cpp" />
     <ClCompile Include="src\OnBeat\Config\Skin.cpp" />

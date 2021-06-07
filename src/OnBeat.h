@@ -4,6 +4,7 @@
 
 #include "OnBeat/App/App.h"
 #include "OnBeat/App/Layer/MusicLayer.h"
+#include "OnBeat/App/LayerStack/LayerStack.h"
 
 #include "OnBeat/Config/Config.h"
 #include "OnBeat/Config/Skin.h"
