@@ -25,7 +25,7 @@ namespace OnBeat
 			//Get functions
 			static App& Get() { return *instance; }
 			GLFWwindow* GetNativeWindow() const { return NativeWindow; }
-			const LayerStack& GetLayerStack() const { return *LayerStack; }
+			LayerStack& GetLayerStack() { return *LayerStack; }
 			AudioPlayer& GetAudioPlayer() { return AudioPlayer; }
 			const Config::Settings& GetSettings() const { return Settings;  }
 

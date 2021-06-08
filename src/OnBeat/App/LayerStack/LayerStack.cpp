@@ -6,12 +6,17 @@ namespace OnBeat {
 	{
 
 	}
-	//TODO(Callum): Fix vector errors when Popping and Pushing
+	
 	void LayerStack::OnUpdate(Hazel::Timestep ts)
 	{
 		for (auto it = this->begin(); it != this->end(); it++)
 		{
 			(*it)->OnUpdate(ts);
+		}
+		if (callback)
+		{
+			callback();
+			callback = nullptr;
 		}
 	}
 

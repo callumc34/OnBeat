@@ -22,7 +22,7 @@ namespace OnBeat
 
 	void MainMenu::StartGame(const ul::JSObject& obj, const ul::JSArgs& args)
 	{
-		App::Get().StartGame("testing/testMusic/test.wav");
+		App::Get().GetLayerStack().SetCallback(BindPostUpdateCallback(&MainMenu::StartMusicLayer));
 		return;
 	}
 
@@ -140,6 +140,12 @@ namespace OnBeat
 		//Notify JS Content is loaded
 		if (globalObj["DOMLoaded"].IsFunction())
 			globalObj["DOMLoaded"].ToFunction()(ul::JSArgs());
+	}
+
+	void MainMenu::StartMusicLayer()
+	{
+		App::Get().StartGame("testing/testMusic/test.wav");
+		return;
 	}
 
 	MainMenu::~MainMenu()

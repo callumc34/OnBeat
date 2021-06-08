@@ -18,6 +18,8 @@ namespace OnBeat
 			ultralight::JSValue SelectSkin(const ultralight::JSObject& obj, const ultralight::JSArgs& args);
 			ultralight::JSValue GetHWInfo(const ultralight::JSObject& obj, const ultralight::JSArgs& args);
 
+			void StartMusicLayer();
+
 			void UpdateMenu(Hazel::Timestep ms) override;
 
 			void OnDOMReady(ultralight::View* caller,
