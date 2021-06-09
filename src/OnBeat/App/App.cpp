@@ -32,7 +32,7 @@ namespace OnBeat
 		PushLayer(LayerStack);
 
 		MainMenu = new OnBeat::MainMenu(Settings.CurrentSkin.SkinDirectory + OB_MAIN_MENU, "Main Menu");
-		LayerStack->PushLayer(MainMenu);
+		LayerStack->AttachLayer(MainMenu);
 	}
 
 	void App::StartGame(const std::string& song)
@@ -40,9 +40,10 @@ namespace OnBeat
 		LayerStack->PopLayer(MainMenu);
 		MainMenu = nullptr;
 
+		glfwSetCursor(NativeWindow, nullptr);
 		//TODO(Callum): Get these from settings
-		MusicLayer = new OnBeat::MusicLayer(song, 90.0f, 512, 44100);
-		LayerStack->PushLayer(MusicLayer);
+		MusicLayer = new OnBeat::MusicLayer(song, 10.0f, 44100, 512);
+		LayerStack->AttachLayer(MusicLayer);
 	}
 
 	void App::RefreshSettings()

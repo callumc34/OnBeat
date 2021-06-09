@@ -16,6 +16,8 @@ namespace OnBeat
 			void OnUpdate(Hazel::Timestep ts) override;
 			void OnEvent(Hazel::Event& e) override;
 
+			void AttachLayer(Layer* layer);
+
 			void SetCallback(PostUpdateCallback fn) { callback = fn; }
 
 		private:

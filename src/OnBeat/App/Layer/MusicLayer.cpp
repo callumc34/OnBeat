@@ -5,7 +5,7 @@
 namespace OnBeat {
 	MusicLayer::MusicLayer(const std::string& file,
 		float cameraVelocity, double sampleRate, int sampleSize)
-		: Layer("MusicLayer"), beatGen({ 0, 1, 8, 8 }, file)
+		: Layer("MusicLayer"), BeatGenerator({ 0, 1, 8, 8 }, file)
 	{
 		auto& window = App::Get().GetWindow();
 
@@ -21,7 +21,7 @@ namespace OnBeat {
 
 		App::Get().GetAudioPlayer().LoadAudio(file);
 
-		beats = beatGen.FindBeats(beatGen.ProcessFile());
+		beats = BeatGenerator.FindBeats(BeatGenerator.ProcessFile());
 
 		HZ_ASSERT(beats.size() != 0, "Invalid beats vector.");
 
@@ -91,16 +91,17 @@ namespace OnBeat {
 
 			for (auto& value : vector)
 			{
+				//Check if beat is above current window region
 				if (value > CameraController.get()->GetPosition().y + beatTextureHeight + (2 * App::Get().GetWindow().GetHeight() / 100.0f))
 				{
+					//Break if not visible
 					break;
 				}
+				//Check if beat is below current window region
 				else if (value < CameraController.get()->GetPosition().y - (App::Get().GetWindow().GetHeight() / 100.0f))
 				{
 					continue;
 				}
-
-
 
 				//Draw beats
 				//Cannot use quad draw due to render time calculating string to float
@@ -116,6 +117,7 @@ namespace OnBeat {
 						{ offsetX, value - offsetY, zIndex },
 						{ scale * beatTextureWidth, scale * beatTextureHeight }, std::get<glm::vec4>(skin.Beat.Colour));
 				}
+				//Draw each beat at a higher z index
 				zIndex += 0.001f;
 			}
 		

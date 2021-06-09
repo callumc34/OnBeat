@@ -30,6 +30,12 @@ namespace OnBeat {
 		}
 	}
 
+	void LayerStack::AttachLayer(Layer* layer)
+	{
+		layer->OnAttach();
+		PushLayer(layer);
+	}
+
 	LayerStack::~LayerStack()
 	{
 

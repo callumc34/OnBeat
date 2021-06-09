@@ -25,13 +25,12 @@ namespace OnBeat
 			virtual void OnImGuiRender() override;
 
 		private:
-
-			OnSetDetection beatGen;
-
 			//Textures & Shading
 			void CreateBeatArea();
 			void FindBeatHeights();
 			void CreateBeats();
+
+			OnSetDetection BeatGenerator;
 
 			Skin::MusicSkin skin;
 

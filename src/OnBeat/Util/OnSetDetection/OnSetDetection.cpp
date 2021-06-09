@@ -248,6 +248,10 @@ namespace OnBeat
 					{
 						beatPoints[c].push_back(beats[c][n]);
 					}
+					else
+					{
+						beatPoints[c].push_back(0);
+					}
 				}
 				else
 				{
@@ -307,7 +311,7 @@ namespace OnBeat
 		}
 
 		//All frames processed in both channels
-		return OnSetDetection::Normalise(ProcessAudioVector(AudioFile.GetSamples()));
+		return ProcessAudioVector(AudioFile.GetSamples());
 	}
 
 	OnSetDetection::~OnSetDetection()
