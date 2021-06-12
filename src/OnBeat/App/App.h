@@ -1,7 +1,7 @@
 #pragma once
 #include <OnBeat/Config/Config.h>
 #include <OnBeat/App/LayerStack/LayerStack.h>
-#include <OnBeat/App/Layer/MusicLayer.h>
+#include <OnBeat/App/MusicLayer/MusicLayer.h>
 #include <OnBeat/Ui/MainMenu/MainMenu.h>
 #include <OnBeat/Util/AudioPlayer/AudioPlayer.h>
 #include <Hazel/Core/Application.h>

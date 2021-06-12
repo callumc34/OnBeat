@@ -1,4 +1,4 @@
-#include <OnBeat/App/Layer/MusicLayer.h>
+#include <OnBeat/App/MusicLayer/MusicLayer.h>
 #include <OnBeat/App/App.h>
 #include <Hazel/Renderer/RenderCommand.h>
 

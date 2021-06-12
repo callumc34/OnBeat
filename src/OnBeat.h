@@ -3,7 +3,7 @@
 //Include all headers in onbeat
 
 #include "OnBeat/App/App.h"
-#include "OnBeat/App/Layer/MusicLayer.h"
+#include "OnBeat/App/MusicLayer/MusicLayer.h"
 #include "OnBeat/App/LayerStack/LayerStack.h"
 
 #include "OnBeat/Config/Config.h"
