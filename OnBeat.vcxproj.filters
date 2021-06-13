@@ -66,6 +66,12 @@
     <ClInclude Include="src\OnBeat\App\MusicLayer\MusicLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\OnBeat\Util\Loader\LoadingLayer\LoadingLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OnBeat\Util\Loader\Loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc">
@@ -118,6 +124,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\OnBeat\App\MusicLayer\MusicLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OnBeat\Util\Loader\LoadingLayer\LoadingLayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OnBeat\Util\Loader\Loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

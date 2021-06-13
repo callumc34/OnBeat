@@ -39,6 +39,8 @@
     <ClInclude Include="src\OnBeat\Util\AppUtil\AppUtil.h" />
     <ClInclude Include="src\OnBeat\Util\AudioPlayer\AudioPlayer.h" />
     <ClInclude Include="src\OnBeat\Util\JS\JS.h" />
+    <ClInclude Include="src\OnBeat\Util\Loader\Loader.h" />
+    <ClInclude Include="src\OnBeat\Util\Loader\LoadingLayer\LoadingLayer.h" />
     <ClInclude Include="src\OnBeat\Util\OnSetDetection\OnSetDetection.h" />
     <ClInclude Include="src\OnBeat\Util\Template\GLTextureSurface.h" />
     <ClInclude Include="src\OnBeat\Util\Template\Layer.h" />
@@ -62,6 +64,8 @@
     <ClCompile Include="src\OnBeat\Util\AppUtil\AppUtil.cpp" />
     <ClCompile Include="src\OnBeat\Util\AudioPlayer\AudioPlayer.cpp" />
     <ClCompile Include="src\OnBeat\Util\JS\JS.cpp" />
+    <ClCompile Include="src\OnBeat\Util\Loader\Loader.cpp" />
+    <ClCompile Include="src\OnBeat\Util\Loader\LoadingLayer\LoadingLayer.cpp" />
     <ClCompile Include="src\OnBeat\Util\OnSetDetection\OnSetDetection.cpp" />
     <ClCompile Include="src\OnBeat\Util\Template\GLTextureSurface.cpp" />
     <ClCompile Include="src\OnBeat\Util\Template\Layer.cpp" />

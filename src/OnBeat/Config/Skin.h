@@ -65,6 +65,8 @@ namespace OnBeat
 			AppSkin();
 			AppSkin(std::string path);
 
+			Quad LoadingScreen;
+
 			MusicSkin MusicSkin;
 			std::string SkinPath;
 			std::string SkinName;

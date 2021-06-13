@@ -8,8 +8,8 @@
 #define OB_MAIN_MENU "/menu/MainMenu/main.html"
 
 //Generic settings to be checked against upon swapping values
-//Bit of an issue if one of the settings has to be 100000
-#define OB_UNDEFINED_INT 100000
+//Bit of an issue if one of the settings has to be int16_t max
+#define OB_UNDEFINED_INT INT16_MAX
 #define OB_UNDEFINED_KEY "Undefined"
 
 //magic_enum throws error if this is not defined
@@ -178,10 +178,10 @@ namespace OnBeat
 			
 			struct
 			{
-				int DisplayWidth = OB_UNDEFINED_INT, DisplayHeight = OB_UNDEFINED_INT;
-				int Fullscreen = OB_UNDEFINED_INT;
-				int VSync = OB_UNDEFINED_INT;
-				double FpsCap = OB_UNDEFINED_INT;
+				uint16_t DisplayWidth = OB_UNDEFINED_INT, DisplayHeight = OB_UNDEFINED_INT;
+				int16_t Fullscreen = OB_UNDEFINED_INT;
+				uint16_t VSync = OB_UNDEFINED_INT;
+				uint16_t FpsCap = OB_UNDEFINED_INT;
 			} Resolution;
 
 			InputMap Input;

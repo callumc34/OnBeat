@@ -68,5 +68,12 @@
             "colour" : [0.08, 0.08, 0.08, 1.0]
         },
         "ClearColour" : [0.08, 0.08, 0.08, 1.0]
+    },
+    "LoadingScreen" : {
+        "x" : "0.0f",
+        "y" : "0.0f",
+        "scaleX" : "100%",
+        "scaleY" : "100%",
+        "colour" : "loading.png"
     }
 }

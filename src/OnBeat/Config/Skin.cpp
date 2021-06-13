@@ -178,8 +178,9 @@ namespace OnBeat
 
 			SkinPath = path;
 			SkinName = config["Name"];
-
 			SkinDirectory = std::filesystem::path(path).parent_path().string();
+
+			LoadingScreen = Quad(config["LoadingScreen"], SkinDirectory);
 
 			MusicSkin = Skin::MusicSkin(config["MusicSkin"], SkinDirectory);
 		}
