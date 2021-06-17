@@ -8,7 +8,7 @@ namespace OnBeat
 	LoadingLayer::LoadingLayer(LoaderFunction fn, LoaderCallback callback, bool visible) : Layer("Loading Layer"), Loader(fn),
 		callback(callback), visible(visible)
 	{
-		App::Get().GetLayerStack().PushLayer(this);
+		App::Get().GetLayerStack().AttachLayer(this);
 		LoadingScreen = App::Get().GetSettings().CurrentSkin.LoadingScreen;
 	}
 
@@ -30,11 +30,21 @@ namespace OnBeat
 			}
 		}
 
-		if (this->GetFinished())
+		if (GetFinished())
 		{
 			callback();
+			Pop();
 		}
 
+	}
+
+	void LoadingLayer::Pop()
+	{
+		LoaderCallback fn = [this]()
+		{
+			App::Get().GetLayerStack().PopLayer(this);
+		};
+		App::Get().GetLayerStack().SetCallback(fn);
 	}
 
 	LoadingLayer::~LoadingLayer()

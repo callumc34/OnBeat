@@ -3,7 +3,7 @@
 
 namespace OnBeat
 {
-	Layer::Layer(std::string name)
+	Layer::Layer(const std::string& name)
 		: Hazel::Layer(name)
 	{
 		auto& window = Hazel::Application::Get().GetWindow();

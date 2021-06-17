@@ -19,16 +19,8 @@ namespace OnBeat {
 
 		skin = App::Get().GetSettings().CurrentSkin.MusicSkin;
 
-		App::Get().GetAudioPlayer().LoadAudio(file);
-
-		beats = BeatGenerator.FindBeats(BeatGenerator.ProcessFile());
-
-		HZ_ASSERT(beats.size() != 0, "Invalid beats vector.");
-
-		//Set up camera
-		CreateCamera(window.GetWidth(), window.GetHeight());
-
-		FindBeatHeights();
+		LoadingLayer = new OnBeat::LoadingLayer(BindLoadingFunction(&MusicLayer::LoadLayer),
+			BindLoadingCallback(&MusicLayer::ClearLoadingLayer), true);
 	}
 
 	void MusicLayer::CreateBeatArea()
@@ -158,7 +150,6 @@ namespace OnBeat {
 
 	void MusicLayer::OnAttach()
 	{
-		App::Get().GetAudioPlayer().PlayAudio();
 	}
 
 	void MusicLayer::OnDetach()
@@ -172,6 +163,9 @@ namespace OnBeat {
 		// 
 		// 
 		//Clear scene
+		if (!loaded)
+			return;
+
 		Hazel::Renderer2D::ResetStats();
 		{
 			Hazel::RenderCommand::SetClearColor(skin.ClearColour);
@@ -199,5 +193,32 @@ namespace OnBeat {
 
 	void MusicLayer::OnImGuiRender()
 	{
+	}
+
+	void MusicLayer::ClearLoadingLayer()
+	{
+		LoadingLayer = nullptr;
+	}
+
+	void MusicLayer::LoadLayer()
+	{
+
+		//Load all beats in a threaded process
+
+		App::Get().GetAudioPlayer().LoadAudio(file);
+
+		beats = BeatGenerator.FindBeats(BeatGenerator.ProcessFile());
+
+		HZ_ASSERT(beats.size() != 0, "Invalid beats vector.");
+
+
+		FindBeatHeights();
+		loaded = true;
+		App::Get().GetAudioPlayer().PlayAudio();
+	}
+
+	MusicLayer::~MusicLayer()
+	{
+
 	}
 }

@@ -35,17 +35,6 @@ namespace OnBeat
 		LayerStack->AttachLayer(MainMenu);
 	}
 
-	void App::LoadScreenCallback()
-	{
-		LayerStack->SetCallback(BindPostUpdateCallback(&App::LoadScreenCallbackLower));
-	}
-
-	void App::LoadScreenCallbackLower()
-	{
-		LayerStack->PopLayer(LoadLayer);
-		LoadLayer = nullptr;
-	}
-
 	void App::StartGame(const std::string& song)
 	{
 		LayerStack->PopLayer(MainMenu);

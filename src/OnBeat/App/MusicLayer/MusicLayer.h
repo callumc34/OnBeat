@@ -1,7 +1,6 @@
 #pragma once
-#include <OnBeat/Util/Template/Layer.h>
+#include <OnBeat/Util/Loader/LoadingLayer/LoadingLayer.h>
 #include <OnBeat/Util/OnSetDetection/OnSetDetection.h>
-#include <OnBeat/Config/Skin.h>
 #include <Hazel/Renderer/Shader.h>
 #include <Hazel/Renderer/Renderer2D.h>
 
@@ -14,10 +13,11 @@ namespace OnBeat
 
 			MusicLayer(const std::string& file,
 				float cameraVelocity, double sampleRate, int sampleSize);
+			~MusicLayer();
 
 			//OnEvents
-			virtual void OnAttach() override;
-			virtual void OnDetach() override;
+			void OnAttach() override;
+			void OnDetach() override;
 
 			void EventUpdate(Hazel::Event& e) override;
 			void OnUpdate(Hazel::Timestep ts) override;
@@ -44,5 +44,11 @@ namespace OnBeat
 			double SampleRate;
 
 			std::string file;
+
+			//Loading functionality
+			void LoadLayer();
+			void ClearLoadingLayer();
+			LoadingLayer* LoadingLayer = nullptr;
+			bool loaded = false;
 	};
 }

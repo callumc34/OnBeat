@@ -3,6 +3,7 @@
 #include <OnBeat/Util/Loader/Loader.h>
 #include <OnBeat/Config/Skin.h>
 
+#define BindLoadingFunction(fn) (OnBeat::LoaderFunction)std::bind(fn, this)
 #define BindLoadingCallback(fn) (OnBeat::LoaderCallback)std::bind(fn, this)
 
 namespace OnBeat
@@ -14,6 +15,8 @@ namespace OnBeat
 			~LoadingLayer();
 
 			void OnUpdate(Hazel::Timestep ts) override;
+
+			void Pop();
 
 		private:
 			LoaderCallback callback;

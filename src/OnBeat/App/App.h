@@ -6,9 +6,6 @@
 #include <OnBeat/Util/AudioPlayer/AudioPlayer.h>
 #include <Hazel/Core/Application.h>
 
-//Testing
-#include <OnBeat/Util/Loader/LoadingLayer/LoadingLayer.h>
-
 typedef struct GLFWwindow GLFWwindow;
 
 namespace OnBeat
@@ -20,7 +17,6 @@ namespace OnBeat
 			App();
 			~App();
 
-			void LoadScreenCallback();
 			void StartGame(const std::string& song);
 
 			void RefreshSettings();
@@ -36,8 +32,6 @@ namespace OnBeat
 		private:
 			static App* instance;
 
-			void LoadScreenCallbackLower();
-
 			void SetFullScreen(int monitor);
 			void SetWindowIcon(const std::string& path);
 
@@ -47,7 +41,6 @@ namespace OnBeat
 			Config::Settings Settings;
 
 			//Layers
-			LoadingLayer* LoadLayer = nullptr;
 			MusicLayer* MusicLayer = nullptr;
 			MainMenu* MainMenu = nullptr;
 	};

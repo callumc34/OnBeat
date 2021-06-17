@@ -8,7 +8,7 @@ namespace OnBeat
 	class Layer : public Hazel::Layer
 	{
 		public:
-			Layer(std::string name = "OnBeatLayer");
+			Layer(const std::string& name = "OnBeatLayer");
 			~Layer();
 
 			void OnEvent(Hazel::Event& e) override;
