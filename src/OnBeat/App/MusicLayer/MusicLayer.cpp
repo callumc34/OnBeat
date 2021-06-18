@@ -5,7 +5,7 @@
 namespace OnBeat {
 	MusicLayer::MusicLayer(const std::string& file,
 		float cameraVelocity, double sampleRate, int sampleSize)
-		: Layer("MusicLayer"), BeatGenerator({ 0, 1, 8, 8 }, file)
+		: Layer("MusicLayer"), BeatGenerator({ 0, 1, 8, 8 })
 	{
 		auto& window = App::Get().GetWindow();
 
@@ -207,7 +207,7 @@ namespace OnBeat {
 
 		App::Get().GetAudioPlayer().LoadAudio(file);
 
-		beats = BeatGenerator.FindBeats(BeatGenerator.ProcessFile());
+		beats = BeatGenerator.FindBeats(BeatGenerator.ProcessFile(file));
 
 		HZ_ASSERT(beats.size() != 0, "Invalid beats vector.");
 

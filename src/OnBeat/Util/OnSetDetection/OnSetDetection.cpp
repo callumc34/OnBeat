@@ -76,8 +76,8 @@ namespace OnBeat
 		for (int c = 0; c < MP3FileInfo.channels; c++)
 		{
 			//Copy buffer data from channel index to next channel
-			samples[c] = std::vector<double>(MP3FileInfo.buffer + ((c * MP3FileInfo.samples) / MP3FileInfo.channels),
-				MP3FileInfo.buffer + (((c + 1) * MP3FileInfo.samples) / MP3FileInfo.channels));
+			samples.push_back(std::vector<double>(MP3FileInfo.buffer + ((c * MP3FileInfo.samples) / MP3FileInfo.channels),
+				MP3FileInfo.buffer + (((c + 1) * MP3FileInfo.samples) / MP3FileInfo.channels)));
 		}
 
 		free(MP3FileInfo.buffer);
