@@ -5,19 +5,24 @@
 namespace OnBeat {
 	MusicLayer::MusicLayer(const std::string& file,
 		float cameraVelocity, double sampleRate, int sampleSize)
-		: Layer("MusicLayer"), BeatGenerator({ 0, 1, 8, 8 })
+		:
+		Layer("MusicLayer"),
+		BeatGenerator(OnSetOptions
+			{
+				App::Get().GetSettings().Game.ThresholdConstant,
+				App::Get().GetSettings().Game.ThresholdMultiple,
+				App::Get().GetSettings().Game.MeanWindow,
+				App::Get().GetSettings().Game.MaximaWindow
+			}
+		),
+		CameraVelocity(cameraVelocity),
+		SampleRate(sampleRate),
+		SampleSize(sampleSize),
+		file(file)
 	{
 		auto& window = App::Get().GetWindow();
 
-		//CameraVelocity in px/sec (900px/sec)
-		this->CameraVelocity = cameraVelocity;
-
-		this->SampleRate = sampleRate;
-		this->SampleSize = sampleSize;
-
-		this->file = file;
-
-		skin = App::Get().GetSettings().CurrentSkin.MusicSkin;
+		skin = App::Get().GetSettings().Game.Skin.MusicSkin;
 
 		LoadingLayer = new OnBeat::LoadingLayer(BindLoadingFunction(&MusicLayer::LoadLayer),
 			BindLoadingCallback(&MusicLayer::ClearLoadingLayer), true);

@@ -1,6 +1,10 @@
 {
-    "Resolution": "1600x900",
-    "Fullscreen" : 0,
+    "Video" : {
+        "Resolution": "1600x900",
+        "Fullscreen" : 0,
+        "FpsCap": 0,
+        "VSync": 0
+    },
     "Input" : {
         "COLUMN_1" : "Z",
         "COLUMN_2" : "X",
@@ -8,8 +12,15 @@
         "COLUMN_4" : "Period",
         "PAUSE" : "Escape"
     },
-    "Skin" : "Default",
-    "FpsCap": 0,
-    "VSync": 0,
-    "Volume" : 1.0
+    "Audio" : { 
+        "Volume" : 1.0
+    },
+    "Game" : {
+        "CameraVelocity" : 10,
+        "ThresholdConstant" : 0,
+        "ThresholdMultiple" : 1.0,
+        "MeanWindow" : 8,
+        "MaximaWindow" : 8,
+        "Skin" : "Default"
+    }
 }

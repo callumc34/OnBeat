@@ -31,7 +31,7 @@ namespace OnBeat
 		//Setup layers
 		PushLayer(LayerStack);
 
-		MainMenu = new OnBeat::MainMenu(Settings.CurrentSkin.SkinDirectory + OB_MAIN_MENU, "Main Menu");
+		MainMenu = new OnBeat::MainMenu(Settings.Game.Skin.SkinDirectory + OB_MAIN_MENU, "Main Menu");
 		LayerStack->AttachLayer(MainMenu);
 	}
 
@@ -42,7 +42,7 @@ namespace OnBeat
 
 		glfwSetCursor(NativeWindow, nullptr);
 		//TODO(Callum): Get these from settings
-		MusicLayer = new OnBeat::MusicLayer(song, 10.0f, 44100, 512);
+		MusicLayer = new OnBeat::MusicLayer(song, Settings.Game.CameraVelocity, 44100, 512);
 		LayerStack->AttachLayer(MusicLayer);
 	}
 
@@ -53,9 +53,9 @@ namespace OnBeat
 			HZ_WARN("Settings refreshed with invalid settings. Falling back to default settings");
 			Settings = Config::Settings::Create(OB_DEFAULT_SETTINGS);
 		}
-		SetFullScreen(Settings.Resolution.Fullscreen);
-		glfwSwapInterval(Settings.Resolution.VSync);
-		AudioPlayer.SetVolume(Settings.Volume);
+		SetFullScreen(Settings.Video.Fullscreen);
+		glfwSwapInterval(Settings.Video.VSync);
+		AudioPlayer.SetVolume(Settings.Audio.Volume);
 	}
 
 	int App::SetSettings(const Config::Settings& newS)
@@ -104,8 +104,8 @@ namespace OnBeat
 		{
 			monitor = glfwGetPrimaryMonitor();
 			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-			xOff = (mode->width - Settings.Resolution.DisplayWidth) / 2;
-			yOff = (mode->height - Settings.Resolution.DisplayHeight) / 2;
+			xOff = (mode->width - Settings.Video.DisplayWidth) / 2;
+			yOff = (mode->height - Settings.Video.DisplayHeight) / 2;
 			monitor = nullptr;
 		}
 		else
@@ -118,7 +118,7 @@ namespace OnBeat
 
 
 		// switch to full screen
-		glfwSetWindowMonitor(NativeWindow, monitor, xOff, yOff, Settings.Resolution.DisplayWidth, Settings.Resolution.DisplayHeight, (int)Settings.Resolution.FpsCap);
+		glfwSetWindowMonitor(NativeWindow, monitor, xOff, yOff, Settings.Video.DisplayWidth, Settings.Video.DisplayHeight, (int)Settings.Video.FpsCap);
 	}
 
 	App::~App()

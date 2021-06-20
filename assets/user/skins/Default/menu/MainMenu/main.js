@@ -1,18 +1,11 @@
 //C callbacks to JS
 //Required JS Functions
 function SetSettings(settings) {
-    for (let key in settings) {
-        let setting = document.getElementById(key);
-        if (!setting) {
-            continue;
+    for (let k in settings) {
+        for (let v in settings[k]) {
+            document.getElementById(v).value = settings[k][v];
         }
-        setting.value = settings[key];                
     }
-    COLUMN_1.value = settings["Input"]["COLUMN_1"];
-    COLUMN_2.value = settings["Input"]["COLUMN_2"];
-    COLUMN_3.value = settings["Input"]["COLUMN_3"];
-    COLUMN_4.value = settings["Input"]["COLUMN_4"];
-    PAUSE.value = settings["Input"]["PAUSE"];
 }
 
 function DOMLoaded() {
@@ -61,29 +54,31 @@ function setHWInfo() {
     }
 }
 
-function getAsNumber(val) {
-    let value = Number(val);
-    if (value == NaN) {
-        return val;
-    }
-    return value;
-}
-
 function applySettings() {
     let config = {
-        "Resolution": Resolution.value,
-        "Fullscreen": Number(Fullscreen.value),
-        "VSync": Number(VSync.value),
-        "FpsCap": FpsCap.valueAsNumber,
-        "Skin": Skin.value,
-        "Volume": Volume.valueAsNumber,
-
+        "Video" : {
+            "Resolution" : Resolution.value,
+            "Fullscreen" : Number(Fullscreen.value),
+            "FpsCap" : FpsCap.valueAsNumber,
+            "VSync" : Number(VSync.value)
+        },
         "Input": {
             "COLUMN_1" : COLUMN_1.value,
             "COLUMN_2" : COLUMN_2.value,
             "COLUMN_3" : COLUMN_3.value,
             "COLUMN_4" : COLUMN_4.value,
             "PAUSE"       : PAUSE.value
+        },
+        "Audio" : {
+            "Volume" : Volume.valueAsNumber
+        },
+        "Game" : {
+            "CameraVelocity" : CameraVelocity.valueAsNumber,
+            "ThresholdConstant" : ThresholdConstant.valueAsNumber,
+            "ThresholdMultiple" : ThresholdMultiple.valueAsNumber,
+            "MeanWindow" : MeanWindow.valueAsNumber,
+            "MaximaWindow" : MaximaWindow.valueAsNumber,
+            "Skin" : Skin.value
         }
     };
     UpdateSettings(config);
@@ -165,7 +160,7 @@ function inputToUpper(event) {
 
 
 //Event listeners
-GameSettings.addEventListener("click", () => display(Settings,
+MenuSettings.addEventListener("click", () => display(Settings,
  document.body.children, "block"));
 
 DisplayHeader.addEventListener("click", () => display(
@@ -176,6 +171,9 @@ InputHeader.addEventListener("click", () => display(
 
 AudioHeader.addEventListener("click", () => display(
     AudioSettings, document.getElementsByClassName("settingsOptions"), "flex"));
+
+GameHeader.addEventListener("click", () => display(
+    GameSettings, document.getElementsByClassName("settingsOptions"), "flex"));
 
 
 SettingsQuit.addEventListener("click", () => display(MainMenu,

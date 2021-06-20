@@ -158,47 +158,75 @@ namespace OnBeat
 			Undefined = 500,
 		};
 
-		struct InputMap
+		//Settings structs
+		struct VideoConfig
+		{
+			uint16_t 
+				DisplayWidth = OB_UNDEFINED_INT,
+				DisplayHeight = OB_UNDEFINED_INT,
+				VSync = OB_UNDEFINED_INT,
+				FpsCap = OB_UNDEFINED_INT;
+			int16_t Fullscreen = OB_UNDEFINED_INT;
+		};
+
+		void setResolution(VideoConfig& c, const std::string& res);
+		void to_json(nlohmann::json& j, const VideoConfig& c);
+		void from_json(const nlohmann::json& j, VideoConfig& c);
+
+		struct InputConfig
 		{
 			Keys
-				COLUMN_1,
-				COLUMN_2,
-				COLUMN_3,
-				COLUMN_4,
-				PAUSE
+				COLUMN_1 = Keys::Undefined,
+				COLUMN_2 = Keys::Undefined,
+				COLUMN_3 = Keys::Undefined,
+				COLUMN_4 = Keys::Undefined,
+				PAUSE = Keys::Undefined
 				;				
 		};
 
-		void to_json(nlohmann::json& j, const InputMap& i);
-		void from_json(const nlohmann::json& j, InputMap& i);
+		void to_json(nlohmann::json& j, const InputConfig& c);
+		void from_json(const nlohmann::json& j, InputConfig& c);
+
+		struct AudioConfig
+		{
+			float Volume = OB_UNDEFINED_INT;
+		};
+
+		void to_json(nlohmann::json& j, const AudioConfig& c);
+		void from_json(const nlohmann::json& j, AudioConfig& c);
+
+		struct GameConfig
+		{
+			uint16_t
+				CameraVelocity = OB_UNDEFINED_INT,
+				MeanWindow = OB_UNDEFINED_INT,
+				MaximaWindow = OB_UNDEFINED_INT;
+			double
+				ThresholdConstant = OB_UNDEFINED_INT,
+				ThresholdMultiple = OB_UNDEFINED_INT;
+			Skin::AppSkin Skin;
+		};
+
+		void to_json(nlohmann::json& j, const GameConfig& c);
+		void from_json(const nlohmann::json& j, GameConfig& c);
 
 		struct Settings
 		{
 			static Settings Create(const std::string& path);
 			
-			struct
-			{
-				uint16_t DisplayWidth = OB_UNDEFINED_INT, DisplayHeight = OB_UNDEFINED_INT;
-				int16_t Fullscreen = OB_UNDEFINED_INT;
-				uint16_t VSync = OB_UNDEFINED_INT;
-				uint16_t FpsCap = OB_UNDEFINED_INT;
-			} Resolution;
-
-			InputMap Input;
-
-			Skin::AppSkin CurrentSkin;
-
-			float Volume = OB_UNDEFINED_INT;
+			VideoConfig Video;
+			InputConfig Input;
+			AudioConfig Audio;
+			GameConfig Game;
 		};
+
+		void to_json(nlohmann::json& j, const Settings& c);
+
+		void from_json(const nlohmann::json& j, Settings& c);
 
 		bool swapSettings(Settings& newS, const Settings& oldS);
 
-		bool validateSettings(const Settings& s, bool allowUndefined = true);
+		bool validateSettings(const Settings& c, bool allowUndefined = true);
 
-		void setResolution(Settings& s, const std::string& res);
-
-		void to_json(nlohmann::json& j, const Settings& s);
-
-		void from_json(const nlohmann::json& j, Settings& s);
 	}
 }

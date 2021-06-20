@@ -6,25 +6,62 @@
 #include <fstream>
 #include <algorithm>
 
+//Macros to shorten default expressions
+#define DEFAULT_SET(var) j[#var] = c.var
+#define DEFAULT_GET(var) c.var = j.value(#var, OB_UNDEFINED_INT)
+#define DEFAULT_SWAP(var) set(newS.var, oldS.var);
+#define DEFAULT_VALIDATE(var, min, max) if (!checkRange(c.var, min, max)) return false;
+
 using json = nlohmann::json;
 
 namespace OnBeat
 {
 	namespace Config
 	{
-		//Cast input struct to and from json
-		void to_json(json& j, const InputMap& i)
+		//Set resolution from a json resolution string
+		void setResolution(VideoConfig& c, const std::string& resString)
+		{
+			try
+			{
+				c.DisplayWidth = std::stoi(resString.substr(0, resString.find("x", 0)).c_str());
+				c.DisplayHeight = std::stoi(resString.substr(resString.find("x", 0) + 1, resString.length()).c_str());
+			}
+			catch (const std::exception& e)
+			{
+				HZ_WARN("Invalid resolution string: " + std::string(e.what()));
+				c.DisplayWidth = OB_UNDEFINED_INT;
+				c.DisplayHeight = OB_UNDEFINED_INT;
+			}
+		}
+
+		void to_json(json& j, const VideoConfig& c)
+		{
+			j["Resolution"] = std::to_string(c.DisplayWidth) + "x" + std::to_string(c.DisplayHeight);
+			DEFAULT_SET(Fullscreen);
+			DEFAULT_SET(VSync);
+			DEFAULT_SET(FpsCap);
+		}
+
+		void from_json(const json& j, VideoConfig& c)
+		{
+			setResolution(c, j.value("Resolution", ""));
+			DEFAULT_GET(Fullscreen);
+			DEFAULT_GET(FpsCap);
+			DEFAULT_GET(VSync);
+		}
+
+		void to_json(json& j, const InputConfig& c)
 		{
 			j = json{
-				{ "COLUMN_1", magic_enum::enum_name(i.COLUMN_1) },
-				{ "COLUMN_2", magic_enum::enum_name(i.COLUMN_2) },
-				{ "COLUMN_3", magic_enum::enum_name(i.COLUMN_3) },
-				{ "COLUMN_4", magic_enum::enum_name(i.COLUMN_4) },
-				{ "PAUSE"   , magic_enum::enum_name(i.PAUSE   ) },
+				{ "COLUMN_1", magic_enum::enum_name(c.COLUMN_1) },
+				{ "COLUMN_2", magic_enum::enum_name(c.COLUMN_2) },
+				{ "COLUMN_3", magic_enum::enum_name(c.COLUMN_3) },
+				{ "COLUMN_4", magic_enum::enum_name(c.COLUMN_4) },
+				{ "PAUSE"   , magic_enum::enum_name(c.PAUSE) },
 			};
 		}
 
-		void from_json(const json& j, InputMap& i)
+		void from_json(const json& j, InputConfig& c)
 		{
 			auto enumCast = [j](const std::string& key)
 			{
@@ -41,12 +78,42 @@ namespace OnBeat
 				}
 			};
 
-			i.COLUMN_1 = enumCast("COLUMN_1");
-			i.COLUMN_2 = enumCast("COLUMN_2");
-			i.COLUMN_3 = enumCast("COLUMN_3");
-			i.COLUMN_4 = enumCast("COLUMN_4");
+			c.COLUMN_1 = enumCast("COLUMN_1");
+			c.COLUMN_2 = enumCast("COLUMN_2");
+			c.COLUMN_3 = enumCast("COLUMN_3");
+			c.COLUMN_4 = enumCast("COLUMN_4");
+	
+			c.PAUSE = enumCast("PAUSE");
+		}
 
-			i.PAUSE = enumCast("PAUSE");
+		void to_json(json& j, const AudioConfig& c)
+		{
+			DEFAULT_SET(Volume);
+		}
+
+		void from_json(const json& j, AudioConfig& c)
+		{
+			c.Volume = j.value("Volume", (float)OB_UNDEFINED_INT);
+		}
+
+		void to_json(json& j, const GameConfig& c)
+		{
+			DEFAULT_SET(CameraVelocity);
+			DEFAULT_SET(ThresholdConstant);
+			DEFAULT_SET(ThresholdMultiple);
+			DEFAULT_SET(MeanWindow);
+			DEFAULT_SET(MaximaWindow);
+			j["Skin"] = c.Skin.SkinPath;
+		}
+
+		void from_json(const json& j, GameConfig& c)
+		{
+			DEFAULT_GET(CameraVelocity);
+			DEFAULT_GET(MeanWindow);
+			DEFAULT_GET(MaximaWindow);
+			c.ThresholdConstant = j.value("ThresholdConstant", (double)OB_UNDEFINED_INT);
+			c.ThresholdMultiple = j.value("ThresholdMultiple", (double)OB_UNDEFINED_INT);
+			c.Skin = Skin::AppSkin(j.value("Skin", OB_DEFAULT_SKIN));
 		}
 
 		//Setup onbeat settings from json file
@@ -72,26 +139,35 @@ namespace OnBeat
 					newS = oldS;
 			};
 
-			//Quick set values that can be defined by an int
-			set(newS.Resolution.DisplayWidth, oldS.Resolution.DisplayWidth);
-			set(newS.Resolution.DisplayHeight, oldS.Resolution.DisplayHeight);
-			set(newS.Resolution.Fullscreen, oldS.Resolution.Fullscreen);
-			set(newS.Resolution.VSync, oldS.Resolution.VSync);
-			set(newS.Resolution.FpsCap, oldS.Resolution.FpsCap);
-			set(newS.Volume, oldS.Volume);
+			//Video config
+			DEFAULT_SWAP(Video.DisplayWidth);
+			DEFAULT_SWAP(Video.DisplayHeight);
+			DEFAULT_SWAP(Video.VSync);
+			DEFAULT_SWAP(Video.FpsCap);
+			DEFAULT_SWAP(Video.Fullscreen);
 
-			//Input setting
-			set(newS.Input.COLUMN_1, oldS.Input.COLUMN_1);
-			set(newS.Input.COLUMN_2, oldS.Input.COLUMN_2);
-			set(newS.Input.COLUMN_3, oldS.Input.COLUMN_3);
-			set(newS.Input.COLUMN_4, oldS.Input.COLUMN_4);
-			set(newS.Input.PAUSE, oldS.Input.PAUSE);
+			//Input config
+			DEFAULT_SWAP(Input.COLUMN_1);
+			DEFAULT_SWAP(Input.COLUMN_2);
+			DEFAULT_SWAP(Input.COLUMN_3);
+			DEFAULT_SWAP(Input.COLUMN_4);
+			DEFAULT_SWAP(Input.PAUSE);
+
+			//Audio config
+			DEFAULT_SWAP(Audio.Volume);
+
+			//Game config
+			DEFAULT_SWAP(Game.CameraVelocity);
+			DEFAULT_SWAP(Game.ThresholdConstant);
+			DEFAULT_SWAP(Game.ThresholdMultiple);
+			DEFAULT_SWAP(Game.MeanWindow);
+			DEFAULT_SWAP(Game.MaximaWindow);
 
 			return true;
 		}
 
 		//Ensure that a settings struct has been made correctly
-		bool validateSettings(const Settings& s, bool allowUndefined)
+		bool validateSettings(const Settings& c, bool allowUndefined)
 		{
 			auto checkRange = [allowUndefined](auto& val, const auto& min, const auto& max)
 			{
@@ -112,59 +188,41 @@ namespace OnBeat
 				return true;
 			};
 
-			if (!checkRange(s.Resolution.DisplayWidth, 64, 16000)) return false;
-			if (!checkRange(s.Resolution.DisplayHeight, 64, 16000)) return false;
-			if (!checkRange(s.Resolution.Fullscreen, -1, 64)) return false;
-			if (!checkRange(s.Resolution.VSync, 0, 1000)) return false;
-			if (!checkRange(s.Resolution.FpsCap, 0, 1000)) return false;
-			if (!checkRange(s.Volume, 0, 1)) return false;
+			//Video config
+			DEFAULT_VALIDATE(Video.DisplayWidth, 64, 16000);
+			DEFAULT_VALIDATE(Video.DisplayHeight, 64, 16000);
+			DEFAULT_VALIDATE(Video.VSync, 0, 8);
+			DEFAULT_VALIDATE(Video.FpsCap, 0, 3000);
+			DEFAULT_VALIDATE(Video.Fullscreen, -1, 64);
+
+			//Audio config
+			DEFAULT_VALIDATE(Audio.Volume, 0, 1);
+
+			//Game config
+			DEFAULT_VALIDATE(Game.CameraVelocity, 0, 100);
+			DEFAULT_VALIDATE(Game.ThresholdConstant, 0, 1);
+			DEFAULT_VALIDATE(Game.ThresholdMultiple, 0, 1);
+			DEFAULT_VALIDATE(Game.MeanWindow, 3, 32);
+			DEFAULT_VALIDATE(Game.MaximaWindow, 3, 32);
+
 			return true;
 		}
 
-		//Set resolution from a json resolution string
-		void setResolution(Settings& s, const std::string& resString)
-		{
-			try
-			{
-				s.Resolution.DisplayWidth = std::stoi(resString.substr(0, resString.find("x", 0)).c_str());
-				s.Resolution.DisplayHeight = std::stoi(resString.substr(resString.find("x", 0) + 1, resString.length()).c_str());
-			}
-			catch (const std::exception& e)
-			{
-				HZ_WARN("Invalid resolution string: " + std::string(e.what()));
-				s.Resolution.DisplayWidth = OB_UNDEFINED_INT;
-				s.Resolution.DisplayHeight = OB_UNDEFINED_INT;
-			}
-		}
-
-
 		//Cast settings to and from json
-		void to_json(json& j, const Settings& s)
+		void to_json(json& j, const Settings& c)
 		{
-			j["Resolution"] = std::to_string(s.Resolution.DisplayWidth) + "x" + std::to_string(s.Resolution.DisplayHeight);
-			j["Fullscreen"] = s.Resolution.Fullscreen;
-			j["VSync"] = s.Resolution.FpsCap;
-			j["FpsCap"] = s.Resolution.FpsCap;
-			j["Skin"] = s.CurrentSkin.SkinPath;
-			j["Volume"] = s.Volume;
-			j["Input"] = s.Input;
+			DEFAULT_SET(Video);
+			DEFAULT_SET(Input);
+			DEFAULT_SET(Audio);
+			DEFAULT_SET(Game);
 		}
 
-		void from_json(const json& j, Settings& s)
+		void from_json(const json& j, Settings& c)
 		{
-			setResolution(s, j.value("Resolution", ""));
-
-			s.Resolution.Fullscreen = j.value("Fullscreen", OB_UNDEFINED_INT);
-
-			s.Resolution.VSync = j.value("VSync", OB_UNDEFINED_INT);
-
-			s.Resolution.FpsCap = j.value("FpsCap", OB_UNDEFINED_INT);
-
-			s.CurrentSkin = Skin::AppSkin(j.value("Skin", OB_DEFAULT_SKIN));
-
-			s.Volume = j.value("Volume", (float)OB_UNDEFINED_INT);
-
-			s.Input = j.value("Input", InputMap{});
+			c.Video = j["Video"];
+			c.Input = j["Input"];
+			c.Audio = j["Audio"];
+			c.Game = j["Game"];
 		}
 	}
 }

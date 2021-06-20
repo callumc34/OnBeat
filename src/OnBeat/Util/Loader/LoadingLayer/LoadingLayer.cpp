@@ -10,7 +10,7 @@ namespace OnBeat
 	{
 		//Attach self
 		App::Get().GetLayerStack().AttachLayer(this);
-		skin = App::Get().GetSettings().CurrentSkin.LoadingSkin;
+		skin = App::Get().GetSettings().Game.Skin.LoadingSkin;
 		//Setup default bounds
 		OnResize(
 			Hazel::WindowResizeEvent(App::Get().GetWindow().GetWidth(), App::Get().GetWindow().GetHeight())

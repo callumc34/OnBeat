@@ -62,7 +62,6 @@ namespace OnBeat
 		}
 
 		App::Get().SetSettings(newSettings);
-
 		App::Get().RefreshSettings();
 		return;
 	}

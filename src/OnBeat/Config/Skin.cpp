@@ -10,16 +10,22 @@ namespace OnBeat
 	namespace Skin
 	{
 		Quad::Quad()
+			:
+			x("0.0f"),
+			y("0.0f"),
+			scaleX("1.0f"),
+			scaleY("1.0f"),
+			Colour(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
 		{
-			this->x = std::string("0.0f");
-			this->y = std::string("0.0f");
-			this->scaleX = std::string("1.0f");
-			this->scaleY = std::string("1.0f");
-			this->Colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 
 		//Create quad from json object
 		Quad::Quad(const json& object, const std::string& texturePath)
+			:
+			x(object["x"]),
+			y(object["y"]),
+			scaleX(object["scaleX"]),
+			scaleY(object["scaleY"])
 		{
 
 			if (object["colour"].is_string())
@@ -30,22 +36,16 @@ namespace OnBeat
 			{
 				Colour = Util::arrayToVec4(object["colour"]);
 			}
-
-			//Bit of a mess may need cleaning up
-			x = object["x"];
-			y = object["y"];
-			scaleX = object["scaleX"];
-			scaleY = object["scaleY"];
-
 		}
 
 		Quad::Quad(ColourTexture Colour, const std::string& x, const std::string& y, const std::string& scaleX, const std::string& scaleY)
+			:
+			x(x),
+			y(y),
+			scaleX(scaleX),
+			scaleY(scaleY),
+			Colour(Colour)
 		{
-			this->x = x;
-			this->y = y;
-			this->scaleX = scaleX;
-			this->scaleY = scaleY;
-			this->Colour = Colour;
 		}
 
 		float Quad::getX()
@@ -101,30 +101,32 @@ namespace OnBeat
 		}
 
 		LayerSkin::LayerSkin(Quad BackgroundTexture, glm::vec4 ClearColour)
+			:
+			ClearColour(ClearColour),
+			BackgroundTexture(BackgroundTexture)
 		{
-			this->ClearColour = ClearColour;
-			this->BackgroundTexture = BackgroundTexture;
 		}
 
-		LayerSkin::LayerSkin(const json& object, const std::string& path)
+		LayerSkin::LayerSkin(const json& object, const std::string& path) 
+			:
+			BackgroundTexture(Quad(object["Background"], path)),
+			ClearColour(Util::arrayToVec4(object["ClearColour"]))
 		{
-			BackgroundTexture = Quad(object["Background"], path);
-			ClearColour = Util::arrayToVec4(object["ClearColour"]);
 		}
 
 		LoadingSkin::LoadingSkin()
 		{
-
 		}
 
-		LoadingSkin::LoadingSkin(Quad LoadingAnimation)
+		LoadingSkin::LoadingSkin(Quad LoadingAnimation) : LoadingAnimation(LoadingAnimation)
 		{
-			this->LoadingAnimation = LoadingAnimation;
 		}
 
-		LoadingSkin::LoadingSkin(const json& object, const std::string& path) : LayerSkin(object, path)
+		LoadingSkin::LoadingSkin(const json& object, const std::string& path)
+			: 
+			LayerSkin(object, path),
+			LoadingAnimation(Quad(object["LoadingAnimation"], path))
 		{
-			LoadingAnimation = Quad(object["LoadingAnimation"], path);
 		}
 
 		MusicSkin::MusicSkin()
@@ -134,22 +136,29 @@ namespace OnBeat
 
 		MusicSkin::MusicSkin(Quad Column1, Quad Column2, Quad Column3, Quad Column4, Quad Column5,
 			Quad Beat, Quad BeatArea, Quad BeatZone)
+			:
+			Columns(std::vector<Quad>{ Column1, Column2, Column3, Column4, Column5 }),
+			Beat(Beat),
+			BeatArea(BeatArea),
+			BeatZone(BeatZone)
 		{
-			this->Columns = std::vector<Quad>{ Column1, Column2, Column3, Column4, Column5 };
-			this->Beat = Beat;
-			this->BeatArea = BeatArea;
-			this->BeatZone = BeatZone;
 		}
 
 		MusicSkin::MusicSkin(std::vector<Quad> Columns, Quad Beat, Quad BeatArea, Quad BeatZone)
+			:			
+			Columns(Columns),
+			Beat(Beat),
+			BeatArea(BeatArea),
+			BeatZone(BeatZone)
 		{
-			this->Columns = Columns;
-			this->Beat = Beat;
-			this->BeatArea = BeatArea;
-			this->BeatZone = BeatZone;
 		}
 
-		MusicSkin::MusicSkin(const json& object, const std::string& path) : LayerSkin(object, path)
+		MusicSkin::MusicSkin(const json& object, const std::string& path)
+			:
+			LayerSkin(object, path),
+			Beat(Quad(object["Beat"], path)),
+			BeatArea(Quad(object["BeatArea"], path)),
+			BeatZone(Quad(object["BeatZone"], path))
 		{
 			//Setup MusicSkin
 			for (auto& column : object["Columns"])
@@ -157,9 +166,6 @@ namespace OnBeat
 				Columns.push_back(Quad(column, path));
 			}
 			//TODO(Callum): Pass in texturePath from the skin.json not the skin path
-			Beat = Quad(object["Beat"], path);
-			BeatArea = Quad(object["BeatArea"], path);
-			BeatZone = Quad(object["BeatZone"], path);
 		}
 
 		AppSkin::AppSkin()
