@@ -144,7 +144,11 @@ namespace OnBeat
 
 	void MainMenu::StartMusicLayer()
 	{
-		App::Get().StartGame("testing/testMusic/test.wav");
+		auto dialog = Hazel::FileDialogs::OpenFile("Supported Files (*.wav, *.mp3)\0*.wav;*.mp3;\0Wav Files (*.wav)\0*.wav\0MP3 Files (*.mp3)\0*.mp3\0");
+		if (dialog.has_value())
+		{
+			App::Get().StartGame(dialog.value());
+		}
 		return;
 	}
 

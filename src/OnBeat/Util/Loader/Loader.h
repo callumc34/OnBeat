@@ -20,7 +20,7 @@ namespace OnBeat
 			LoaderFunction fn;
 		
 		private:
-			struct InternalFunction
+			struct
 			{
 				void operator()()
 				{
@@ -33,12 +33,12 @@ namespace OnBeat
 
 				Loader* parent;
 				
-			} ThreadClass;
-
-			std::thread thread;
+			} InternalThread;
 
 			bool finished;
 
-			friend InternalFunction;
+			std::thread thread;
+
+			friend class InternalThread;
 	};
 }

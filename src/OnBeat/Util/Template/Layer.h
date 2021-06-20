@@ -14,13 +14,9 @@ namespace OnBeat
 			void OnEvent(Hazel::Event& e) override;
 			bool OnWindowResize(Hazel::WindowResizeEvent& e);
 
-			virtual void EventUpdate(Hazel::Event& e);
-
 		protected:
 			Hazel::Scope<Hazel::OrthographicCamera> CameraController;
 
 			void CreateCamera(uint32_t width, uint32_t height);
-
-		private:
 	};
 }

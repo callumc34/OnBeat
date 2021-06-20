@@ -13,9 +13,9 @@ namespace OnBeat
 		struct Quad
 		{
 			Quad();
-			Quad(nlohmann::json object, std::string texturePath);
+			Quad(const nlohmann::json& object, const std::string& texturePath);
 			Quad(ColourTexture Colour,
-				std::string x = "0.0f", std::string y = "0.0f", std::string scaleX = "1.0f", std::string scaleY = "1.0f");
+				const std::string& x = "0.0f", const std::string& y = "0.0f", const std::string& scaleX = "1.0f", const std::string& scaleY = "1.0f");
 
 			std::string x, y, scaleX, scaleY;
 			ColourTexture Colour;
@@ -34,9 +34,17 @@ namespace OnBeat
 		struct LayerSkin
 		{
 			LayerSkin(Quad BackgroundTexture = Quad(), glm::vec4 ClearColour = { 0.08f, 0.08f, 0.08f, 1 });
-
+			LayerSkin(const nlohmann::json& object, const std::string& path);
 			glm::vec4 ClearColour;
 			Quad BackgroundTexture;
+		};
+
+		struct LoadingSkin : LayerSkin
+		{
+			LoadingSkin();
+			LoadingSkin(Quad LoadingAnimation);
+			LoadingSkin(const nlohmann::json& object, const std::string& path);
+			Quad LoadingAnimation;
 		};
 
 		struct MusicSkin : LayerSkin
@@ -52,7 +60,7 @@ namespace OnBeat
 				Quad BeatArea,
 				Quad BeatZone);
 			MusicSkin(std::vector<Quad>Columns, Quad Beat, Quad BeatArea, Quad BeatZone);
-			MusicSkin(nlohmann::json object, std::string path);
+			MusicSkin(const nlohmann::json& object, const std::string& path);
 
 			std::vector<Quad> Columns;
 			Quad Beat;
@@ -63,10 +71,9 @@ namespace OnBeat
 		struct AppSkin
 		{
 			AppSkin();
-			AppSkin(std::string path);
+			AppSkin(const std::string& path);
 
-			Quad LoadingScreen;
-
+			LoadingSkin LoadingSkin;
 			MusicSkin MusicSkin;
 			std::string SkinPath;
 			std::string SkinName;

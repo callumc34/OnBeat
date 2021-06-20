@@ -30,11 +30,9 @@ namespace OnBeat {
 
 		float length = window.GetHeight() / 100.0f;
 
-		float yOffset = CameraController.get()->GetPosition().y;
-
-		glm::vec2 position = skin.BackgroundTexture.toPositionVec();
+		float yOffset = CameraController->GetPosition().y;
 		//Background
-		skin.BackgroundTexture.draw(-0.5f, position.x, position.y + yOffset);
+		skin.BackgroundTexture.draw(-0.5f, 0, yOffset);
 
 		//Beat Columns
 		for (auto& column : skin.Columns)
@@ -46,7 +44,7 @@ namespace OnBeat {
 		skin.BeatArea.draw(-0.15f, 0.0f, yOffset);
 
 		//Beat Zone
-		skin.BeatZone.draw(0.2f, 0.0f, yOffset + position.y - App::Get().GetWindow().GetHeight() / 200);
+		skin.BeatZone.draw(0.2f, 0.0f, yOffset - App::Get().GetWindow().GetHeight() / 200);
 	}
 
 	void MusicLayer::CreateBeats()
@@ -56,8 +54,8 @@ namespace OnBeat {
 		try
 		{
 			Hazel::Ref<Hazel::Texture2D> beatTexture = std::get<Hazel::Ref<Hazel::Texture2D>>(skin.Beat.Colour);
-			beatTextureHeight = beatTexture.get()->GetHeight() / 100.0f;
-			beatTextureWidth = beatTexture.get()->GetWidth() / 100.0f;
+			beatTextureHeight = beatTexture->GetHeight() / 100.0f;
+			beatTextureWidth = beatTexture->GetWidth() / 100.0f;
 
 		}
 		catch (std::bad_variant_access const&)
@@ -84,13 +82,13 @@ namespace OnBeat {
 			for (auto& value : vector)
 			{
 				//Check if beat is above current window region
-				if (value > CameraController.get()->GetPosition().y + beatTextureHeight + (2 * App::Get().GetWindow().GetHeight() / 100.0f))
+				if (value > CameraController->GetPosition().y + beatTextureHeight + (2 * App::Get().GetWindow().GetHeight() / 100.0f))
 				{
 					//Break if not visible
 					break;
 				}
 				//Check if beat is below current window region
-				else if (value < CameraController.get()->GetPosition().y - (App::Get().GetWindow().GetHeight() / 100.0f))
+				else if (value < CameraController->GetPosition().y - (App::Get().GetWindow().GetHeight() / 100.0f))
 				{
 					continue;
 				}
@@ -182,13 +180,14 @@ namespace OnBeat {
 		}	 
 	
 		//TODO(Callum): Regulate framerate
-		glm::vec3 cameraPos = CameraController.get()->GetPosition();
+		glm::vec3 cameraPos = CameraController->GetPosition();
 		cameraPos.y += CameraVelocity * ts.GetSeconds();
-		CameraController.get()->SetPosition(cameraPos);
+		CameraController->SetPosition(cameraPos);
 	}
 
-	void MusicLayer::EventUpdate(Hazel::Event& e)
+	void MusicLayer::OnEvent(Hazel::Event& e)
 	{
+		Layer::OnEvent(e);
 	}
 
 	void MusicLayer::OnImGuiRender()
@@ -197,7 +196,7 @@ namespace OnBeat {
 
 	void MusicLayer::ClearLoadingLayer()
 	{
-		LoadingLayer = nullptr;
+		delete LoadingLayer;
 	}
 
 	void MusicLayer::LoadLayer()

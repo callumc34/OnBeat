@@ -14,14 +14,25 @@ namespace OnBeat
 			LoadingLayer(LoaderFunction fn, LoaderCallback callback, bool visible);
 			~LoadingLayer();
 
+			bool OnResize(Hazel::WindowResizeEvent& e);
 			void OnUpdate(Hazel::Timestep ts) override;
+			void OnEvent(Hazel::Event& e) override;
 
 			void Pop();
 
 		private:
+			void Render(float s);
+
 			LoaderCallback callback;
 			bool visible;
 
-			Skin::Quad LoadingScreen;
+			Skin::LoadingSkin skin;
+			struct
+			{
+				double velocity = 4;
+				float oldX = 0.0f;
+				double lower;
+				double upper;
+			} AnimationConfig;
 	};
 }

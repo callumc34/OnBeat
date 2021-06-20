@@ -19,7 +19,7 @@ namespace OnBeat
 			void OnAttach() override;
 			void OnDetach() override;
 
-			void EventUpdate(Hazel::Event& e) override;
+			void OnEvent(Hazel::Event& e) override;
 			void OnUpdate(Hazel::Timestep ts) override;
 
 			virtual void OnImGuiRender() override;

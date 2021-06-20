@@ -14,13 +14,12 @@ namespace OnBeat
 	{
 		Hazel::EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<Hazel::WindowResizeEvent>(HZ_BIND_EVENT_FN(Layer::OnWindowResize));
-		EventUpdate(e);
 	}
 
 	bool Layer::OnWindowResize(Hazel::WindowResizeEvent& e)
 	{
 		CreateCamera(e.GetWidth(), e.GetHeight());
-		return true;
+		return false;
 	}
 
 	void Layer::CreateCamera(uint32_t width, uint32_t height)
@@ -33,11 +32,6 @@ namespace OnBeat
 		float left = bottom * aspectRatio;
 		float right = top * aspectRatio;
 		CameraController = Hazel::CreateScope<Hazel::OrthographicCamera>(left, right, bottom, top);
-	}
-
-	void Layer::EventUpdate(Hazel::Event& e)
-	{
-
 	}
 
 	Layer::~Layer()

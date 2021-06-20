@@ -19,7 +19,7 @@ namespace OnBeat
 		}
 
 		//Create quad from json object
-		Quad::Quad(json object, std::string texturePath)
+		Quad::Quad(const json& object, const std::string& texturePath)
 		{
 
 			if (object["colour"].is_string())
@@ -39,7 +39,7 @@ namespace OnBeat
 
 		}
 
-		Quad::Quad(ColourTexture Colour, std::string x, std::string y, std::string scaleX, std::string scaleY)
+		Quad::Quad(ColourTexture Colour, const std::string& x, const std::string& y, const std::string& scaleX, const std::string& scaleY)
 		{
 			this->x = x;
 			this->y = y;
@@ -106,6 +106,27 @@ namespace OnBeat
 			this->BackgroundTexture = BackgroundTexture;
 		}
 
+		LayerSkin::LayerSkin(const json& object, const std::string& path)
+		{
+			BackgroundTexture = Quad(object["Background"], path);
+			ClearColour = Util::arrayToVec4(object["ClearColour"]);
+		}
+
+		LoadingSkin::LoadingSkin()
+		{
+
+		}
+
+		LoadingSkin::LoadingSkin(Quad LoadingAnimation)
+		{
+			this->LoadingAnimation = LoadingAnimation;
+		}
+
+		LoadingSkin::LoadingSkin(const json& object, const std::string& path) : LayerSkin(object, path)
+		{
+			LoadingAnimation = Quad(object["LoadingAnimation"], path);
+		}
+
 		MusicSkin::MusicSkin()
 		{
 
@@ -128,7 +149,7 @@ namespace OnBeat
 			this->BeatZone = BeatZone;
 		}
 
-		MusicSkin::MusicSkin(json object, std::string path)
+		MusicSkin::MusicSkin(const json& object, const std::string& path) : LayerSkin(object, path)
 		{
 			//Setup MusicSkin
 			for (auto& column : object["Columns"])
@@ -139,8 +160,6 @@ namespace OnBeat
 			Beat = Quad(object["Beat"], path);
 			BeatArea = Quad(object["BeatArea"], path);
 			BeatZone = Quad(object["BeatZone"], path);
-			BackgroundTexture = Quad(object["Background"], path);
-			ClearColour = Util::arrayToVec4(object["ClearColour"]);
 		}
 
 		AppSkin::AppSkin()
@@ -148,40 +167,40 @@ namespace OnBeat
 
 		}
 
-		AppSkin::AppSkin(std::string path)
+		AppSkin::AppSkin(const std::string& path)
 		{
 			//Find path
+			std::string file;
 			if (std::filesystem::is_regular_file(path))
 			{
 				
 			}
 			else if (std::filesystem::is_directory(path))
 			{
-				path = path + "/Skin.json";
+				file = path + "/Skin.json";
 			}
 			else if (std::filesystem::is_directory(std::filesystem::current_path().string()
 				+ "/assets/user/skins/" + path))
 			{
-				path = std::filesystem::current_path().string()
+				file = std::filesystem::current_path().string()
 					+ "/assets/user/skins/" + path + "/Skin.json";
 			}
 			else
 			{
-				path = std::filesystem::current_path().string()
+				file = std::filesystem::current_path().string()
 					+ "/assets/user/skins/Default/Skin.json";
 			}
 
-			std::ifstream input(path);
+			std::ifstream input(file);
 			json config;
 			input >> config;
 			input.close();
 
 			SkinPath = path;
 			SkinName = config["Name"];
-			SkinDirectory = std::filesystem::path(path).parent_path().string();
+			SkinDirectory = std::filesystem::path(file).parent_path().string();
 
-			LoadingScreen = Quad(config["LoadingScreen"], SkinDirectory);
-
+			LoadingSkin = Skin::LoadingSkin(config["LoadingScreen"], SkinDirectory);
 			MusicSkin = Skin::MusicSkin(config["MusicSkin"], SkinDirectory);
 		}
 	}

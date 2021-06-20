@@ -7,13 +7,13 @@ namespace OnBeat
 		finished = !fn;
 		if (!finished)
 		{
-			ThreadClass.parent = this;
-			thread = std::thread(ThreadClass);
+			InternalThread.parent = this;
+			thread = std::thread(InternalThread);
 		}
 	}
 
 	Loader::~Loader()
 	{
-
+		thread.join();
 	}
 }
