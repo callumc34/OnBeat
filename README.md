@@ -11,7 +11,7 @@ Onset detection is used to automatically generate a beatmap for any file given a
 Currently OnBeat lacks a lot of functionality - feel free to help - check out the roadmap here - https://trello.com/b/t8s2mLv0/onbeat-hazel
 
 ## How to build and run
-1. Clone this repository to your machine using `git clone --recursive https://callumc34/OnBeat`
+1. Clone this repository to your machine using `git clone --recursive https://github.com/callumc34/OnBeat`
    - You may need to run `git submodule init` within the vendor/Hazel directory to ensure all submodules are initialised
 2. Build Hazel using the provided instructions in the Hazel readme: https://github.com/TheCherno/Hazel#readme
 3. Copy any lib files outputted to Lib/ or provide your own link directory using MSVC
