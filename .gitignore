@@ -17,6 +17,9 @@ Lib
 #FMOD Headers
 FMOD
 
+#Discord Headers
+Discord
+
 #MSVS
 .vs
 x64
@@ -24,6 +27,9 @@ Release
 Debug
 OnBeat.vcxproj.user
 *.aps
+
+#secret file
+secrets.h
 
 #Runtime
 *.dll

@@ -28,6 +28,7 @@ namespace OnBeat
 				const ultralight::String& url) override;
 
 		private:
+			void DiscordPresence();
 
 	};
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <OnBeat/Util/Discord/Integration.h>
 #include <Hazel/Core/Layer.h>
 #include <Hazel/Events/ApplicationEvent.h>
 #include <Hazel/Renderer/OrthographicCamera.h>
@@ -16,6 +17,7 @@ namespace OnBeat
 
 		protected:
 			Hazel::Scope<Hazel::OrthographicCamera> CameraController;
+			discord::Activity activity{};
 
 			void CreateCamera(uint32_t width, uint32_t height);
 	};

@@ -1,4 +1,5 @@
 #include <OnBeat/App/LayerStack/LayerStack.h>
+#include <OnBeat/Util/Discord/Integration.h>
 
 namespace OnBeat {
 
@@ -18,6 +19,7 @@ namespace OnBeat {
 			callback();
 			callback = nullptr;
 		}
+		Discord::Integration::Get().GetState().core->RunCallbacks();
 	}
 
 	void LayerStack::OnEvent(Hazel::Event& e)

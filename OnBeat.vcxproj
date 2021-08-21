@@ -38,6 +38,7 @@
     <ClInclude Include="src\OnBeat\Ui\PauseMenu\PauseMenu.h" />
     <ClInclude Include="src\OnBeat\Util\AppUtil\AppUtil.h" />
     <ClInclude Include="src\OnBeat\Util\AudioPlayer\AudioPlayer.h" />
+    <ClInclude Include="src\OnBeat\Util\Discord\Integration.h" />
     <ClInclude Include="src\OnBeat\Util\JS\JS.h" />
     <ClInclude Include="src\OnBeat\Util\Loader\Loader.h" />
     <ClInclude Include="src\OnBeat\Util\Loader\LoadingLayer\LoadingLayer.h" />
@@ -46,6 +47,23 @@
     <ClInclude Include="src\OnBeat\Util\Template\Layer.h" />
     <ClInclude Include="src\OnBeat\Util\Template\Menu.h" />
     <ClInclude Include="src\OnBeat\Util\Util.h" />
+    <ClInclude Include="vendor\Discord\achievement_manager.h" />
+    <ClInclude Include="vendor\Discord\activity_manager.h" />
+    <ClInclude Include="vendor\Discord\application_manager.h" />
+    <ClInclude Include="vendor\Discord\core.h" />
+    <ClInclude Include="vendor\Discord\discord.h" />
+    <ClInclude Include="vendor\Discord\event.h" />
+    <ClInclude Include="vendor\Discord\ffi.h" />
+    <ClInclude Include="vendor\Discord\image_manager.h" />
+    <ClInclude Include="vendor\Discord\lobby_manager.h" />
+    <ClInclude Include="vendor\Discord\network_manager.h" />
+    <ClInclude Include="vendor\Discord\overlay_manager.h" />
+    <ClInclude Include="vendor\Discord\relationship_manager.h" />
+    <ClInclude Include="vendor\Discord\storage_manager.h" />
+    <ClInclude Include="vendor\Discord\store_manager.h" />
+    <ClInclude Include="vendor\Discord\types.h" />
+    <ClInclude Include="vendor\Discord\user_manager.h" />
+    <ClInclude Include="vendor\Discord\voice_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="OnBeat.rc" />
@@ -63,6 +81,7 @@
     <ClCompile Include="src\OnBeat\Ui\PauseMenu\PauseMenu.cpp" />
     <ClCompile Include="src\OnBeat\Util\AppUtil\AppUtil.cpp" />
     <ClCompile Include="src\OnBeat\Util\AudioPlayer\AudioPlayer.cpp" />
+    <ClCompile Include="src\OnBeat\Util\Discord\Integration.cpp" />
     <ClCompile Include="src\OnBeat\Util\JS\JS.cpp" />
     <ClCompile Include="src\OnBeat\Util\Loader\Loader.cpp" />
     <ClCompile Include="src\OnBeat\Util\Loader\LoadingLayer\LoadingLayer.cpp" />
@@ -70,6 +89,20 @@
     <ClCompile Include="src\OnBeat\Util\Template\GLTextureSurface.cpp" />
     <ClCompile Include="src\OnBeat\Util\Template\Layer.cpp" />
     <ClCompile Include="src\OnBeat\Util\Template\Menu.cpp" />
+    <ClCompile Include="vendor\Discord\achievement_manager.cpp" />
+    <ClCompile Include="vendor\Discord\activity_manager.cpp" />
+    <ClCompile Include="vendor\Discord\application_manager.cpp" />
+    <ClCompile Include="vendor\Discord\core.cpp" />
+    <ClCompile Include="vendor\Discord\image_manager.cpp" />
+    <ClCompile Include="vendor\Discord\lobby_manager.cpp" />
+    <ClCompile Include="vendor\Discord\network_manager.cpp" />
+    <ClCompile Include="vendor\Discord\overlay_manager.cpp" />
+    <ClCompile Include="vendor\Discord\relationship_manager.cpp" />
+    <ClCompile Include="vendor\Discord\storage_manager.cpp" />
+    <ClCompile Include="vendor\Discord\store_manager.cpp" />
+    <ClCompile Include="vendor\Discord\types.cpp" />
+    <ClCompile Include="vendor\Discord\user_manager.cpp" />
+    <ClCompile Include="vendor\Discord\voice_manager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -255,7 +288,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/;vendor/Discord</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -266,6 +299,7 @@
       <AdditionalLibraryDirectories>Lib/;</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>"Lib\Debug\*.lib" %(AdditionalOptions)</AdditionalOptions>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
     <ResourceCompile>
       <ResourceOutputFileName>Resource.rc</ResourceOutputFileName>
@@ -288,7 +322,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/;vendor/Discord</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -325,7 +359,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);USE_FFTW;DIST</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src/;vendor/;vendor/Hazel/Hazel/src/;vendor/Hazel/Hazel/vendor/;vendor/Hazel/Hazel/vendor/entt/include/;vendor/Hazel/Hazel/vendor/glad/include/;vendor/Hazel/Hazel/vendor/glfw/include/;vendor/Hazel/Hazel/vendor/glm/;vendor/Hazel/Hazel/vendor/imgui/;vendor/Hazel/Hazel/vendor/imguizmo/;vendor/Hazel/Hazel/vendor/spdlog/include/;vendor/Hazel/Hazel/vendor/yaml-cpp/include/;vendor/AudioFile/;vendor/gist/src/;vendor/magic_enum/include/;vendor/nlohmann/include/;vendor/ultralight/;vendor/Discord</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>

@@ -27,7 +27,7 @@ namespace OnBeat
 			GLFWwindow* GetNativeWindow() const { return NativeWindow; }
 			LayerStack& GetLayerStack() { return *LayerStack; }
 			AudioPlayer& GetAudioPlayer() { return AudioPlayer; }
-			const Config::Settings& GetSettings() const { return Settings;  }
+			const Config::Settings& GetSettings() const { return Settings; }
 
 		private:
 			static App* instance;
@@ -39,6 +39,7 @@ namespace OnBeat
 			LayerStack* LayerStack = new OnBeat::LayerStack();
 			AudioPlayer AudioPlayer;
 			Config::Settings Settings;
+
 
 			//Layers
 			MusicLayer* MusicLayer = nullptr;

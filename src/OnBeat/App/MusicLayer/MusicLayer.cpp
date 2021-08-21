@@ -24,6 +24,8 @@ namespace OnBeat {
 
 		skin = App::Get().GetSettings().Game.Skin.MusicSkin;
 
+		DiscordPresence();
+
 		LoadingLayer = new OnBeat::LoadingLayer(BindLoadingFunction(&MusicLayer::LoadLayer),
 			BindLoadingCallback(&MusicLayer::ClearLoadingLayer), true);
 	}
@@ -192,11 +194,34 @@ namespace OnBeat {
 
 	void MusicLayer::OnEvent(Hazel::Event& e)
 	{
+		Hazel::EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<Hazel::KeyReleasedEvent>(HZ_BIND_EVENT_FN(MusicLayer::OnKeyRelease));
 		Layer::OnEvent(e);
 	}
 
 	void MusicLayer::OnImGuiRender()
 	{
+	}
+
+	bool MusicLayer::OnKeyRelease(Hazel::KeyReleasedEvent& e)
+	{
+		return true;
+	}
+
+	void MusicLayer::DiscordPresence()
+	{
+		//TODO(Callum): Add song specifics
+		activity.SetState("In a session");
+		activity.SetDetails("Hitting beats");
+		activity.GetTimestamps().SetStart(0);
+		activity.GetTimestamps().SetEnd(0);
+		activity.GetParty().GetSize().SetCurrentSize(0);
+		activity.GetParty().GetSize().SetMaxSize(0);
+		activity.SetType(discord::ActivityType::Playing);
+		activity.GetAssets().SetLargeImage("logo");
+
+		Discord::Integration::Get().GetState().core->ActivityManager().UpdateActivity(activity, nullptr);
+		return;
 	}
 
 	void MusicLayer::ClearLoadingLayer()

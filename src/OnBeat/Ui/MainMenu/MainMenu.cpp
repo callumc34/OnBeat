@@ -11,6 +11,7 @@ namespace OnBeat
 	MainMenu::MainMenu(const std::string& document, std::string layerName)
 		: Menu(document, layerName)
 	{
+		DiscordPresence();
 	}
 
 	//C callbacks from JS
@@ -148,6 +149,21 @@ namespace OnBeat
 		{
 			App::Get().StartGame(dialog.value());
 		}
+		return;
+	}
+
+	void MainMenu::DiscordPresence()
+	{
+		activity.SetState("Idle");
+		activity.SetDetails("At the main menu");
+		activity.GetTimestamps().SetStart(0);
+		activity.GetTimestamps().SetEnd(0);
+		activity.GetParty().GetSize().SetCurrentSize(0);
+		activity.GetParty().GetSize().SetMaxSize(0);
+		activity.SetType(discord::ActivityType::Playing);
+		activity.GetAssets().SetLargeImage("logo");
+
+		Discord::Integration::Get().GetState().core->ActivityManager().UpdateActivity(activity, nullptr);
 		return;
 	}
 

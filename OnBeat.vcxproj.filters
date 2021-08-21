@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Discord SDK">
+      <UniqueIdentifier>{43819120-e07e-4e6b-9907-070fd2b49012}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -71,6 +74,60 @@
     </ClInclude>
     <ClInclude Include="src\OnBeat\Util\Loader\Loader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OnBeat\Util\Discord\Integration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\network_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\overlay_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\relationship_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\storage_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\store_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\types.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\user_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\voice_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\achievement_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\activity_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\application_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\core.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\discord.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\event.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\ffi.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\image_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\Discord\lobby_manager.h">
+      <Filter>Header Files\Discord SDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +188,51 @@
     </ClCompile>
     <ClCompile Include="src\OnBeat\Util\Loader\Loader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OnBeat\Util\Discord\Integration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\overlay_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\relationship_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\storage_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\store_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\types.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\user_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\voice_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\achievement_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\activity_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\application_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\core.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\image_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\lobby_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\Discord\network_manager.cpp">
+      <Filter>Header Files\Discord SDK</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

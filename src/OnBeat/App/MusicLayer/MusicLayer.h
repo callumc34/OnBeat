@@ -3,6 +3,7 @@
 #include <OnBeat/Util/OnSetDetection/OnSetDetection.h>
 #include <Hazel/Renderer/Shader.h>
 #include <Hazel/Renderer/Renderer2D.h>
+#include <Hazel/Events/KeyEvent.h>
 
 namespace OnBeat
 {
@@ -24,6 +25,8 @@ namespace OnBeat
 
 			virtual void OnImGuiRender() override;
 
+			bool OnKeyRelease(Hazel::KeyReleasedEvent& e);
+
 		private:
 			//Textures & Shading
 			void CreateBeatArea();
@@ -44,6 +47,8 @@ namespace OnBeat
 			double SampleRate;
 
 			std::string file;
+
+			void DiscordPresence();
 
 			//Loading functionality
 			void LoadLayer();
